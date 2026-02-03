@@ -10,7 +10,7 @@ import {
 } from "@react-email/components";
 
 
-export default function VerificationEmail({username, otp, emailType}){
+export default function emailTemplate({username, otp, emailType}){
   return (
     <Html>
       <Head>
