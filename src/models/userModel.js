@@ -1,37 +1,49 @@
-import mongoose, {Schema} from "mongoose";
+import mongoose from "mongoose";
 
-const userSchema = new Schema({
-    username: {
-        type: String,
-        required: [true, 'Please enter a username'],
-        unique: [true, 'Username is already present'],
-    },
-    
-    email: {
-        type: String,
-        required: [true, 'Please enter a email'],
-        unique: [true, 'Email is already present']
-    },
-    
-    password: {
-        type: String,
-        required: [true, 'Please enter a password'],
-    },
+const userSchema = new mongoose.Schema({
+  firstName: { type: String, default: "New" },
+  lastName: { type: String, default: "User" },
+  username: { type: String, required: [true, "Please enter a username"] },
+  email: { type: String, required: [true, "Please enter a email"] },
+  password: { type: String, required: [true, "Please enter a password"] },
+  profileImageUrl: { type: String, default: "/images/user-dp.jpg" },
+  isVerified: { type: Boolean },
+  role: { type: String, enum: ["user", "admin"], default: "user" },
 
-    isVerified: {
-        type: Boolean,
+  verificationOtp: { type: Number },
+  verificationOtpExpiry: { type: Date },
+
+  bio: { type: String, maxLength: 160 },
+  coverPicture: { type: String },
+  location: { type: String },
+  occupation: { type: String },
+  relationshipStatus: {
+    type: String,
+    enum: ["Single", "In a relationship", "Married", "Engaged", "None"],
+    default: "None",
+  },
+
+  friends: [{ type: mongoose.Schema.Types.ObjectId, ref: "user" }],
+  friendRequestsSent: [{ type: mongoose.Schema.Types.ObjectId, ref: "user" }],
+  friendRequestsReceived: [
+    { type: mongoose.Schema.Types.ObjectId, ref: "user" },
+  ],
+
+  posts: [{ type: mongoose.Schema.Types.ObjectId, ref: "post" }],
+  savedPosts: [{ type: mongoose.Schema.Types.ObjectId, ref: "post" }],
+
+  privacy: {
+    profileVisibility: {
+      type: String,
+      enum: ["public", "friends", "private"],
+      default: "public",
     },
+    showEmail: { type: Boolean, default: false },
+  },
 
-    verificationOtp: {
-        type: Number,
-    },
-
-    verifictionOtpExpiry: {
-        type: Date,
-    }
-
+  isBanned: { type: Boolean, default: false },
 });
 
-const User = mongoose.models.user || mongoose.model(userSchema);
+const userModel = mongoose.models.user || mongoose.model("user", userSchema);
 
-export default User;
+export default userModel;

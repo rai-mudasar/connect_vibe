@@ -1,18 +1,18 @@
 import mongoose from "mongoose";
 
 const connection = {
-    isConnected: String
+    isConnected: 0
 };
 
 async function connectToDb() {
-    if(connection.isConnected) {
+    if(connection.isConnected === 1) {
         console.log('Database is already connected');
         return
     }
 
     try {
-        const db = await mongoose.connect(process.env.MONDODB_URI || '');
-        connection.isConnected = db.connection[0].readyState;
+        const db = await mongoose.connect(process.env.MONGODB_URI || '');
+        connection.isConnected = db.connections[0].readyState;
 
         console.log('Database connected Successfully');
     }
