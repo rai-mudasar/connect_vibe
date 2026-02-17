@@ -1,27 +1,18 @@
-"use client";
 
-import { MessageCircle, MoreHorizontal, Share2, ThumbsUp } from "lucide-react";
-import { useSession } from "next-auth/react";
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import { MessageCircle, MoreHorizontal, Share2, ThumbsUp } from "lucide-react";
 
-export default function Post({ user, time, content, image, priority }) {
-  const { data: session, status } = useSession();
-  const [profileImage, setProfileImage] = useState("");
+export default function PostCard({ author, authorProfileImage, time, content, image, priority }) {
 
-  useEffect(() => {
-    if (status === "loading") return;
-    setProfileImage(session.user?.profileImageUrl);
-  }, [status]);
   return (
     <div className="bg-white rounded-xl shadow-sm border border-gray-200 mb-4 overflow-hidden">
       {/* Post Header */}
       <div className="flex items-center justify-between p-4 pb-2">
         <div className="flex items-center space-x-2">
           <div className="w-10 h-10 bg-gray-300 rounded-full overflow-hidden">
-            {profileImage && (
+            {authorProfileImage && (
               <Image
-                src={profileImage}
+                src={authorProfileImage}
                 width={40}
                 height={40}
                 alt="User Profile Image"
@@ -30,7 +21,7 @@ export default function Post({ user, time, content, image, priority }) {
           </div>
           <div>
             <h4 className="font-semibold text-[15px] hover:underline cursor-pointer">
-              {user}
+              {author.firstName} {author.lastName}
             </h4>
             <p className="text-gray-500 text-[13px]">{time}</p>
           </div>
@@ -48,12 +39,13 @@ export default function Post({ user, time, content, image, priority }) {
       {/* Optional Post Image */}
       {image && (
         <div className="w-full bg-gray-100 flex justify-center">
-          <div className="w-80 h-120 relative">
+          <div className="w-full h-120 relative">
             <Image
               src={image}
               fill={true}
               alt="Post Image"
               priority={priority}
+              className="object-cover rounded-lg"
             />
           </div>
         </div>

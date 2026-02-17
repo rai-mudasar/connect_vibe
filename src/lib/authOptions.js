@@ -14,7 +14,7 @@ export const authOptions = {
         },
         password: { label: "Password", type: "password" },
       },
-      
+
       async authorize(credentials) {
         await dbConnect();
 
@@ -34,7 +34,7 @@ export const authOptions = {
           }
 
           if (!user.isVerified) {
-              throw new Error("Please verify your account before login.");
+            throw new Error("Please verify your account before login.");
           }
 
           const isPasswordValid = await bcrypt.compare(password, user.password);
@@ -52,12 +52,20 @@ export const authOptions = {
   ],
 
   callbacks: {
-    async jwt({ token, user }) {
+    async jwt({ token, user, trigger, session }) {
       if (user) {
         token.id = user._id?.toString();
         token.isVerified = user.isVerified;
         token.username = user.username;
-        token.profileImageUrl = user.profileImageUrl
+        token.profileImageUrl = user.profileImageUrl;
+        token.name = user.firstName + " " + user.lastName
+      }
+
+      if (trigger === "update" && session) {
+        token.id = session.user.id;
+        token.isVerified = session.user.isVerified;
+        token.username = session.user.username;
+        token.profileImageUrl = session.user.profileImageUrl;
       }
       return token;
     },
@@ -65,9 +73,10 @@ export const authOptions = {
     async session({ session, token }) {
       if (token) {
         session.user.id = token.id;
+        session.user.name = token.name,
         session.user.isVerified = token.isVerified;
         session.user.username = token.username;
-        session.user.profileImageUrl = token.profileImageUrl
+        session.user.profileImageUrl = token.profileImageUrl;
       }
       return session;
     },
@@ -81,4 +90,3 @@ export const authOptions = {
 
   secret: process.env.NEXTAUTH_SECRET,
 };
-

@@ -11,10 +11,10 @@ export async function proxy(request) {
 
   if (
     token &&
-    ( url.pathname.startsWith("/login") ||
+    (url.pathname === "/" ||
+      url.pathname.startsWith("/login") ||
       url.pathname.startsWith("/signup") ||
       url.pathname.startsWith("/verify") ||
-      // url.pathname.startsWith("/") ||
       url.pathname.startsWith("/verify/:path*"))
   ) {
     return NextResponse.redirect(new URL("/home", request.url));
@@ -22,7 +22,7 @@ export async function proxy(request) {
 
   if (
     !token &&
-    ( url.pathname.startsWith("/home") ||
+    (url.pathname.startsWith("/home") ||
       url.pathname.startsWith("/friends") ||
       url.pathname.startsWith("/profile"))
   ) {
@@ -34,6 +34,7 @@ export async function proxy(request) {
 
 export const config = {
   matcher: [
+    "/",
     "/login",
     "/signup",
     "/home",

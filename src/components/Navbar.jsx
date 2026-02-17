@@ -14,19 +14,19 @@ import {
   User2Icon,
   LogOut,
   Search,
-} from "lucide-react"; // Optional icons
+} from "lucide-react";
 import { ActionButton } from "./ui/ActionButton";
 import { signOut } from "next-auth/react";
 
-const navLinks = [
-  { icon: <House />, href: "/home" },
-  { icon: <Users2 />, href: "/friends" },
-  { icon: <User2Icon />, href: "/profile" },
-];
-
-export default function NavBar() {
+export default function NavBar({loggedInUser}) {
   const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
+
+  const navLinks = [
+    { icon: <House />, href: "/home" },
+    { icon: <Users2 />, href: "/friends" },
+    { icon: <User2Icon />, href: `/profile/${loggedInUser.username}` },
+  ];
 
   return (
     <nav className="w-full h-14 px-3 bg-[#FFFFFF] dark:bg-[#252728] flex flex-row shrink items-center justify-around shadow-sm fixed z-50">

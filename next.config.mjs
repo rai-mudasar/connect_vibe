@@ -4,19 +4,24 @@ const nextConfig = {
   images: {
     remotePatterns: [
       {
-        protocol: 'https',
-        hostname: 'res.cloudinary.com',
-        pathname: '/**', // This allows all paths from Cloudinary
-      },
-{
-        protocol: 'https',
-        hostname: 'i.pravatar.cc',
+        protocol: "https",
+        hostname: "res.cloudinary.com",
+        pathname: "/**",
       },
       {
-        protocol: 'https',
-        hostname: 'api.dicebear.com',
+        protocol: "https",
+        hostname: "i.pravatar.cc",
+      },
+      {
+        protocol: "https",
+        hostname: "api.dicebear.com",
       },
     ],
+  },
+  experimental: {
+    serverActions: {
+      bodySizeLimit: "5mb",
+    },
   },
 
   reactCompiler: true,

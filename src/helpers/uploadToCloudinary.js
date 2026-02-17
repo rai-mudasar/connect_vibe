@@ -33,15 +33,10 @@ export default async function uploadToCloudinary(file) {
         message: "Upload Successfully",
         url: response.secure_url,
       };
-    } else {
-      return {
-        success: false,
-        message: "Cloudinary Upload error",
-      };
-    }
+    } 
   } catch (error) {
     console.log(
-      "Something went wrong in Cloudinary Upload with error: ",
+      "Something went wrong in Cloudinary Upload with error : ",
       error,
     );
     return {

@@ -1,9 +1,9 @@
-import uploadToCloudinary from "@/helpers/uploadToCloudinary";
-import { NextResponse } from "next/server";
 import userModel from "@/models/userModel";
 import postModel from "@/models/postModel";
+import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/authOptions";
+import uploadToCloudinary from "@/helpers/uploadToCloudinary";
 
 export async function POST(request) {
   const formData = await request.formData();

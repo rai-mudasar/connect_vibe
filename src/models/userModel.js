@@ -13,10 +13,10 @@ const userSchema = new mongoose.Schema({
   verificationOtp: { type: Number },
   verificationOtpExpiry: { type: Date },
 
-  bio: { type: String, maxLength: 160 },
-  coverPicture: { type: String },
-  location: { type: String },
-  occupation: { type: String },
+  coverImageUrl: { type: String, default: "/images/cover-image.png" },
+  bio: { type: String, maxLength: 160, default: "No bio ever added" },
+  location: { type: String, default: "None" },
+  occupation: { type: String, default: "None" },
   relationshipStatus: {
     type: String,
     enum: ["Single", "In a relationship", "Married", "Engaged", "None"],
@@ -43,6 +43,7 @@ const userSchema = new mongoose.Schema({
 
   isBanned: { type: Boolean, default: false },
 });
+
 
 const userModel = mongoose.models.user || mongoose.model("user", userSchema);
 

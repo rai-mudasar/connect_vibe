@@ -8,7 +8,8 @@ export async function GET() {
 
     const posts = await postModel
       .find({})
-      .populate("author", "username profileImageUrl")
+      .sort({ createdAt: -1})
+      .populate("author", "firstName lastName username profileImageUrl")
       .lean();
 
     if (!posts || posts.length === 0) {
