@@ -22,7 +22,8 @@ export async function proxy(request) {
 
   if (
     !token &&
-    (url.pathname.startsWith("/home") ||
+    (url.pathname === "/" ||
+      url.pathname.startsWith("/home") ||
       url.pathname.startsWith("/friends") ||
       url.pathname.startsWith("/profile"))
   ) {
