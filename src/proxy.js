@@ -14,8 +14,7 @@ export async function proxy(request) {
     (url.pathname === "/" ||
       url.pathname.startsWith("/login") ||
       url.pathname.startsWith("/signup") ||
-      url.pathname.startsWith("/verify") ||
-      url.pathname.startsWith("/verify/:path*"))
+      url.pathname.startsWith("/verify"))
   ) {
     return NextResponse.redirect(new URL("/home", request.url));
   }
@@ -40,7 +39,7 @@ export const config = {
     "/signup",
     "/home",
     "/friends",
-    "/profile",
+    "/profile/:path*",
     "/verify/:path*",
   ],
 };
