@@ -20,12 +20,17 @@ const PostFeed = ({user, posts, className}) => {
         posts.map((post, index) => (
           <PostCard
             key={post._id}
+            postId={post._id}
             author={post.author}
             authorProfileImage={post.author.profileImageUrl}
             time={formatDistanceToNow(new Date(post.createdAt))}
             content={post.caption}
             image={post.media}
+            likes={post.likes}
+            comment={post.comments}
+            loggedInUser = {user}
             priority={index < 2}
+            post={post}
           />
         ))}
     </main>

@@ -44,7 +44,6 @@ const userSchema = new mongoose.Schema({
   isBanned: { type: Boolean, default: false },
 });
 
-
 const userModel = mongoose.models.user || mongoose.model("user", userSchema);
 
 export default userModel;

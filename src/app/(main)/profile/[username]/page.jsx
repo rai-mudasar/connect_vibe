@@ -103,7 +103,7 @@ export default async function ProfilePage({ params }) {
           <div className="w-[65%]">
             <PostFeed
               user={JSON.parse(JSON.stringify(profileUser))}
-              posts={allPost}
+              posts={JSON.parse(JSON.stringify(allPost))}
             />
           </div>
         </div>

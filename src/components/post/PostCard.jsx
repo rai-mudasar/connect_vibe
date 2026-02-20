@@ -1,8 +1,42 @@
+"use client";
 
 import Image from "next/image";
 import { MessageCircle, MoreHorizontal, Share2, ThumbsUp } from "lucide-react";
+import { toggleLikes } from "@/actions/postActions";
+import { useState } from "react";
+import { ViewPost } from "./ViewPost";
+import SafeImage from "../SafeImage";
 
-export default function PostCard({ author, authorProfileImage, time, content, image, priority }) {
+export default function PostCard({
+  postId,
+  author,
+  authorProfileImage,
+  time,
+  content,
+  image,
+  likes,
+  comment,
+  loggedInUser,
+  priority,
+  post,
+}) {
+  const [likedList, setLikedList] = useState(likes.map((id) => id.toString()));
+  const userId = loggedInUser?.id?.toString();
+  const isLiked = likedList.includes(userId);
+
+  const handleToggleLikes = async () => {
+    const updatedLikes = isLiked
+      ? likedList.filter((id) => id !== userId)
+      : [...likedList, userId];
+    setLikedList(updatedLikes);
+
+    try {
+      const response = await toggleLikes(postId);
+      if (!response.success) return setLikedList(likes);
+    } catch (error) {
+      setLikedList(likes);
+    }
+  };
 
   return (
     <div className="bg-white rounded-xl shadow-sm border border-gray-200 mb-4 overflow-hidden">
@@ -40,12 +74,12 @@ export default function PostCard({ author, authorProfileImage, time, content, im
       {image && (
         <div className="w-full bg-gray-100 flex justify-center">
           <div className="w-full h-120 relative">
-            <Image
+            <SafeImage
               src={image}
-              fill={true}
+              fill
               alt="Post Image"
               priority={priority}
-              className="object-cover rounded-lg"
+              className="object-contain"
             />
           </div>
         </div>
@@ -57,23 +91,31 @@ export default function PostCard({ author, authorProfileImage, time, content, im
           <div className="bg-blue-500 rounded-full p-1">
             <ThumbsUp size={12} className="text-white" />
           </div>
-          <span>124</span>
+          <span>{likes.length}</span>
         </div>
         <div className="flex space-x-3">
-          <span>24 comments</span>
+          <span>{comment.length} comments</span>
           <span>12 shares</span>
         </div>
       </div>
 
       {/* Action Buttons */}
       <div className="flex px-2 py-1">
-        <button className="flex-1 flex items-center justify-center space-x-2 p-2 hover:bg-gray-100 rounded-lg text-gray-600 font-medium">
-          <ThumbsUp size={20} /> <span>Like</span>
+        <button
+          className="flex-1 flex items-center justify-center space-x-2 p-2 hover:bg-gray-100 rounded-lg text-gray-600 font-medium cursor-pointer"
+          onClick={handleToggleLikes}
+        >
+          {!isLiked ? (
+            <ThumbsUp size={20} />
+          ) : (
+            <ThumbsUp size={20} fill="#1877F2" className="text-neutral-500" />
+          )}
+          <span>Like</span>
         </button>
-        <button className="flex-1 flex items-center justify-center space-x-2 p-2 hover:bg-gray-100 rounded-lg text-gray-600 font-medium">
-          <MessageCircle size={20} /> <span>Comment</span>
-        </button>
-        <button className="flex-1 flex items-center justify-center space-x-2 p-2 hover:bg-gray-100 rounded-lg text-gray-600 font-medium">
+        <div className="cursor-pointer">
+          <ViewPost post={post} />
+        </div>
+        <button className="flex-1 flex items-center justify-center space-x-2 p-2 hover:bg-gray-100 rounded-lg text-gray-600 font-medium cursor-pointer">
           <Share2 size={20} /> <span>Share</span>
         </button>
       </div>
