@@ -43,13 +43,13 @@ export default function PostCard({
       {/* Post Header */}
       <div className="flex items-center justify-between p-4 pb-2">
         <div className="flex items-center space-x-2">
-          <div className="w-10 h-10 bg-gray-300 rounded-full overflow-hidden">
+          <div className="w-10 h-10 bg-gray-300 rounded-full overflow-hidden relative">
             {authorProfileImage && (
-              <Image
+              <SafeImage
                 src={authorProfileImage}
-                width={40}
-                height={40}
+                fill
                 alt="User Profile Image"
+                className={'object-contain'}
               />
             )}
           </div>

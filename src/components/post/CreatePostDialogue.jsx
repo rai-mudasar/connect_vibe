@@ -2,12 +2,12 @@
 
 import { useState, useRef } from "react";
 import axios from "axios";
-import { 
-  Dialog, 
-  DialogContent, 
-  DialogHeader, 
-  DialogTitle, 
-  DialogTrigger 
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
@@ -15,7 +15,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { ImagePlus, X } from "lucide-react";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
-
+import SafeImage from "../SafeImage";
 
 export default function CreatePostDialog({ user }) {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -23,7 +23,7 @@ export default function CreatePostDialog({ user }) {
   const [image, setImage] = useState(null);
   const [loading, setLoading] = useState(false);
   const fileInputRef = useRef(null);
-  const router = useRouter()
+  const router = useRouter();
 
   const handlePost = async () => {
     // Keeping your logic: Validation and FormData
@@ -41,8 +41,8 @@ export default function CreatePostDialog({ user }) {
         setIsDialogOpen(false);
         setText("");
         setImage(null);
-        toast.success("Post Created Successfully")
-        router.refresh()
+        toast.success("Post Created Successfully");
+        router.refresh();
       }
     } catch (error) {
       console.error("Axios Error : ", error.response?.data || error.message);
@@ -57,7 +57,12 @@ export default function CreatePostDialog({ user }) {
       <DialogTrigger asChild>
         <div className="flex items-center gap-2 p-4 bg-white rounded-lg shadow-sm cursor-pointer hover:bg-gray-50">
           <Avatar>
-            <AvatarImage src={user?.profileImageUrl} />
+            <SafeImage
+              src={user?.profileImageUrl}
+              fill
+              alt="LoggedIn User Image"
+              className="object-contain"
+            />
             <AvatarFallback>{user?.name?.[0]}</AvatarFallback>
           </Avatar>
           <div className="bg-gray-100 rounded-full py-2 px-4 flex-1 text-gray-500 text-sm">
@@ -78,9 +83,7 @@ export default function CreatePostDialog({ user }) {
               <AvatarImage src={user?.profileImageUrl} />
               <AvatarFallback>{user?.name?.[0]}</AvatarFallback>
             </Avatar>
-            <span className="font-semibold text-sm">
-              {user?.name}
-            </span>
+            <span className="font-semibold text-sm">{user?.name}</span>
           </div>
 
           {/* Post Text Area */}

@@ -16,6 +16,7 @@ import { updateCoverImage, updateProfileImage } from "@/actions/userActions";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { useSession } from "next-auth/react";
 import EditProfileDialog from "./EditProfileDialog";
+import SafeImage from "../SafeImage";
 
 export default function ProfileHeader({ user, isOwnProfile }) {
   const coverInputRef = useRef(null);
@@ -108,10 +109,15 @@ export default function ProfileHeader({ user, isOwnProfile }) {
 
       {/* Profile Section */}
       <section className="h-51 flex flex-row items-center px-17 relative">
-        <div className=" relative object-cover">
+        <div className=" relative">
           {user.profileImageUrl && (
             <Avatar className="h-40 w-40">
-              <AvatarImage src={user?.profileImageUrl} />
+              <SafeImage
+                src={user?.profileImageUrl}
+                fill
+                alt="Post Image"
+                className="object-contain"
+              />
               <AvatarFallback>{user?.userame?.[0]}</AvatarFallback>
             </Avatar>
           )}
