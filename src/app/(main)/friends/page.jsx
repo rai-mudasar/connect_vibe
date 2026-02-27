@@ -46,15 +46,15 @@ export default function FriendsPage() {
   ];
 
   return (
-    <div className="flex h-screen bg-[#F2F4F7] dark:bg-[#1b1b1b]">
+    <div className="flex h-screen bg-[#F2F4F7] dark:bg-[#1b1b1b] pt-20 md:pt-14">
       {/* Left Sidebar */}
-      <div className="w-80 bg-white dark:bg-[#242526] shadow-md p-4 flex flex-col gap-2">
-        <h2 className="text-2xl font-bold mb-4 px-2">Friends</h2>
+      <div className="w-50 lg:w-80 bg-white dark:bg-[#242526] shadow-md py-4 flex flex-col gap-2">
+        <h2 className="text-lg md:text-2xl font-bold mb-4 px-2">Friends</h2>
         {tabs.map((tab) => (
           <button
             key={tab.id}
             onClick={() => setActiveTab(tab.id)}
-            className={`flex items-center gap-3 px-4 py-3 rounded-lg font-medium transition-all relative
+            className={`flex items-center gap-3 px-4 py-3 rounded-lg font-normal md:font-medium transition-all relative
               ${
                 activeTab === tab.id
                   ? "text-[#1877F2] bg-blue-50 dark:bg-blue-900/20"

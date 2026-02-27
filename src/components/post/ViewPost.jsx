@@ -67,7 +67,7 @@ export function ViewPost({ post }) {
         </Button>
       </DialogTrigger>
 
-      <DialogContent className="sm:max-w-150 max-h-full flex flex-col p-0 gap-0 bg-white overflow-y-scroll">
+      <DialogContent className="sm:max-w-150 max-h-[calc(100vh-200px)] md:max-h-[calc(100vh-70px)] flex flex-col p-0 gap-0 bg-white overflow-y-scroll">
         <DialogHeader className="p-4 border-b">
           <DialogTitle>Post by {post.author.firstName}</DialogTitle>
           <DialogDescription className="sr-only">
@@ -138,7 +138,7 @@ export function ViewPost({ post }) {
             <Textarea
               placeholder="Write a comment..."
               value={newComment}
-              onChange={(e) => setComment(e.target.value)}
+              onChange={(e) => setNewComment(e.target.value)}
               className="min-h-10 max-h-30 rounded-xl resize-none"
             />
             <Button

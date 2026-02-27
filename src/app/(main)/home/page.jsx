@@ -13,7 +13,7 @@ export default async function HomePage() {
   const allPost = response.success ? response.data : []
 
   return (
-    <div className="max-w-full h-screen bg-[#F2F4F7] dark:bg-[#333334] overflow-x-hidden pt-5">
+    <div className="max-w-full h-screen bg-[#F2F4F7] dark:bg-[#333334] overflow-x-hidden pt-14 md:pt-5">
       <LeftSidebar user={session.user} />
       <PostFeed user={session.user} posts={allPost} className={"mt-13"} />
     </div>

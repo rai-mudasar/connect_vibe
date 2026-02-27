@@ -54,7 +54,7 @@ export default function ProfileHeader({ user, isOwnProfile }) {
 
   const handleRemoveCoverImage = () => {};
   return (
-    <div className="w-[70%]">
+    <div className="w-[95%] md:w-[70%]">
       <input
         type="file"
         hidden
@@ -69,7 +69,7 @@ export default function ProfileHeader({ user, isOwnProfile }) {
         ref={profileInputRef}
         onChange={handleUpdateProfileImage}
       />
-      <section className="h-90 relative rounded-b-3xl object-cover overflow-hidden">
+      <section className="h-60 md:h-90 relative rounded-b-3xl object-cover overflow-hidden">
         <Image fill={true} src={user.coverImageUrl} alt="User Cover Photo" />
         {isOwnProfile && (
           <DropdownMenu>
@@ -81,13 +81,13 @@ export default function ProfileHeader({ user, isOwnProfile }) {
                   size={28}
                   strokeWidth="1px"
                 />
-                <p>Edit cover photo</p>
+                <p className="hidden md:block">Edit cover photo</p>
               </div>
             </DropdownMenuTrigger>
 
             <DropdownMenuContent className={"bg-white"}>
               <DropdownMenuGroup>
-                <DropdownMenuItem
+                <DropdownMenuItem q
                   onClick={handleCoverInputRef}
                   className={"cursor-pointer"}
                 >
