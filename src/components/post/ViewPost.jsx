@@ -13,7 +13,7 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
-import { MessageSquare, Send } from "lucide-react";
+import { MessageCircle, Send } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
 import { addComment, getPostAllcomments } from "@/actions/postActions";
 import { toast } from "sonner";
@@ -59,11 +59,10 @@ export function ViewPost({ post }) {
     <Dialog onOpenChange={handleLoadComments}>
       <DialogTrigger asChild>
         <Button
-          variant="ghost"
-          className="flex-1 flex items-center justify-center space-x-2 p-2 hover:bg-gray-100 rounded-lg text-gray-600 font-medium cursor-pointer"
+          className="w-full flex items-center justify-center mt-0.5 p-2 hover:bg-gray-100 rounded-lg text-[16px] text-gray-600 font-medium cursor-pointer"
         >
-          <MessageSquare className="mr-2 h-4 w-4" />
-          Comment
+          <MessageCircle size={20} />
+          <span>Comment</span>
         </Button>
       </DialogTrigger>
 

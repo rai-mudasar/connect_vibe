@@ -66,7 +66,7 @@ export default function CreatePostDialog({ user }) {
             <AvatarFallback>{user?.name?.[0]}</AvatarFallback>
           </Avatar>
           <div className="bg-gray-100 rounded-full py-2 px-4 flex-1 text-gray-500 text-sm">
-            What's on your mind, {user?.name}?
+            What's on your mind, {user?.firstName} {user?.lastName}?
           </div>
         </div>
       </DialogTrigger>

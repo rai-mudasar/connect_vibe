@@ -5,7 +5,7 @@ import UserCard from './UserCard'
 export default function PeopleYouMayKnow({users}) {
   return (
     <div>
-        <div className="flex justify-between mx-5 font-semibold text-lg">
+        <div className="flex justify-between mx-5 font-semibold text-md md:text-lg">
             <p>People You May Know</p>
             <Link href={""} className="text-[#0f81ec]">
               See more

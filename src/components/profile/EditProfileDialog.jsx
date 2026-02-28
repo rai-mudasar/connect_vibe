@@ -69,13 +69,13 @@ export default function EditProfileDialog({ user }) {
   return (
     <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
       <DialogTrigger asChild>
-        <button className="flex items-center gap-1 bg-[#F2F2F2] text-[15px] font-semibold text-black py-2 px-3 rounded-[10px] hover:bg-gray-200 transition">
-          <Pencil fill="black" size={20} strokeWidth={"1px"} />
+        <button className="w-39 flex items-center gap-2 md:gap-1 bg-[#F2F2F2] text-[15px] font-semibold text-black px-5 py-2.5 rounded-[10px] hover:bg-gray-200 transition">
+          <Pencil fill="black" className="w-6 h-6" strokeWidth={"1px"} />
           <span>Edit Profile</span>
         </button>
       </DialogTrigger>
 
-      <DialogContent className="sm:max-w-125 max-h-[90vh] overflow-y-auto bg-white">
+      <DialogContent className="sm:max-w-125 max-h-[90vh] overflow-y-scroll bg-white">
         <DialogHeader>
           <DialogTitle className="text-center text-xl">
             Edit Profile

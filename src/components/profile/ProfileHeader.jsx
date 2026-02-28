@@ -77,7 +77,7 @@ export default function ProfileHeader({ user, isOwnProfile }) {
               <div className="absolute bottom-5 right-5 border-2 text-black font-semibold bg-[#F2F2F2] px-4 py-2 rounded-[10px] flex gap-2 cursor-pointer">
                 <Camera
                   className="text-[#F2F2F2]"
-                  fill="blck"
+                  fill="black"
                   size={28}
                   strokeWidth="1px"
                 />
@@ -108,14 +108,14 @@ export default function ProfileHeader({ user, isOwnProfile }) {
       </section>
 
       {/* Profile Section */}
-      <section className="h-51 flex flex-row items-center px-17 relative">
+      <section className="h-51 md:h-51 flex flex-row items-start md:items-center pl-3 md:px-17 -mt-5 md:mt-0 relative">
         <div className=" relative">
           {user.profileImageUrl && (
-            <Avatar className="h-40 w-40">
+            <Avatar className="w-26 md:w-40 h-26 md:h-40 border-3 md:border-0 border-white">
               <SafeImage
                 src={user?.profileImageUrl}
                 fill
-                alt="Post Image"
+                alt="User Profile Image"
                 className="object-contain"
               />
               <AvatarFallback>{user?.userame?.[0]}</AvatarFallback>
@@ -123,36 +123,35 @@ export default function ProfileHeader({ user, isOwnProfile }) {
           )}
           {isOwnProfile && (
             <div
-              className="w-9 h-9 bg-[#D6D9DD] rounded-full absolute bottom-4 right-0 flex justify-center items-center cursor-pointer"
+              className="w-7 md:w-9 h-7 md:h-9 bg-[#D6D9DD] rounded-full absolute bottom-4 right-0 flex justify-center items-center cursor-pointer"
               onClick={handleProfileInputRef}
             >
               <Camera
-                className="text-[#D6D9DD]"
-                fill="blck"
-                size={28}
+                className="text-[#D6D9DD] w-6 md:w-7 h-6 md:h-7"
+                fill="black"
                 strokeWidth="1px"
               />
             </div>
           )}
         </div>
 
-        <div className="flex flex-col ml-5 gap-4">
+        <div className="flex flex-col ml-3 md:ml-5 mt-9 md:mt-0 md:gap-1">
           <div>
-            <h2 className="text-2xl font-bold">
+            <h2 className="text-xl md:text-2xl font-bold">
               {user.firstName} {user.lastName}
             </h2>
           </div>
-          <div className="text-xl font-semibold">
+          <div className="text-[12px] md:text-lg font-semibold ml-1 md:ml-0">
             <p>{user.bio}</p>
           </div>
         </div>
 
-        <div className="absolute right-7 top-10 flex gap-3 ">
+        <div className=" absolute top-33 md:top-7 right-6 md:right-12 flex gap-4 md:gap-6">
           <Link
             href={""}
-            className="flex gap-1 bg-[#0861F2] text-[15px] font-semibold text-white py-2 px-3 rounded-[10px] "
+            className="w-39 flex gap-2 md:gap-1 bg-[#0861F2] text-[15px] font-semibold text-white px-5 py-2.5 rounded-[10px] "
           >
-            <Plus />
+            <Plus className="w-6 h-6" />
             <p>Add to post</p>
           </Link>
           {isOwnProfile && <EditProfileDialog user={user} />}

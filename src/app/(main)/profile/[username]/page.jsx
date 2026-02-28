@@ -89,18 +89,19 @@ export default async function ProfilePage({ params }) {
           isOwnProfile={session?.user?.id === String(profileUser._id)}
         />
 
-        <div className="w-[70%] h-80 border border-gray-300 rounded-md">
+        <div className="w-[90%] md:w-[70%] h-70 md:h-80 border border-gray-300 rounded-md pt-3">
           <PeopleYouMayKnow
             users={JSON.parse(JSON.stringify(suggestedUsers))}
           />
         </div>
       </div>
+
       <div className="w-full mah-h-full flex flex-col justify-center items-center bg-[#F2F4F7]">
-        <div className="w-[70%] max-h-full flex flex-row gap-2 mt-5">
-          <div className="w-[35%]">
+        <div className="w-[90%] md:w-[70%] max-h-full flex flex-col md:flex-row gap-5 md:gap-2 mt-5">
+          <div className="md:w-[35%]">
             <UserDetail user={JSON.parse(JSON.stringify(profileUser))} />
           </div>
-          <div className="w-[65%]">
+          <div className="md:w-[65%]">
             <PostFeed
               user={JSON.parse(JSON.stringify(profileUser))}
               posts={JSON.parse(JSON.stringify(allPost))}

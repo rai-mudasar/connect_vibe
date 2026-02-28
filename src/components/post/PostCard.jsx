@@ -1,7 +1,6 @@
 "use client";
 
-import Image from "next/image";
-import { MessageCircle, MoreHorizontal, Share2, ThumbsUp } from "lucide-react";
+import { Heart, MoreHorizontal, Share2 } from "lucide-react";
 import { toggleLikes } from "@/actions/postActions";
 import { useState } from "react";
 import { ViewPost } from "./ViewPost";
@@ -39,7 +38,7 @@ export default function PostCard({
   };
 
   return (
-    <div className="bg-white rounded-xl shadow-sm border border-gray-200 mb-4 overflow-hidden">
+    <div className="bg-white rounded-xl shadow-sm border border-gray-200 mb-2 md:mb-4 overflow-hidden">
       {/* Post Header */}
       <div className="flex items-center justify-between p-4 pb-2">
         <div className="flex items-center space-x-2">
@@ -89,7 +88,7 @@ export default function PostCard({
       <div className="px-4 py-2 flex justify-between text-gray-500 text-[14px] border-b border-gray-100 mx-2">
         <div className="flex items-center space-x-1">
           <div className="bg-blue-500 rounded-full p-1">
-            <ThumbsUp size={12} className="text-white" />
+            <Heart size={12} className="text-white" />
           </div>
           <span>{likes.length}</span>
         </div>
@@ -102,20 +101,20 @@ export default function PostCard({
       {/* Action Buttons */}
       <div className="flex px-2 py-1">
         <button
-          className="flex-1 flex items-center justify-center space-x-2 p-2 hover:bg-gray-100 rounded-lg text-gray-600 font-medium cursor-pointer"
+          className="w-[33%] flex items-center justify-center space-x-2 p-2 hover:bg-gray-100 rounded-lg text-gray-600 font-medium cursor-pointer"
           onClick={handleToggleLikes}
         >
           {!isLiked ? (
-            <ThumbsUp size={20} />
+            <Heart size={20} />
           ) : (
-            <ThumbsUp size={20} fill="#1877F2" className="text-neutral-500" />
+            <Heart size={20} fill="red" className="text-red-600" />
           )}
           <span>Like</span>
         </button>
-        <div className="cursor-pointer">
+        <div className="w-[33%] cursor-pointer">
           <ViewPost post={post} />
         </div>
-        <button className="flex-1 flex items-center justify-center space-x-2 p-2 hover:bg-gray-100 rounded-lg text-gray-600 font-medium cursor-pointer">
+        <button className="w-[33%] flex items-center justify-center space-x-2 p-2 hover:bg-gray-100 rounded-lg text-gray-600 font-medium cursor-pointer">
           <Share2 size={20} /> <span>Share</span>
         </button>
       </div>

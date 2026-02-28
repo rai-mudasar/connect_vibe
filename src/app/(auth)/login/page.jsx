@@ -63,7 +63,7 @@ const Login = () => {
         facebook
       </div>
       <div className="p-10 shadow-xl/30 rounded-4xl bg-white">
-        <div className="w-[20rem]">
+        <div className="w-68 md:w-80">
           <Form {...form}>
             <form
               onSubmit={form.handleSubmit(onSubmit)}
@@ -134,7 +134,7 @@ const Login = () => {
               <Button
                 type="submit"
                 disabled={isSubmitting}
-                className="bg-[#0866FF] text-[18px] md:text-[21px]"
+                className="bg-[#0866FF] text-white font-semibold text-[18px] md:text-[21px]"
               >
                 {isSubmitting ? (
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />

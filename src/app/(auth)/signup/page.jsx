@@ -18,7 +18,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Loader2 } from "lucide-react";
+import { Eye, EyeOff, Loader2 } from "lucide-react";
 import Link from "next/link";
 
 const Signup = () => {
@@ -96,7 +96,7 @@ const Signup = () => {
         facebook
       </div>
       <div className="p-10 shadow-xl/30 rounded-4xl bg-white mx-4">
-        <div className="w-[20rem]">
+        <div className="w-68 md:w-80">
           <Form {...form}>
             <form
               onSubmit={form.handleSubmit(onSubmit)}
@@ -143,11 +143,29 @@ const Signup = () => {
                   <FormItem>
                     <FormLabel className="text-[18px]">Password</FormLabel>
                     <FormControl>
-                      <Input
-                        placeholder="password"
-                        autoComplete="new-password"
-                        {...field}
-                      />
+                      <div className="relative">
+                        <Input
+                          type={showPassword ? "text" : "password"}
+                          placeholder="password"
+                          autoComplete="new-password"
+                          {...field}
+                        />
+
+                        <button
+                          className="text absolute right-2 top-0 h-full py-2 hover:cursor-pointer"
+                          type="button"
+                          onClick={() => setShowPassword((prev) => !prev)}
+                          aria-label={
+                            showPassword ? "Hide password" : "Show password"
+                          }
+                        >
+                          {showPassword ? (
+                            <EyeOff className="h-5 w-5" />
+                          ) : (
+                            <Eye className="h-5 w-5" />
+                          )}
+                        </button>
+                      </div>
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -157,7 +175,7 @@ const Signup = () => {
               <Button
                 type="submit"
                 disabled={isSubmitting || !isUsernameAvailable}
-                className="bg-[#0866FF] text-[18px] md:text-[21px]"
+                className="bg-[#0866FF] text-white text-[18px] md:text-[21px] font-semibold"
               >
                 {isSubmitting ? (
                   <Loader2 className="mr-2 h-4 w-4 animate-spin">
