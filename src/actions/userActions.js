@@ -1,8 +1,10 @@
 "use server";
 
 import uploadToCloudinary from "@/helpers/uploadToCloudinary";
+import connectToDb from "@/lib/dbConnect";
 import userModel from "@/models/userModel";
 import { revalidatePath } from "next/cache";
+import { success } from "zod";
 
 // TODO:Checks for authentication before setting any user data
 
@@ -25,7 +27,7 @@ export async function updateProfileImage(fileImage, username) {
       return {
         success: true,
         message: "Profile image updated Successfully",
-        newProfileImageUrl: user.profileImageUrl
+        newProfileImageUrl: user.profileImageUrl,
       };
     }
 
@@ -81,31 +83,69 @@ export async function updateCoverImage(fileImage, username) {
 export async function updateProfile(userId, data) {
   try {
     const user = await userModel.findById(userId);
-  
-    if(!user) return {
-      success: false,
-      message: "No user found"
-    }
-  
-    user.firstName = data.firstName,
-    user.lastName = data.lastName,
-    user.bio = data.bio,
-    user.location = data.location,
-    user.occupation = data.occupation,
-    user.relationshipStatus = data.relationshipStatus
-  
-    await user.save()
+
+    if (!user)
+      return {
+        success: false,
+        message: "No user found",
+      };
+
+    ((user.firstName = data.firstName),
+      (user.lastName = data.lastName),
+      (user.bio = data.bio),
+      (user.location = data.location),
+      (user.occupation = data.occupation),
+      (user.relationshipStatus = data.relationshipStatus));
+
+    await user.save();
 
     return {
       success: true,
-      message: "Updated Successfully"
-    }
+      message: "Updated Successfully",
+    };
   } catch (error) {
-    console.log('Updating Profile action with error : ', error);
+    console.log("Updating Profile action with error : ", error);
 
     return {
       success: false,
-      message: "Something went wrong!"
+      message: "Something went wrong!",
+    };
+  }
+}
+
+export async function getLoggedInUser(sessionId) {
+  if (!sessionId) {
+    return {
+      success: false,
+      message: "No id to get for loggedIn user!",
+    };
+  }
+
+  try {
+    await connectToDb();
+
+    const loggedInUser = await userModel
+      .findById(sessionId)
+      .select("firstName lastName email profileImageUrl")
+      .lean();
+
+    if (!loggedInUser) {
+      return {
+        success: false,
+        message: "No user found for this Id!",
+      };
     }
+
+    return {
+      success: true,
+      message: "LoggedIn user found!",
+      data: JSON.parse(JSON.stringify(loggedInUser)),
+    };
+  } catch (error) {
+    console.log("Error in getting loggedIn user action : ", error);
+    return {
+      success: false,
+      message: `Error in getting loggedIn user action : ${error.message}`,
+    };
   }
 }

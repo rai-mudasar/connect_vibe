@@ -64,7 +64,12 @@ export default async function ProfilePage({ params }) {
   ];
 
   // 1. Fetch the Profile Owner's details
-  const profileUser = await userModel.findOne({ username }).lean();
+  const profileUser = await userModel
+    .findOne({ username })
+    .select(
+      "firstName lastName profileImageUrl coverImageUrl bio location occupation relationshipStatus",
+    )
+    .lean();
 
   if (!profileUser) return <div>User not found</div>;
 
@@ -85,7 +90,7 @@ export default async function ProfilePage({ params }) {
     <div>
       <div className="w-full max-h-full flex flex-col justify-center items-center pt-13 pb-2 bg-white">
         <ProfileHeader
-          user={JSON.parse(JSON.stringify(profileUser))}
+          currentProfileUser={JSON.parse(JSON.stringify(profileUser))}
           isOwnProfile={session?.user?.id === String(profileUser._id)}
         />
 
@@ -99,12 +104,15 @@ export default async function ProfilePage({ params }) {
       <div className="w-full mah-h-full flex flex-col justify-center items-center bg-[#F2F4F7]">
         <div className="w-[90%] md:w-[70%] max-h-full flex flex-col md:flex-row gap-5 md:gap-2 mt-5">
           <div className="md:w-[35%]">
-            <UserDetail user={JSON.parse(JSON.stringify(profileUser))} />
+            <UserDetail
+              currentProfileUser={JSON.parse(JSON.stringify(profileUser))}
+            />
           </div>
           <div className="md:w-[65%]">
             <PostFeed
-              user={JSON.parse(JSON.stringify(profileUser))}
+              loggedInUser={JSON.parse(JSON.stringify(profileUser))}
               posts={JSON.parse(JSON.stringify(allPost))}
+              isOwnProfile={session?.user?.id === String(profileUser._id)}
             />
           </div>
         </div>

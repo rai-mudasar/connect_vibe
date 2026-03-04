@@ -35,26 +35,26 @@ import {
 } from "../ui/select";
 
 // Pass the initial user data as props
-export default function EditProfileDialog({ user }) {
+export default function EditProfileDialog({ currentProfileUser }) {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const router = useRouter();
 
   const form = useForm({
     resolver: zodResolver(editProfileSchema),
     defaultValues: {
-      firstName: user?.firstName || "",
-      lastName: user?.lastName || "",
-      bio: user?.bio || "",
-      location: user?.location || "",
-      occupation: user?.occupation || "",
-      relationshipStatus: user?.relationshipStatus || ""
+      firstName: currentProfileUser?.firstName || "",
+      lastName: currentProfileUser?.lastName || "",
+      bio: currentProfileUser?.bio || "",
+      location: currentProfileUser?.location || "",
+      occupation: currentProfileUser?.occupation || "",
+      relationshipStatus: currentProfileUser?.relationshipStatus || ""
     },
   });
 
   const onSubmit = async (data) => {
     try {
       // 1. Call Server Action
-      const result = await updateProfile(user._id, data);
+      const result = await updateProfile(currentProfileUser._id, data);
 
       if (result.success) {
         setIsDialogOpen(false); // Close dialog

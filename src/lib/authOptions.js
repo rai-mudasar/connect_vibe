@@ -58,7 +58,8 @@ export const authOptions = {
         token.isVerified = user.isVerified;
         token.username = user.username;
         token.profileImageUrl = user.profileImageUrl;
-        token.name = user.firstName + " " + user.lastName
+        token.firstName = user.firstName
+        token.lastName = user.lastName
       }
 
       if (trigger === "update" && session) {
@@ -72,8 +73,9 @@ export const authOptions = {
 
     async session({ session, token }) {
       if (token) {
-        session.user.id = token.id;
-        session.user.name = token.name,
+        session.user.id = token.id;  
+        session.user.firstName = token.firstName,
+        session.user.lastName = token.lastName,
         session.user.isVerified = token.isVerified;
         session.user.username = token.username;
         session.user.profileImageUrl = token.profileImageUrl;

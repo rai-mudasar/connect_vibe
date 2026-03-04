@@ -20,7 +20,7 @@ export default function PostCard({
   post,
 }) {
   const [likedList, setLikedList] = useState(likes.map((id) => id.toString()));
-  const userId = loggedInUser?.id?.toString();
+  const userId = loggedInUser?._id?.toString();
   const isLiked = likedList.includes(userId);
 
   const handleToggleLikes = async () => {
@@ -38,7 +38,7 @@ export default function PostCard({
   };
 
   return (
-    <div className="bg-white rounded-xl shadow-sm border border-gray-200 mb-2 md:mb-4 overflow-hidden">
+    <div className="bg-white rounded-xl shadow-sm border border-gray-200 mb-2 md:mb-4 overflow-hidden relative">
       {/* Post Header */}
       <div className="flex items-center justify-between p-4 pb-2">
         <div className="flex items-center space-x-2">

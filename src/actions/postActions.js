@@ -6,6 +6,7 @@ import commentModel from "@/models/commentModel";
 import postModel from "@/models/postModel";
 import { getServerSession } from "next-auth";
 import { revalidatePath } from "next/cache";
+import { sendNotification } from "./notificationActions";
 
 export async function getAllPost() {
   try {
@@ -55,7 +56,6 @@ export async function toggleLikes(postId) {
     }
 
     const hasLiked = post.likes.some((id) => id.toString() === session.user.id);
-    console.log("hasLiked : ", hasLiked);
 
     if (hasLiked) {
       await postModel.findByIdAndUpdate(postId, {
@@ -115,14 +115,14 @@ export async function getPostAllcomments(postId) {
 
 export async function addComment(postId, comment) {
   const session = await getServerSession(authOptions);
-  const loggedInUser = session.user.id;
+  const loggedInUserId = session.user.id;
 
   try {
     await connectToDb();
 
     const newComment = await commentModel.create({
       postId,
-      author: loggedInUser,
+      author: loggedInUserId,
       content: comment,
     });
 
@@ -140,15 +140,20 @@ export async function addComment(postId, comment) {
     }
 
     revalidatePath(`${process.env.NEXTAUTH_URL}/home`);
-    return {
-      success: true,
-      message: "Comment Posted Successfully",
-    };
+
+    const receiverId = post.author._id.toString()
+    const response =  await sendNotification(loggedInUserId, receiverId, "COMMENT");
+    if(response.success) {
+      return {
+        success: true,
+        message: response.message,
+      };
+    }
   } catch (error) {
     console.log("Error in comment action : ", error);
     return {
       success: false,
-      message: `Error in comment action : ${error}`,
+      message: `Error in comment action : ${error.message}`,
     };
   }
 }

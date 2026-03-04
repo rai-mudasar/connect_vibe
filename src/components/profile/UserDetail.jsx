@@ -8,10 +8,9 @@ import {
 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 
-export default function UserDetail({ user }) {
-  // Helper to format the "Joined" date
-  const joinedDate = user?.createdAt 
-    ? new Date(user.createdAt).toLocaleDateString('en-US', { month: 'long', year: 'numeric' })
+export default function UserDetail({ currentProfileUser }) {
+  const joinedDate = currentProfileUser?.createdAt 
+    ? new Date(currentProfileUser.createdAt).toLocaleDateString('en-US', { month: 'long', year: 'numeric' })
     : "Recently";
 
   // Define the details to map through for cleaner code
@@ -19,20 +18,20 @@ export default function UserDetail({ user }) {
     {
       icon: <Briefcase className="h-5 w-5 text-gray-500" />,
       label: "Occupation",
-      value: user?.occupation,
+      value: currentProfileUser?.occupation,
       prefix: "Works as ",
     },
     {
       icon: <MapPin className="h-5 w-5 text-gray-500" />,
       label: "Location",
-      value: user?.location,
+      value: currentProfileUser?.location,
       prefix: "Lives in ",
     },
     {
       icon: <Heart className="h-5 w-5 text-gray-500" />,
       label: "Relationship",
-      value: user?.relationship && user.relationship !== "None" ? user.relationship : null,
-      prefix: "",
+      value: currentProfileUser?.relationshipStatus && currentProfileUser.relationshipStatus !== "None" ? currentProfileUser.relationshipStatus : null,
+      prefix: "Relationship Status ",
     },
     {
       icon: <Calendar className="h-5 w-5 text-gray-500" />,
@@ -49,9 +48,9 @@ export default function UserDetail({ user }) {
       </CardHeader>
       <CardContent className="flex flex-col gap-4">
         {/* Bio Section */}
-        {user?.bio && (
+        {currentProfileUser?.bio && (
           <div className="text-center pb-2 border-b">
-            <p className="text-[15px] text-gray-800 italic">"{user.bio}"</p>
+            <p className="text-[15px] text-gray-800 italic">"{currentProfileUser.bio}"</p>
           </div>
         )}
 
@@ -71,7 +70,7 @@ export default function UserDetail({ user }) {
         </div>
 
         {/* If no details are available yet */}
-        {!user?.bio && !user?.occupation && !user?.location && (
+        {!currentProfileUser?.bio && !currentProfileUser?.occupation && !currentProfileUser?.location && (
           <div className="flex flex-col items-center gap-2 py-4 text-gray-500">
             <Info size={32} strokeWidth={1} />
             <p className="text-sm">No profile details to show.</p>

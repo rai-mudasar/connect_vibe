@@ -13,12 +13,12 @@ import {
 } from "../ui/dropdown-menu";
 import { toast } from "sonner";
 import { updateCoverImage, updateProfileImage } from "@/actions/userActions";
-import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
+import { Avatar, AvatarFallback } from "../ui/avatar";
 import { useSession } from "next-auth/react";
 import EditProfileDialog from "./EditProfileDialog";
 import SafeImage from "../SafeImage";
 
-export default function ProfileHeader({ user, isOwnProfile }) {
+export default function ProfileHeader({ currentProfileUser, isOwnProfile }) {
   const coverInputRef = useRef(null);
   const profileInputRef = useRef(null);
   const { update } = useSession();
@@ -30,7 +30,7 @@ export default function ProfileHeader({ user, isOwnProfile }) {
     const file = e.target.files?.[0];
 
     if (!file) return toast.error("Please select a file");
-    const response = await updateCoverImage(file, user.username);
+    const response = await updateCoverImage(file, currentProfileUser.username);
 
     if (response.success) {
       toast.success(response.message);
@@ -42,7 +42,7 @@ export default function ProfileHeader({ user, isOwnProfile }) {
   const handleUpdateProfileImage = async (e) => {
     const file = e.target.files?.[0];
 
-    const response = await updateProfileImage(file, user.username);
+    const response = await updateProfileImage(file, currentProfileUser.username);
 
     if (response.success) {
       await update({ profileImageUrl: response.newProfileImageUrl });
@@ -70,7 +70,7 @@ export default function ProfileHeader({ user, isOwnProfile }) {
         onChange={handleUpdateProfileImage}
       />
       <section className="h-60 md:h-90 relative rounded-b-3xl object-cover overflow-hidden">
-        <Image fill={true} src={user.coverImageUrl} alt="User Cover Photo" />
+        <Image fill={true} src={currentProfileUser.coverImageUrl} alt="User Cover Photo" />
         {isOwnProfile && (
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -110,15 +110,15 @@ export default function ProfileHeader({ user, isOwnProfile }) {
       {/* Profile Section */}
       <section className="h-51 md:h-51 flex flex-row items-start md:items-center pl-3 md:px-17 -mt-5 md:mt-0 relative">
         <div className=" relative">
-          {user.profileImageUrl && (
+          {currentProfileUser.profileImageUrl && (
             <Avatar className="w-26 md:w-40 h-26 md:h-40 border-3 md:border-0 border-white">
               <SafeImage
-                src={user?.profileImageUrl}
+                src={currentProfileUser?.profileImageUrl}
                 fill
                 alt="User Profile Image"
                 className="object-contain"
               />
-              <AvatarFallback>{user?.userame?.[0]}</AvatarFallback>
+              <AvatarFallback>{currentProfileUser?.firstName?.[0]}</AvatarFallback>
             </Avatar>
           )}
           {isOwnProfile && (
@@ -138,11 +138,11 @@ export default function ProfileHeader({ user, isOwnProfile }) {
         <div className="flex flex-col ml-3 md:ml-5 mt-9 md:mt-0 md:gap-1">
           <div>
             <h2 className="text-xl md:text-2xl font-bold">
-              {user.firstName} {user.lastName}
+              {currentProfileUser.firstName} {currentProfileUser.lastName}
             </h2>
           </div>
           <div className="text-[12px] md:text-lg font-semibold ml-1 md:ml-0">
-            <p>{user.bio}</p>
+            <p>{currentProfileUser.bio}</p>
           </div>
         </div>
 
@@ -154,7 +154,7 @@ export default function ProfileHeader({ user, isOwnProfile }) {
             <Plus className="w-6 h-6" />
             <p>Add to post</p>
           </Link>
-          {isOwnProfile && <EditProfileDialog user={user} />}
+          {isOwnProfile && <EditProfileDialog currentProfileUser={currentProfileUser} />}
         </div>
       </section>
     </div>

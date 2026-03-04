@@ -5,23 +5,18 @@ import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import {
-  Bell,
   House,
   Users2,
-  Menu,
   MessageCircle,
-  X,
   User2Icon,
   LogOut,
   Search,
 } from "lucide-react";
-import { ActionButton } from "./ui/ActionButton";
 import { signOut } from "next-auth/react";
+import NotificationDrawer from "./notification/NotificationDrawer";
 
-export default function NavBar({ loggedInUser }) {
+export default function NavBar({ loggedInUser , notifications }) {
   const pathname = usePathname();
-  const [isOpen, setIsOpen] = useState(false);
-  const [isMobile, setIsMobile] = useState(true);
 
   const navLinks = [
     { icon: <House />, name: "Home", href: "/home" },
@@ -39,9 +34,13 @@ export default function NavBar({ loggedInUser }) {
       {/* For mobiles */}
       <section className="md:hidden w-full flex items-center justify-between px-5 py-2">
         <h1 className="md:hidden text-blue-600 dark:text-white text-2xl font-extrabold">facebook</h1>
-        <Link href={"/search"}>
+        <div className="flex flex-row justify-center items-center gap-2">
+          <Link href={"/search"}>
           <Search size={20} className="text-neutral-400 stroke-[2px]"  />
         </Link>
+
+        <NotificationDrawer initialNotifications={notifications} loggedInUserId={loggedInUser.id} />
+        </div>
       </section>
 
       <section className="hidden md:flex w-[25%] gap-2 items-center">
@@ -88,7 +87,8 @@ export default function NavBar({ loggedInUser }) {
         >
           <MessageCircle size={20} className="text-black" />
         </Link>
-        <ActionButton Icon={Bell} />
+        
+        <NotificationDrawer initialNotifications={notifications} loggedInUserId={loggedInUser.id} />
         <button onClick={() => signOut()}>
           <LogOut />
         </button>

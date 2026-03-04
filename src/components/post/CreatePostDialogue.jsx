@@ -17,7 +17,7 @@ import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import SafeImage from "../SafeImage";
 
-export default function CreatePostDialog({ user }) {
+export default function CreatePostDialog({ loggedInUser }) {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [text, setText] = useState("");
   const [image, setImage] = useState(null);
@@ -58,15 +58,15 @@ export default function CreatePostDialog({ user }) {
         <div className="flex items-center gap-2 p-4 bg-white rounded-lg shadow-sm cursor-pointer hover:bg-gray-50">
           <Avatar>
             <SafeImage
-              src={user?.profileImageUrl}
+              src={loggedInUser?.profileImageUrl}
               fill
               alt="LoggedIn User Image"
               className="object-contain"
             />
-            <AvatarFallback>{user?.name?.[0]}</AvatarFallback>
+            <AvatarFallback>{loggedInUser?.firstName?.[0]}</AvatarFallback>
           </Avatar>
           <div className="bg-gray-100 rounded-full py-2 px-4 flex-1 text-gray-500 text-sm">
-            What's on your mind, {user?.firstName} {user?.lastName}?
+            What's on your mind, {loggedInUser?.firstName} {loggedInUser?.lastName}?
           </div>
         </div>
       </DialogTrigger>
@@ -80,10 +80,10 @@ export default function CreatePostDialog({ user }) {
           {/* User Info Header */}
           <div className="flex items-center gap-3">
             <Avatar className="h-10 w-10">
-              <AvatarImage src={user?.profileImageUrl} />
-              <AvatarFallback>{user?.name?.[0]}</AvatarFallback>
+              <AvatarImage src={loggedInUser?.profileImageUrl} />
+              <AvatarFallback>{loggedInUser?.firstName?.[0]}</AvatarFallback>
             </Avatar>
-            <span className="font-semibold text-sm">{user?.name}</span>
+            <span className="font-semibold text-sm">{loggedInUser?.firstName} {loggedInUser?.lastName}</span>
           </div>
 
           {/* Post Text Area */}
