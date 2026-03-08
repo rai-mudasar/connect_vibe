@@ -25,19 +25,18 @@ export default function emailTemplate({username, otp, emailType}){
 
       <Section>
         <Row>
-          <Heading as="h2">Hello {username},</Heading>
+          <Heading as="h2">Hello, {username}</Heading>
         </Row>
         <Row>
           <Text>
-            Thank you for {emailType === "VERIFY" ? " signing up" : " resetting your password"}. please do not share this code with anyone
-            Enter the following code to verify your account
+            Thank you for {emailType === "VERIFY" ? " creating an  account" : " resetting your password"}. Please do not share this code with anyone. Enter the following code to verify your account
           </Text>
         </Row>
         <Row>
           <Text>{otp}</Text>
         </Row>
         <Row>
-          <Text>If you did not request this, please ignore this email</Text>
+          <Text>If you did not request this, please ignore this mail</Text>
         </Row>
       </Section>
     </Html>

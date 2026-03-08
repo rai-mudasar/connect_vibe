@@ -15,6 +15,7 @@ import { pusherClient } from "@/lib/pusher";
 import { readNotificationById } from "@/actions/notificationActions";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+import getSmartDateTime from "@/helpers/getSmartDate";
 
 export default function NotificationDrawer({
   loggedInUserId,
@@ -147,10 +148,7 @@ export default function NotificationDrawer({
                       )}
                     </div>
                     <p className="text-[10px] text-gray-400 mt-1">
-                      {new Date(notification.createdAt).toLocaleTimeString([], {
-                        hour: "2-digit",
-                        minute: "2-digit",
-                      })}
+                      {getSmartDateTime(notification.createdAt)}
                     </p>
                   </div>
                 </div>

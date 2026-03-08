@@ -57,7 +57,6 @@ const Signup = () => {
           if (respose.data.success) {
             setIsUsernameAvailable(true);
           }
-          console.log("Response : ", respose.data);
           setUsernameMessage(respose.data.message);
         } catch (error) {
           console.error(
@@ -117,7 +116,7 @@ const Signup = () => {
                       {usernameMessage}
                     </p>
                     {isCheckingUsername && <Loader2 className="animate-spin" />}
-                    <FormMessage />
+                    <FormMessage className={'text-red-600'} />
                   </FormItem>
                 )}
               />
@@ -131,7 +130,7 @@ const Signup = () => {
                     <FormControl>
                       <Input placeholder="email@gmail.com" {...field} />
                     </FormControl>
-                    <FormMessage />
+                    <FormMessage className={'text-red-600'} />
                   </FormItem>
                 )}
               />
@@ -167,7 +166,7 @@ const Signup = () => {
                         </button>
                       </div>
                     </FormControl>
-                    <FormMessage />
+                    <FormMessage className={'text-red-600'} />
                   </FormItem>
                 )}
               />

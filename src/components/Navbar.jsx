@@ -14,8 +14,9 @@ import {
 } from "lucide-react";
 import { signOut } from "next-auth/react";
 import NotificationDrawer from "./notification/NotificationDrawer";
+import { FacebookSearchDialog } from "./FacebookSearchDialog";
 
-export default function NavBar({ loggedInUser , notifications }) {
+export default function NavBar({ loggedInUser, notifications }) {
   const pathname = usePathname();
 
   const navLinks = [
@@ -30,16 +31,20 @@ export default function NavBar({ loggedInUser , notifications }) {
 
   return (
     <nav className="w-full md:h-14 px-3 bg-[#FFFFFF] dark:bg-[#252728] flex flex-col md:flex-row items-center justify-around shadow-sm fixed z-50">
-
       {/* For mobiles */}
       <section className="md:hidden w-full flex items-center justify-between px-5 py-2">
-        <h1 className="md:hidden text-blue-600 dark:text-white text-2xl font-extrabold">facebook</h1>
+        <h1 className="md:hidden text-blue-600 dark:text-white text-2xl font-extrabold">
+          facebook
+        </h1>
         <div className="flex flex-row justify-center items-center gap-2">
           <Link href={"/search"}>
-          <Search size={20} className="text-neutral-400 stroke-[2px]"  />
-        </Link>
+            <Search size={20} className="text-neutral-400 stroke-[2px]" />
+          </Link>
 
-        <NotificationDrawer initialNotifications={notifications} loggedInUserId={loggedInUser.id} />
+          <NotificationDrawer
+            initialNotifications={notifications}
+            loggedInUserId={loggedInUser.id}
+          />
         </div>
       </section>
 
@@ -50,15 +55,7 @@ export default function NavBar({ loggedInUser , notifications }) {
           width={40}
           height={40}
         />
-
-        <div className="w-60 h-10 text-[#333334] dark:text-white bg-[#F0F2F5] dark:bg-neutral-700 md:rounded-2xl flex items-center justify-center pl-6 gap-2">
-          <Search size={30} className="text-neutral-400 stroke-[2px]" />
-          <input
-            type="text"
-            placeholder="Search Facebook"
-            className="bg-transparent outline-none placeholder:text-neutral-500 dark:placeholder:text-neutral-400 w-full h-full text-sm"
-          />
-        </div>
+        <FacebookSearchDialog />
       </section>
 
       <section className="w-full md:w-[60%] flex justify-around md:justify-evenly">
@@ -87,8 +84,11 @@ export default function NavBar({ loggedInUser , notifications }) {
         >
           <MessageCircle size={20} className="text-black" />
         </Link>
-        
-        <NotificationDrawer initialNotifications={notifications} loggedInUserId={loggedInUser.id} />
+
+        <NotificationDrawer
+          initialNotifications={notifications}
+          loggedInUserId={loggedInUser.id}
+        />
         <button onClick={() => signOut()}>
           <LogOut />
         </button>

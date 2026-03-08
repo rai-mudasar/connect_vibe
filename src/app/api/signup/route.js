@@ -1,8 +1,8 @@
+import bcryptjs from "bcryptjs";
+import connectToDb from "@/lib/dbConnect";
 import { NextResponse } from "next/server";
 import userModel from "@/models/userModel";
-import connectToDb from "@/lib/dbConnect";
-import sendEmail from "@/helpers/sendEmail";
-import bcryptjs from "bcryptjs";
+import sendEmailToUser from "@/helpers/sendEmail";
 
 export async function POST(request) {
   await connectToDb();
@@ -67,13 +67,13 @@ export async function POST(request) {
         await newUser.save();
       }
 
-      const emailResponse = await sendEmail({
+      const emailResponse = await sendEmailToUser({
         username,
         email,
         otp,
-        emailType: "Verification",
+        emailType: "VERIFY",
       });
-      console.log("After sending mail", emailResponse);
+
       if (emailResponse.success) {
         return NextResponse.json(
           {
@@ -96,7 +96,7 @@ export async function POST(request) {
     return NextResponse.json(
       {
         success: false,
-        message: "Error occurs in signup",
+        message: `Error occurs in signup : ${error.message}`,
       },
       { status: 500 },
     );

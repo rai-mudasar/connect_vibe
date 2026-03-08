@@ -7,10 +7,11 @@ import {
   Info 
 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
+import getSmartDateTime from "@/helpers/getSmartDate";
 
 export default function UserDetail({ currentProfileUser }) {
   const joinedDate = currentProfileUser?.createdAt 
-    ? new Date(currentProfileUser.createdAt).toLocaleDateString('en-US', { month: 'long', year: 'numeric' })
+    ? getSmartDateTime(currentProfileUser.createdAt)
     : "Recently";
 
   // Define the details to map through for cleaner code

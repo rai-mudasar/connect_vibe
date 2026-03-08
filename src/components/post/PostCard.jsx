@@ -5,21 +5,14 @@ import { toggleLikes } from "@/actions/postActions";
 import { useState } from "react";
 import { ViewPost } from "./ViewPost";
 import SafeImage from "../SafeImage";
+import getSmartDateTime from "@/helpers/getSmartDate";
 
 export default function PostCard({
-  postId,
-  author,
-  authorProfileImage,
-  time,
-  content,
-  image,
-  likes,
-  comment,
-  loggedInUser,
-  priority,
   post,
+  priority,
+  loggedInUser,
 }) {
-  const [likedList, setLikedList] = useState(likes.map((id) => id.toString()));
+  const [likedList, setLikedList] = useState(post.likes.map((id) => id.toString()));
   const userId = loggedInUser?._id?.toString();
   const isLiked = likedList.includes(userId);
 
@@ -30,10 +23,10 @@ export default function PostCard({
     setLikedList(updatedLikes);
 
     try {
-      const response = await toggleLikes(postId);
-      if (!response.success) return setLikedList(likes);
+      const response = await toggleLikes(post.postId);
+      if (!response.success) return setLikedList(post.likes);
     } catch (error) {
-      setLikedList(likes);
+      setLikedList(post.likes);
     }
   };
 
@@ -43,9 +36,9 @@ export default function PostCard({
       <div className="flex items-center justify-between p-4 pb-2">
         <div className="flex items-center space-x-2">
           <div className="w-10 h-10 bg-gray-300 rounded-full overflow-hidden relative">
-            {authorProfileImage && (
+            {post.author.profileImageUrl && (
               <SafeImage
-                src={authorProfileImage}
+                src={post.author.profileImageUrl}
                 fill
                 alt="User Profile Image"
                 className={'object-contain'}
@@ -54,9 +47,9 @@ export default function PostCard({
           </div>
           <div>
             <h4 className="font-semibold text-[15px] hover:underline cursor-pointer">
-              {author.firstName} {author.lastName}
+              {post.author.firstName} {post.author.lastName}
             </h4>
-            <p className="text-gray-500 text-[13px]">{time}</p>
+            <p className="text-gray-500 text-[13px]">{getSmartDateTime(post.createdAt)}</p>
           </div>
         </div>
         <button className="p-2 hover:bg-gray-100 rounded-full text-gray-600">
@@ -66,15 +59,15 @@ export default function PostCard({
 
       {/* Post Content */}
       <div className="px-4 pb-3">
-        <p className="text-[15px]">{content}</p>
+        <p className="text-[15px]">{post.caption}</p>
       </div>
 
       {/* Optional Post Image */}
-      {image && (
+      {post.media && (
         <div className="w-full bg-gray-100 flex justify-center">
           <div className="w-full h-120 relative">
             <SafeImage
-              src={image}
+              src={post.media}
               fill
               alt="Post Image"
               priority={priority}
@@ -90,13 +83,13 @@ export default function PostCard({
           <div className="bg-blue-500 rounded-full p-1">
             <Heart size={12} className="text-white" />
           </div>
-          <span>{likes.length}</span>
+          <span>{post.likes.length}</span>
         </div>
         <div className="flex space-x-3">
-          <span>{comment.length} comments</span>
+          <span>{post.comments.length} comments</span>
           <span>12 shares</span>
         </div>
-      </div>
+      </div>  
 
       {/* Action Buttons */}
       <div className="flex px-2 py-1">

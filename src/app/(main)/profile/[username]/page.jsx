@@ -103,16 +103,17 @@ export default async function ProfilePage({ params }) {
 
       <div className="w-full mah-h-full flex flex-col justify-center items-center bg-[#F2F4F7]">
         <div className="w-[90%] md:w-[70%] max-h-full flex flex-col md:flex-row gap-5 md:gap-2 mt-5">
-          <div className="md:w-[35%]">
+          <div className="w-full md:w-[35%]">
             <UserDetail
               currentProfileUser={JSON.parse(JSON.stringify(profileUser))}
             />
           </div>
-          <div className="md:w-[65%]">
+          <div className="w-full md:w-[65%]">
             <PostFeed
               loggedInUser={JSON.parse(JSON.stringify(profileUser))}
               posts={JSON.parse(JSON.stringify(allPost))}
               isOwnProfile={session?.user?.id === String(profileUser._id)}
+              className={''}
             />
           </div>
         </div>

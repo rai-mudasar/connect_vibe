@@ -57,7 +57,7 @@ const verify = () => {
 
   return (
     <div className="h-screen w-full bg-[#F0F2F5] px-4 md:px-0 pt-20 sm:pt-15 md:pt-10 flex flex-col items-center gap-9">
-      <div className="p-10 shadow-xl/30 rounded-4xl bg-white">
+      <div className="p-10 shadow-xl/30 shadow-neutral-400 rounded-4xl bg-white">
         <h1 className="text-3xl font-bold text-center">Please Verify your Account</h1>
         <p className="mt-6 flex flex-col text-center">
           Enter the verification code sent to
@@ -94,7 +94,7 @@ const verify = () => {
 
               <Button
                 type="submit"
-                className="bg-[#0866FF] text-[18px] md:text-[21px]"
+                className="bg-[#0866FF] text-[18px] md:text-[21px] text-white"
               >
                 {isSubmitting ? (
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />

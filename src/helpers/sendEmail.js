@@ -1,34 +1,35 @@
-import { NextResponse } from "next/server";
-import resend from "@/lib/resend";
+import { sendEmail } from "@/lib/nodeMailer";
+import { render } from "@react-email/render";
 import emailTemplate from "../../emails/emailTemplate";
 
-export default async function sendEmail({username, email, otp, emailType}) {
+export default async function sendEmailToUser({ username, email, otp, emailType }) {
+
+  const emailHtml = await render(emailTemplate({ username, otp, emailType }))
   try {
-      const {data, error} = await resend.emails.send({
-      from: 'onboarding@resend.dev',
+    const response = await sendEmail({
       to: email,
       subject: `Facebook | ${emailType}`,
-      react: emailTemplate({username, otp, emailType}),
-    })
+      html: emailHtml,
+    });
 
-    if(error) {
+    console.log('email response: ', response.accepted.includes(email));
+
+    if (response.accepted.includes(email)) {
       return {
-        success: false,
-        message: `Error occurs in sending email : ${error.message}`,
+        success: true,
+        message: `${emailType} email send successfully`,
       };
     }
-
+    
     return {
-      success: true,
-      message: `${emailType} email send successfully`,
-      data: data,
+      success: false,
+      message: `Error occurs in sending email : ${error.message}`,
     };
-
   } catch (error) {
-    console.log('Error in trycatch block of send email : ', error);
+    console.log("Error in trycatch block of send email : ", error);
     return {
-        success: false,
-        message: `Something went wrong in sending email`,
-      };
+      success: false,
+      message: `Error in sending email : ${error.message}`,
+    };
   }
 }
