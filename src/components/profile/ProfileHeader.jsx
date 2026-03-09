@@ -69,7 +69,7 @@ export default function ProfileHeader({ currentProfileUser, isOwnProfile }) {
         ref={profileInputRef}
         onChange={handleUpdateProfileImage}
       />
-      <section className="h-60 md:h-90 relative rounded-b-3xl object-cover overflow-hidden">
+      <section className="h-50 md:h-90 relative rounded-b-3xl object-cover overflow-hidden">
         <Image fill={true} src={currentProfileUser.coverImageUrl} alt="User Cover Photo" />
         {isOwnProfile && (
           <DropdownMenu>
@@ -85,7 +85,7 @@ export default function ProfileHeader({ currentProfileUser, isOwnProfile }) {
               </div>
             </DropdownMenuTrigger>
 
-            <DropdownMenuContent className={"bg-white"}>
+            <DropdownMenuContent className={"bg-white mr-8 md:mr-0"}>
               <DropdownMenuGroup>
                 <DropdownMenuItem q
                   onClick={handleCoverInputRef}
@@ -141,19 +141,19 @@ export default function ProfileHeader({ currentProfileUser, isOwnProfile }) {
               {currentProfileUser.firstName} {currentProfileUser.lastName}
             </h2>
           </div>
-          <div className="text-[12px] md:text-lg font-semibold ml-1 md:ml-0">
+          <div className="text-[12px] md:text-lg font-semibold ml-1 md:ml-0 text-gray-500">
             <p>{currentProfileUser.bio}</p>
           </div>
         </div>
 
-        <div className=" absolute top-33 md:top-7 right-6 md:right-12 flex gap-4 md:gap-6">
-          <Link
+        <div className="absolute top-30 md:top-7 right-32 md:right-12 flex gap-4 md:gap-6">
+          {/* <Link
             href={""}
             className="w-39 flex gap-2 md:gap-1 bg-[#0861F2] text-[15px] font-semibold text-white px-5 py-2.5 rounded-[10px] "
           >
             <Plus className="w-6 h-6" />
             <p>Add to post</p>
-          </Link>
+          </Link> */}
           {isOwnProfile && <EditProfileDialog currentProfileUser={currentProfileUser} />}
         </div>
       </section>

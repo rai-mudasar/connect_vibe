@@ -4,7 +4,7 @@ import uploadToCloudinary from "@/helpers/uploadToCloudinary";
 import connectToDb from "@/lib/dbConnect";
 import userModel from "@/models/userModel";
 import { revalidatePath } from "next/cache";
-import { success } from "zod";
+import { startsWith, success } from "zod";
 
 // TODO:Checks for authentication before setting any user data
 
@@ -148,4 +148,29 @@ export async function getLoggedInUser(sessionId) {
       message: `Error in getting loggedIn user action : ${error.message}`,
     };
   }
+}
+
+export async function getUserByFirstName(searchName) {
+  console.log("Name is :", searchName);
+  if (!searchName) {
+    return {
+      success: false,
+      message: "Input value is required to be searched",
+    };
+  }
+
+  const regex = new RegExp(`^${searchName}`, "i");
+
+  const users = await userModel
+    .find({ firstName: regex })
+    .select(
+      "username firstName lastName profileImageUrl location occupation",
+    )
+    .lean();
+
+  return {
+    success: true,
+    message: "Data Found",
+    data: JSON.parse(JSON.stringify(users)),
+  };
 }

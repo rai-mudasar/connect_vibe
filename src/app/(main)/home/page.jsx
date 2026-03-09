@@ -25,12 +25,11 @@ export default async function HomePage() {
       <div className="w-0 md:w-[25%]">
         <LeftSidebar loggedInUser={loggedInUser} />
       </div>
-      <div className="w-full md:w-[55%]">
+      <div className="w-full md:w-[55%] mt-10 md:mt-13">
         <PostFeed
           loggedInUser={loggedInUser}
           posts={allPost}
           isOwnProfile={true}
-          className={"mt-13"}
         />
       </div>
     </div>

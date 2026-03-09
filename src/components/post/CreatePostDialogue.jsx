@@ -53,7 +53,6 @@ export default function CreatePostDialog({ loggedInUser }) {
 
   return (
     <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-      {/* Trigger: The Facebook-style fake input bar */}
       <DialogTrigger asChild>
         <div className="flex items-center gap-2 p-4 bg-white rounded-lg shadow-sm cursor-pointer hover:bg-gray-50">
           <Avatar>

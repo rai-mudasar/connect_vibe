@@ -2,7 +2,6 @@
 
 import { Bell } from "lucide-react";
 import { useState, useEffect } from "react";
-import { formatDistanceToNow } from "date-fns";
 import {
   Sheet,
   SheetContent,
@@ -80,7 +79,7 @@ export default function NotificationDrawer({
   return (
     <Sheet open={open} onOpenChange={handleOpenChange}>
       <SheetTrigger className="relative p-2 rounded-full hover:bg-gray-100 transition">
-        <Bell className="w-5 md:w-6 h-5 md:h-6" />
+        <Bell className="w-5.5 md:w-7 h-5.5 md:h-7" />
         {unreadCount > 0 && (
           <span className="absolute top-0 right-0 bg-red-500 text-white text-[10px] w-5 h-5 flex items-center justify-center rounded-full border-2 border-white animate-pulse">
             {unreadCount}

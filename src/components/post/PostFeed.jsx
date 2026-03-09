@@ -1,4 +1,3 @@
-import { formatDistanceToNow } from "date-fns";
 import React from "react";
 import PostCard from "@/components/post/PostCard";
 import CreatePostDialog from "./CreatePostDialogue";
@@ -6,7 +5,7 @@ import CreatePostDialog from "./CreatePostDialogue";
 const PostFeed = ({ loggedInUser, posts, isOwnProfile, className }) => {
   return (
     <main
-      className={`max-w-170 w-full flex flex-col gap-5 ${className} relative`}
+      className={`max-w-170 w-full flex flex-col gap-3 md:gap-5 ${className} relative`}
     >
       {isOwnProfile && <CreatePostDialog loggedInUser={loggedInUser} />}
 

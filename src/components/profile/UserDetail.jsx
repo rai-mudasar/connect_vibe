@@ -48,7 +48,6 @@ export default function UserDetail({ currentProfileUser }) {
         <CardTitle className="text-xl font-bold">Personal Detail</CardTitle>
       </CardHeader>
       <CardContent className="flex flex-col gap-4">
-        {/* Bio Section */}
         {currentProfileUser?.bio && (
           <div className="text-center pb-2 border-b">
             <p className="text-[15px] text-gray-800 italic">"{currentProfileUser.bio}"</p>

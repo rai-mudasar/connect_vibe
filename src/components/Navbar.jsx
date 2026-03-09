@@ -1,20 +1,18 @@
 "use client";
 
-import { useState } from "react";
-import Link from "next/link";
-import Image from "next/image";
-import { usePathname } from "next/navigation";
 import {
   House,
   Users2,
   MessageCircle,
   User2Icon,
   LogOut,
-  Search,
 } from "lucide-react";
+import Link from "next/link";
+import SafeImage from "./SafeImage";
 import { signOut } from "next-auth/react";
-import NotificationDrawer from "./notification/NotificationDrawer";
+import { usePathname } from "next/navigation";
 import { FacebookSearchDialog } from "./FacebookSearchDialog";
+import NotificationDrawer from "./notification/NotificationDrawer";
 
 export default function NavBar({ loggedInUser, notifications }) {
   const pathname = usePathname();
@@ -31,30 +29,16 @@ export default function NavBar({ loggedInUser, notifications }) {
 
   return (
     <nav className="w-full md:h-14 px-3 bg-[#FFFFFF] dark:bg-[#252728] flex flex-col md:flex-row items-center justify-around shadow-sm fixed z-50">
-      {/* For mobiles */}
-      <section className="md:hidden w-full flex items-center justify-between px-5 py-2">
-        <h1 className="md:hidden text-blue-600 dark:text-white text-2xl font-extrabold">
-          facebook
-        </h1>
-        <div className="flex flex-row justify-center items-center gap-2">
-          <Link href={"/search"}>
-            <Search size={20} className="text-neutral-400 stroke-[2px]" />
-          </Link>
 
-          <NotificationDrawer
-            initialNotifications={notifications}
-            loggedInUserId={loggedInUser.id}
-          />
-        </div>
-      </section>
-
-      <section className="hidden md:flex w-[25%] gap-2 items-center">
-        <Image
+      <section className="w-full md:w-[25%] flex flex-row gap-2 items-center cursor-pointer mt-2 md:mt-0">
+        <div className="w-8 md:w-10 h-8 md:h-10 relative">
+          <SafeImage
           src="/svg/fb_icon.svg"
           alt="Facebook Icon"
-          width={40}
-          height={40}
+          fill
+          className={'w-8 md:w-10 h-8 md:h-10 object-cover'}
         />
+        </div>
         <FacebookSearchDialog />
       </section>
 
@@ -77,7 +61,7 @@ export default function NavBar({ loggedInUser, notifications }) {
         })}
       </section>
 
-      <section className="w-[15%] hidden md:flex items-center justify-end gap-2 mr-3 sm:space-x-2">
+      <section className="w-[15%] absolute md:relative top-1 right-2 flex items-center justify-end gap-2 mr-3 sm:space-x-2">
         <Link
           href={"/chat"}
           className="p-2 bg-gray-200 hover:bg-gray-300 rounded-full cursor-pointer hidden md:inline-flex"
@@ -90,7 +74,7 @@ export default function NavBar({ loggedInUser, notifications }) {
           loggedInUserId={loggedInUser.id}
         />
         <button onClick={() => signOut()}>
-          <LogOut />
+          <LogOut className="w-5.5 md:w-7 h-5.5 md:h-7" />
         </button>
       </section>
     </nav>
