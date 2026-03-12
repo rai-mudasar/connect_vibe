@@ -1,26 +1,40 @@
-import { UserPlus2 } from "lucide-react";
-import Image from "next/image";
+import { UserCheck, UserMinus, UserPlus, X } from "lucide-react";
 import SafeImage from "../SafeImage";
 
-export default function UserCard({user}) {
+export default function UserCard({ user, type, onAction }) {
+  const currentButton = [
+    { id: "friends", label: "Remove Friend", icon: <UserMinus size={20} /> },
+    { id: "nearby", label: "Add Friend", icon: <UserPlus size={20} /> },
+    { id: "pending", label: "Accept Request", icon: <UserCheck size={20} /> },
+    { id: "sent", label: "Cancel Request", icon: <X size={20} /> },
+  ].find((btn) => btn.id === type);
+
+  if (!currentButton) return null;
+
   return (
-    <div className="w-30 md:w-40 h-49 md:h-65 ml-3 mt-3 md:mt-0 rounded-lg shadow-xl border border-neutral-300 overflow-hidden">
+    <div className="w-30 md:w-40 h-49 md:h-65 rounded-lg shadow-xl border border-neutral-300 overflow-hidden">
       <div className="w-full h-[60%] relative">
         <SafeImage
           src={user.profileImageUrl}
           fill={true}
-          alt="Suggested Users Profile Images"
+          alt={`${user.firstName}'s profile`}
+          className="object-cover"
         />
       </div>
-      <div className="w-full h-[40%] bg-white relative">
-        <h1 className="h-6 text-[15px] md:text-[17px] text-black font-bold mt-2 ml-2 truncate overflow-y-hidden">{user.name}</h1>
-        <button className="w-24 md:w-30 h-8 md:h-10 bg-blue-200 rounded-lg absolute bottom-3 left-1/2 -translate-x-1/2 flex justify-center items-center gap-1 md:gap-2">
-          <UserPlus2
-            className="text-[#2296D5]"
-            fill="#2296D5"
-            size={24}
-          />
-          <p className="text-[12px] md:text-sm text-[#2296D5] font-semibold">Add friend</p>
+
+      <div className="w-full h-[40%] bg-white p-2 flex flex-col justify-between">
+        <h1 className="text-[15px] md:text-[17px] text-black font-bold truncate">
+          {`${user.firstName} ${user.lastName}`}
+        </h1>
+
+        <button
+          onClick={() => onAction(user._id, type)}
+          className="w-full h-8 md:h-10 bg-blue-50 hover:bg-blue-100 transition-colors rounded-lg flex justify-center items-center gap-1 md:gap-2"
+        >
+          <span className="text-[#2296D5]">{currentButton.icon}</span>
+          <p className="text-[12px] md:text-sm text-[#2296D5] font-semibold">
+            {currentButton.label}
+          </p>
         </button>
       </div>
     </div>

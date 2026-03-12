@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react"; // Added useEffect
-import { Users, UserPlus, Send, UserCheck, Loader2 } from "lucide-react";
+import { Users, UserPlus, Send, UserCheck, Loader2, Menu } from "lucide-react";
 import UserCard from "@/components/profile/UserCard";
 import { Card } from "@/components/ui/card";
 import {
@@ -9,34 +9,26 @@ import {
   getPendingRequests,
   getSentRequests,
   getNearbyPeople,
+  handleUnfriend,
+  handleSentFriendRequest,
+  handleApproveFriendRequest,
+  handleRejectFriendRequest,
 } from "@/actions/friendActions";
+import {
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
+import { toast } from "sonner";
 
 export default function FriendsPage() {
   const [activeTab, setActiveTab] = useState("friends");
+  const [sheetOpen, setSheetOpen] = useState(false);
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      setLoading(true);
-      let res;
-
-      // Map tabs to actions
-      if (activeTab === "friends") res = await getFriends();
-      if (activeTab === "pending") res = await getPendingRequests();
-      if (activeTab === "sent") res = await getSentRequests();
-      if (activeTab === "nearby") res = await getNearbyPeople();
-
-      if (res?.success) {
-        setData(res.data);
-      } else {
-        setData([]);
-      }
-      setLoading(false);
-    };
-
-    fetchData();
-  }, [activeTab]);
 
   const tabs = [
     { id: "friends", label: "All Friends", icon: <UserCheck size={20} /> },
@@ -45,10 +37,93 @@ export default function FriendsPage() {
     { id: "sent", label: "Sent Requests", icon: <Send size={20} /> },
   ];
 
+  useEffect(() => {
+    const fetchData = async () => {
+      setLoading(true);
+      let res;
+
+      if (activeTab === "friends") res = await getFriends();
+      if (activeTab === "nearby") res = await getNearbyPeople();
+      if (activeTab === "pending") res = await getPendingRequests();
+      if (activeTab === "sent") res = await getSentRequests();
+      
+      if (res?.success) {
+        setData(res.data);
+      } else {
+        setData([]);
+      }
+      setLoading(false);
+    };
+    
+    fetchData();
+  }, [activeTab]);
+
+
+  const handleClick = (id) => {
+    setActiveTab(id) 
+    setSheetOpen((prev) => !prev)
+  }
+
+  const handleOnAction = async (id, type) => {
+    let res;
+    if (type === "friends") res = await handleUnfriend(id);
+    if (type === "nearby") res = await handleSentFriendRequest(id);
+    if (type === "pending") res = await handleApproveFriendRequest(id);
+    if (type === "sent") res = await handleRejectFriendRequest(id);
+
+    if(res.success) {
+      setData(prev => prev.filter(user => user._id !== id))
+      toast.success(res.message)
+    } else{
+      toast.error(`Error : ${res.message}`)
+    }
+  }
+
   return (
     <div className="flex h-screen bg-[#F2F4F7] dark:bg-[#1b1b1b] pt-20 md:pt-14">
-      {/* Left Sidebar */}
-      <div className="w-50 lg:w-80 bg-white dark:bg-[#242526] shadow-md py-4 flex flex-col gap-2">
+      <Sheet
+        open={sheetOpen}
+        onOpenChange={() => setSheetOpen((prev) => !prev)}
+      >
+        <SheetTrigger className="h-6 absolute flex justify-start mt-6 ml-4 transition md:hidden">
+          <Menu />
+        </SheetTrigger>
+
+        <SheetContent
+          showCloseButton={false}
+          side={"left"}
+          className="w-52 h-screen mt-20 bg-white"
+        >
+          <SheetHeader>
+            <SheetTitle className={"text-xl -mb-4"}>Friends</SheetTitle>
+            <SheetDescription className="sr-only">
+              View and manage your recent social notifications and activity.
+            </SheetDescription>
+          </SheetHeader> 
+
+          {tabs.map((tab) => (
+            <button
+              key={tab.id}
+              onClick={() => handleClick(tab.id)}
+              className={`flex items-center gap-3 px-4 py-3 rounded-lg font-normal md:font-medium transition-all relative
+              ${
+                activeTab === tab.id
+                  ? "text-[#1877F2] bg-blue-50 dark:bg-blue-900/20"
+                  : "text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-[#3a3b3c] hover:text-[#1877F2]"
+              }`}
+            >
+              {tab.icon}
+              <span>{tab.label}</span>
+              {activeTab === tab.id && (
+                <div className="absolute bottom-0 left-0 h-full w-1 bg-[#1877F2] rounded-r-md" />
+              )}
+            </button>
+          ))}
+        </SheetContent>
+      </Sheet>
+
+      {/* Left Sidebar for desktop */}
+      <div className="w-50 lg:w-80 bg-white dark:bg-[#242526] shadow-md py-4 hidden md:flex flex-col gap-2">
         <h2 className="text-lg md:text-2xl font-bold mb-4 px-2">Friends</h2>
         {tabs.map((tab) => (
           <button
@@ -73,10 +148,8 @@ export default function FriendsPage() {
       {/* Main Content */}
       <div className="flex-1 overflow-y-auto p-6">
         <div className="max-w-5xl mx-auto">
-          <div className="flex justify-between items-center mb-6">
-            <h1 className="text-xl font-semibold capitalize">
-              {activeTab.replace("-", " ")}
-            </h1>
+          <div className="flex justify-between items-center mb-6 ml-7 md:ml-0">
+            <h1 className="text-xl font-semibold capitalize">{activeTab}</h1>
             <span className="text-sm text-gray-500 font-medium">
               {data.length} People
             </span>
@@ -87,13 +160,9 @@ export default function FriendsPage() {
               <Loader2 className="animate-spin text-[#1877F2]" size={40} />
             </div>
           ) : data.length > 0 ? (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
               {data.map((user) => (
-                <UserCard
-                  key={user._id} // MongoDB uses _id
-                  user={user}
-                  type={activeTab}
-                />
+                <UserCard key={user._id} user={user} type={activeTab} onAction={handleOnAction} />
               ))}
             </div>
           ) : (
