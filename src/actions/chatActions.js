@@ -109,7 +109,7 @@ export async function sendMessage(conversationId, senderId, text) {
     updatedAt: new Date(),
   });
 
-  // await pusherServer.trigger(conversationId, "new-message", newMessage);
+  await pusherServer.trigger(conversationId, "new-message", newMessage);
 
   return JSON.parse(JSON.stringify(newMessage));
 }

@@ -37,11 +37,11 @@ export async function sendNotification(senderId, receiverId, notificationType) {
     });
 
     if (notification) {
-      // await pusherServer.trigger(
-      //   `user-${receiverId}`,
-      //   "new-notification",
-      //   notification,
-      // );
+      await pusherServer.trigger(
+        `user-${receiverId}`,
+        "new-notification",
+        notification,
+      );
 
       revalidatePath("/home");
 
