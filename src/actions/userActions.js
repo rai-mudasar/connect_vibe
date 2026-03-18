@@ -1,12 +1,9 @@
 "use server";
 
-import uploadToCloudinary from "@/helpers/uploadToCloudinary";
 import connectToDb from "@/lib/dbConnect";
 import userModel from "@/models/userModel";
 import { revalidatePath } from "next/cache";
-import { startsWith, success } from "zod";
-
-// TODO:Checks for authentication before setting any user data
+import { deleteFromCloudinary, uploadToCloudinary } from "@/helpers/Cloudinary";
 
 export async function updateProfileImage(fileImage, username) {
   if (!fileImage) {
@@ -16,9 +13,19 @@ export async function updateProfileImage(fileImage, username) {
     };
   }
 
-  const user = await userModel.findOne({ username });
+  try {
+    const user = await userModel.findOne({ username });
+    if (!user) {
+      return {
+        success: false,
+        message: "No user found for this profile Image",
+      };
+    }
 
-  if (user) {
+    if (user.profileImageUrl) {
+      await deleteFromCloudinary(user.profileImageUrl);
+    }
+
     const response = await uploadToCloudinary(fileImage);
     if (response.success) {
       user.profileImageUrl = response.url;
@@ -27,20 +34,14 @@ export async function updateProfileImage(fileImage, username) {
       return {
         success: true,
         message: "Profile image updated Successfully",
-        newProfileImageUrl: user.profileImageUrl,
       };
     }
-
+  } catch (error) {
     return {
       success: false,
-      message: response.message,
+      message: error?.message || "Error in profile image update action",
     };
   }
-
-  return {
-    success: false,
-    message: "No user found for this profile Image",
-  };
 }
 
 export async function updateCoverImage(fileImage, username) {
@@ -51,11 +52,22 @@ export async function updateCoverImage(fileImage, username) {
     };
   }
 
-  const user = await userModel.findOne({
-    username,
-  });
+  try {
+    const user = await userModel.findOne({
+      username,
+    });
 
-  if (user) {
+    if (!user) {
+      return {
+        success: false,
+        message: "No user found for this cover Image",
+      };
+    }
+
+    if (user.coverImageUrl) {
+      await deleteFromCloudinary(user.coverImageUrl);
+    }
+
     const response = await uploadToCloudinary(fileImage);
     if (response.success) {
       user.coverImageUrl = response.url;
@@ -67,17 +79,37 @@ export async function updateCoverImage(fileImage, username) {
         message: "Cover image updated Successfully",
       };
     }
+  } catch (error) {
+    console.log(`Error in update cover image action : ${error}`);
 
     return {
       success: false,
-      message: response.message,
+      message: `Error in update cover image action : ${error.message}`,
     };
   }
+}
 
-  return {
-    success: false,
-    message: "No user found for this cover Image",
-  };
+export async function deleteCoverImage(coverUrl, userId) {
+  try {
+    await deleteFromCloudinary(coverUrl);
+
+    const res = await userModel.findByIdAndUpdate(userId, {
+      coverImageUrl: ''
+    })
+
+    console.log('Cover image res : ', res);
+
+    return {
+      success: true,
+      message: "Cover image deleted Successfully!"
+    }
+
+  } catch (error) {
+    return {
+      success: false,
+      message: `Error in cover image delete action : ${error.message || error}`
+    }
+  }
 }
 
 export async function updateProfile(userId, data) {
@@ -151,7 +183,6 @@ export async function getLoggedInUser(sessionId) {
 }
 
 export async function getUserByFirstName(searchName) {
-  console.log("Name is :", searchName);
   if (!searchName) {
     return {
       success: false,
@@ -163,9 +194,7 @@ export async function getUserByFirstName(searchName) {
 
   const users = await userModel
     .find({ firstName: regex })
-    .select(
-      "username firstName lastName profileImageUrl location occupation",
-    )
+    .select("username firstName lastName profileImageUrl location occupation")
     .lean();
 
   return {

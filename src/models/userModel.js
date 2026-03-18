@@ -7,7 +7,7 @@ const userSchema = new mongoose.Schema(
     username: { type: String, required: [true, "Please enter a username"] },
     email: { type: String, required: [true, "Please enter a email"] },
     password: { type: String, required: [true, "Please enter a password"] },
-    profileImageUrl: { type: String, default: "/images/user-dp.jpg" },
+    profileImageUrl: { type: String },
     isVerified: { type: Boolean },
     role: { type: String, enum: ["user", "admin"], default: "user" },
 

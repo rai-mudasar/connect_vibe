@@ -64,7 +64,7 @@ export default function NavBar({ loggedInUser, notifications }) {
       <section className="w-[15%] absolute md:relative top-1 right-2 flex items-center justify-end gap-2 mr-3 sm:space-x-2">
         <Link
           href={"/chat"}
-          className="p-2 bg-gray-200 hover:bg-gray-300 rounded-full cursor-pointer hidden md:inline-flex"
+          className="p-2 bg-gray-200 hover:bg-gray-300 rounded-full cursor-pointer inline-flex"
         >
           <MessageCircle size={20} className="text-black" />
         </Link>

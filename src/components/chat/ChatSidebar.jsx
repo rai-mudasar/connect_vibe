@@ -29,7 +29,7 @@ export default function ChatSidebar({
 
   return (
     <div
-      className={`${isChatting ? "hidden md:flex" : "flex"} w-screen md:w-80 md:h-[calc(100vh-56px)] bg-white flex-col`}
+      className={`${isChatting ? "hidden md:flex" : "flex"} w-screen sm:w-80 h-screen bg-white border-r flex-col`}
     >
       <div className="p-4 border-b">
         <h2 className="text-xl font-bold text-gray-800">Messages</h2>

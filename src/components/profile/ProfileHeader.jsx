@@ -1,8 +1,7 @@
 "use client";
 
-import { Camera, ImageUp, Pencil, Plus, Trash2 } from "lucide-react";
+import { Camera, ImageUp, Trash2 } from "lucide-react";
 import Image from "next/image";
-import Link from "next/link";
 import { useRef } from "react";
 import {
   DropdownMenu,
@@ -12,7 +11,7 @@ import {
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
 import { toast } from "sonner";
-import { updateCoverImage, updateProfileImage } from "@/actions/userActions";
+import { deleteCoverImage, updateCoverImage, updateProfileImage } from "@/actions/userActions";
 import { Avatar, AvatarFallback } from "../ui/avatar";
 import { useSession } from "next-auth/react";
 import EditProfileDialog from "./EditProfileDialog";
@@ -52,7 +51,17 @@ export default function ProfileHeader({ currentProfileUser, isOwnProfile }) {
     }
   };
 
-  const handleRemoveCoverImage = () => {};
+  const handleRemoveCoverImage = async (imageUrl) => {
+    if(imageUrl) {
+      const response = await deleteCoverImage(imageUrl)
+      if(response.success) {
+        toast.success(response.message)
+      } else {
+        toast.error(response.message)
+      }
+
+    }
+  };
   return (
     <div className="w-[95%] md:w-[70%]">
       <input

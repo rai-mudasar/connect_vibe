@@ -1,20 +1,28 @@
 "use client";
 
 import { Heart, MoreHorizontal, Share2 } from "lucide-react";
-import { toggleLikes } from "@/actions/postActions";
+import { deletePost, toggleLikes } from "@/actions/postActions";
 import { useState } from "react";
-import { ViewPost } from "./ViewPost";
+import ViewPost from "./ViewPost";
 import SafeImage from "../SafeImage";
 import getSmartDateTime from "@/helpers/getSmartDate";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "../ui/dropdown-menu";
+import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 
-export default function PostCard({
-  post,
-  priority,
-  loggedInUser,
-}) {
-  const [likedList, setLikedList] = useState(post.likes.map((id) => id.toString()));
+export default function PostCard({ post, priority, loggedInUser }) {
+  const [likedList, setLikedList] = useState(
+    post.likes.map((id) => id.toString()),
+  );
   const userId = loggedInUser?._id?.toString();
   const isLiked = likedList.includes(userId);
+
+  const router = useRouter();
 
   const handleToggleLikes = async () => {
     const updatedLikes = isLiked
@@ -30,10 +38,25 @@ export default function PostCard({
     }
   };
 
+  const handleDeletePost = async (postId) => {
+    try {
+      const response = await deletePost(postId);
+
+      if (response.success) {
+        router.refresh()
+        toast.success(response.message)
+      } else {
+        toast.error(response.message)
+      }
+    } catch (error) {
+      toast.error(error.message || error)
+    }
+  };
+
   return (
     <div className="bg-white rounded-xl shadow-sm border border-gray-200 mb-2 md:mb-4 overflow-hidden relative">
       {/* Post Header */}
-      <div className="flex items-center justify-between p-4 pb-2">
+      <div className="flex items-center justify-between p-4 pb-2 relative">
         <div className="flex items-center space-x-2">
           <div className="w-10 h-10 bg-gray-300 rounded-full overflow-hidden relative">
             {post.author.profileImageUrl && (
@@ -41,7 +64,7 @@ export default function PostCard({
                 src={post.author.profileImageUrl}
                 fill
                 alt="User Profile Image"
-                className={'object-contain'}
+                className={"object-contain"}
               />
             )}
           </div>
@@ -49,15 +72,36 @@ export default function PostCard({
             <h4 className="font-semibold text-[15px] hover:underline cursor-pointer">
               {post.author.firstName} {post.author.lastName}
             </h4>
-            <p className="text-gray-500 text-[13px]">{getSmartDateTime(post.createdAt)}</p>
+            <p className="text-gray-500 text-[13px]">
+              {getSmartDateTime(post.createdAt)}
+            </p>
           </div>
         </div>
-        <button className="p-2 hover:bg-gray-100 rounded-full text-gray-600">
-          <MoreHorizontal size={20} />
-        </button>
+        <DropdownMenu>
+          <DropdownMenuTrigger >
+            <div className="p-2 hover:bg-gray-100 rounded-full text-gray-600 cursor-pointer border-0">
+              <MoreHorizontal size={20} />
+            </div>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent className={'bg-white absolute -top-1 right-1'}>
+            {loggedInUser._id === post.author._id &&
+              <DropdownMenuItem>
+                <div className="w-full cursor-pointer hover:underline" onClick={() => handleDeletePost(post._id)}>
+                  Delete Post
+                </div>
+              </DropdownMenuItem>
+            }
+            {loggedInUser._id !== post.author._id &&
+              <DropdownMenuItem>
+                <div className="w-full cursor-pointer hover:underline">
+                  Report
+                </div>
+              </DropdownMenuItem>
+            }
+          </DropdownMenuContent>
+        </DropdownMenu>
       </div>
 
-      {/* Post Content */}
       <div className="px-4 pb-3">
         <p className="text-[15px]">{post.caption}</p>
       </div>
@@ -89,7 +133,7 @@ export default function PostCard({
           <span>{post.comments.length} comments</span>
           <span>12 shares</span>
         </div>
-      </div>  
+      </div>
 
       {/* Action Buttons */}
       <div className="flex px-2 py-1">

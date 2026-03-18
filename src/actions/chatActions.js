@@ -5,6 +5,8 @@ import { pusherServer } from "@/lib/pusher";
 import userModel from "@/models/userModel";
 import messageModel from "@/models/messageModel";
 import conversationModel from "@/models/conversationModel";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/lib/authOptions";
 
 export async function getFriends(loggedInUserId) {
   connectToDb();
@@ -53,6 +55,32 @@ export async function getOrCreateConversation(currentUserId, targetUserId) {
   }
 
   return JSON.parse(JSON.stringify(chat));
+}
+
+export async function getChattingPartner(conversationId) {
+  try {
+    const session = await getServerSession(authOptions);
+    if (!session || !session.user) return {
+      success: false,
+      message: "Unauthorized!",
+    }
+
+    const conversation = await conversationModel.findById(conversationId).populate('participants', 'firstName lastName profileImageUrl').lean();
+    conversation.participants.map(user => {
+      if (user.id !== session.user.id) {
+        const partner = user;
+        return;
+      }
+    })
+    console.log(partner);
+  } catch (error) {
+    console.log(`Error in getting conversation partner : ${error.message || error}`)
+
+    return {
+      success: false,
+      message: `Error in getting conversation partner : ${error.message || error}`,
+    }
+  }
 }
 
 export async function getMessages(conversationId) {

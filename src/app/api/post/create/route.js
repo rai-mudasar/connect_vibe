@@ -3,7 +3,7 @@ import postModel from "@/models/postModel";
 import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/authOptions";
-import uploadToCloudinary from "@/helpers/uploadToCloudinary";
+import { uploadToCloudinary } from "@/helpers/Cloudinary";
 
 export async function POST(request) {
   const formData = await request.formData();
@@ -23,7 +23,7 @@ export async function POST(request) {
   try {
     const session = await getServerSession(authOptions);
 
-    if(!session || !session.user) {
+    if (!session || !session.user) {
       return NextResponse.json(
         {
           success: false,

@@ -19,7 +19,7 @@ import { addComment, getPostAllcomments } from "@/actions/postActions";
 import { toast } from "sonner";
 import SafeImage from "../SafeImage";
 
-export function ViewPost({ post }) {
+export default function ViewPost({ post }) {
   const [newComment, setNewComment] = useState("");
   const [loadedComments, setLoadedComments] = useState(null);
 

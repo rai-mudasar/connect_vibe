@@ -63,15 +63,12 @@ export default async function ProfilePage({ params }) {
     },
   ];
 
-  // 1. Fetch the Profile Owner's details
   const profileUser = await userModel
     .findOne({ username })
     .select(
-      "firstName lastName profileImageUrl coverImageUrl bio location occupation relationshipStatus",
+      "username firstName lastName profileImageUrl coverImageUrl bio location occupation relationshipStatus",
     )
     .lean();
-
-  if (!profileUser) return <div>User not found</div>;
 
   // 2. Fetch only THIS user's posts (Sorted newest first)
   const allPost = await postModel

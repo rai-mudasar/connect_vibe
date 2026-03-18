@@ -7,6 +7,79 @@ import postModel from "@/models/postModel";
 import { getServerSession } from "next-auth";
 import { revalidatePath } from "next/cache";
 import { sendNotification } from "./notificationActions";
+import { deleteFromCloudinary } from "@/helpers/Cloudinary";
+import userModel from "@/models/userModel";
+
+// export async function updatePost(postId, imageFile, postCaption) {
+//   if (!imageFile) {
+//     return {
+//       success: false,
+//       message: "No file image reached",
+//     }
+//   }
+
+//   try {
+//     const session = await getServerSession(authOptions);
+
+//     if (!session || !session.user) {
+//       return {
+//         success: false,
+//         message: "Unauthorize",
+//       }
+//     }
+
+//     const post = await postModel.findById(postId)
+
+//     if (!post) {
+//       return {
+//         success: false,
+//         message: "Post not found to edit",
+//       }
+//     }
+
+//     if (!post.author._id === session.user.id) {
+//       return {
+//         success: false,
+//         message: "You can edit what you own",
+//       }
+//     }
+
+//     const response = await uploadToCloudinary(imageFile);
+
+//     const newPost = new postModel({
+//       author: session.user.id,
+//       media: response.url,
+//       mediaType: "image",
+//       caption: postCaption,
+//     });
+
+//     await newPost.save();
+
+//     const user = await userModel.findByIdAndUpdate(
+//       session.user.id,
+//       { $push: { posts: newPost._id } },
+//       { new: true },
+//     );
+
+//     if (!user) {
+//       return {
+//           success: false,
+//           message: "No user found for this post",
+//         }
+//     }
+
+//     return {
+//       success: true,
+//       message: "Image Posted to user feed",
+//     }
+//   } catch (error) {
+//     console.log("Error is Create Post route : ", error);
+//     return {
+//       success: false,
+//       message: "Error is Create Post route",
+//     }
+//   }
+// }
 
 export async function getAllPost() {
   try {
@@ -141,9 +214,13 @@ export async function addComment(postId, comment) {
 
     revalidatePath(`${process.env.NEXTAUTH_URL}/home`);
 
-    const receiverId = post.author._id.toString()
-    const response =  await sendNotification(loggedInUserId, receiverId, "COMMENT");
-    if(response.success) {
+    const receiverId = post.author._id.toString();
+    const response = await sendNotification(
+      loggedInUserId,
+      receiverId,
+      "COMMENT",
+    );
+    if (response.success) {
       return {
         success: true,
         message: response.message,
@@ -154,6 +231,41 @@ export async function addComment(postId, comment) {
     return {
       success: false,
       message: `Error in comment action : ${error.message}`,
+    };
+  }
+}
+
+export async function deletePost(postId) {
+  try {
+    await connectToDb();
+    const session = await getServerSession(authOptions);
+    if (!session) throw new Error("You must be logged in");
+
+    const post = await postModel.findById(postId);
+    if (!post) throw new Error("Post not exist!");
+    if (session.user.id !== post.author._id.toString())
+      throw new Error("Unathorized! You can only delete what is yours.");
+
+    if (post.media) {
+      await deleteFromCloudinary(post.media);
+    }
+
+    await Promise.all([
+      postModel.findByIdAndDelete(postId),
+      userModel.findByIdAndUpdate(post.author._Id, {
+        $pull: { posts: postId },
+      }),
+    ]);
+
+    return {
+      success: true,
+      message: "Post deleted successfully!",
+    };
+  } catch (error) {
+    console.log(`Error in Post deletion : ${error.message || error}`);
+    return {
+      success: false,
+      message: `Error in Post deletion : ${error.message || error}`,
     };
   }
 }
