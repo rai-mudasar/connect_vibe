@@ -50,7 +50,7 @@ export async function deleteFromCloudinary(fileLink) {
 
   try {
     const response = await new Promise((resolve, reject) => {
-      cloudinary.uploader.destroy(`posts/${fileName}`, (error, res) => {
+      cloudinary.uploader.destroy(`facebook_clone/${fileName}`, (error, res) => {
         if (error) reject(error);
         else resolve(res);
       });
