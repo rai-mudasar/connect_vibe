@@ -27,6 +27,8 @@ export async function uploadToCloudinary(file) {
         .end(buffer);
     });
 
+    console.log("Res : ", response)
+
     if (response.secure_url) {
       return {
         success: true,

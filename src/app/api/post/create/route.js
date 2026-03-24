@@ -3,12 +3,14 @@ import postModel from "@/models/postModel";
 import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/authOptions";
-import { uploadToCloudinary } from "@/helpers/Cloudinary";
+import { deleteFromCloudinary, uploadToCloudinary } from "@/helpers/Cloudinary";
 
 export async function POST(request) {
   const formData = await request.formData();
   const file = formData.get("image");
   const postCaption = formData.get("text");
+
+  let response;
 
   if (!file) {
     return NextResponse.json(
@@ -33,32 +35,7 @@ export async function POST(request) {
       );
     }
 
-    const response = await uploadToCloudinary(file);
-
-    if (!response?.success) {
-      return NextResponse.json(
-        {
-          success: false,
-          message: "Error in Upload to cloudinary",
-        },
-        { status: 500 },
-      );
-    }
-
-    const newPost = new postModel({
-      author: session.user.id,
-      media: response.url,
-      mediaType: "image",
-      caption: postCaption,
-    });
-
-    await newPost.save();
-
-    const user = await userModel.findByIdAndUpdate(
-      session.user.id,
-      { $push: { posts: newPost._id } },
-      { new: true },
-    );
+    const user = await userModel.findById(session.user.id);
 
     if (!user) {
       return NextResponse.json(
@@ -70,6 +47,20 @@ export async function POST(request) {
       );
     }
 
+    response = await uploadToCloudinary(file);
+    console.log('Response of upload : ', response);
+
+    const newPost = new postModel({
+      author: session.user.id,
+      media: response.url,
+      mediaType: "image",
+      caption: postCaption,
+    });
+
+    user.posts.addToSet(newPost._id)
+    await Promise.all([newPost.save(), user.save()]);
+
+
     return NextResponse.json(
       {
         success: true,
@@ -78,11 +69,14 @@ export async function POST(request) {
       { status: 200 },
     );
   } catch (error) {
-    console.log("Error is Create Post route : ", error);
+    console.log(`Error is Create Post route : ${error.message || error}`);
+    if (response.url) {
+      await deleteFromCloudinary(response.url)
+    }
     return NextResponse.json(
       {
         success: false,
-        message: "Error is Create Post route",
+        message: `Error is Create Post route : ${error.message || error}`,
       },
       { status: 500 },
     );
