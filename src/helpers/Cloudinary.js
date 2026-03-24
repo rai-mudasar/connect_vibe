@@ -15,7 +15,7 @@ export async function uploadToCloudinary(file) {
       cloudinary.uploader
         .upload_stream(
           {
-            folder: "posts",
+            folder: "facebook_clone",
             resource_type: "auto",
           },
 
@@ -60,7 +60,7 @@ export async function deleteFromCloudinary(fileLink) {
       throw new Error("Something went wrong with cloudinary Delete!");
   } catch (error) {
     console.log(
-      `Something went wrong with cloudinary Delete image with error : ${error.message || error}`,
+      `Cloudinary Delete image with error : ${error.message || error}`,
     );
 
     throw new Error(
