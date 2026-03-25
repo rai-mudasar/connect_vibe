@@ -12,7 +12,6 @@ export default async function HomePage() {
 
   const res = await getLoggedInUser(session?.user?.id);
   if (res.success) {
-    // console.log("Logged : ", res.data);
     loggedInUser = res.data;
   }
 
@@ -25,12 +24,13 @@ export default async function HomePage() {
       <div className="w-0 md:w-[25%]">
         <LeftSidebar loggedInUser={loggedInUser} />
       </div>
-      <div className="w-full md:w-[55%] mt-10 md:mt-13">
+      <div className="w-screen md:w-[55%] mt-10 md:mt-13 mx-3 md:mx-0">
         <PostFeed
           loggedInUser={loggedInUser}
           posts={allPost}
           isOwnProfile={true}
         />
+      <div className="flex md:hidden w-full h-3"></div>
       </div>
     </div>
   );

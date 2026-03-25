@@ -61,7 +61,7 @@ export default function ViewPost({ post }) {
         <Button
           className="w-full flex items-center justify-center mt-0.5 p-2 hover:bg-gray-100 rounded-lg text-[16px] text-gray-600 font-medium cursor-pointer"
         >
-          <MessageCircle size={20} />
+          <MessageCircle size={22} strokeWidth="2.5px" />
           <span>Comment</span>
         </Button>
       </DialogTrigger>

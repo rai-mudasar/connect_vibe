@@ -48,7 +48,6 @@ export async function POST(request) {
     }
 
     response = await uploadToCloudinary(file);
-    console.log('Response of upload : ', response);
 
     const newPost = new postModel({
       author: session.user.id,

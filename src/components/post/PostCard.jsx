@@ -1,8 +1,8 @@
 "use client";
 
-import { Heart, MoreHorizontal, Share2 } from "lucide-react";
+import { Heart, MoreHorizontal } from "lucide-react";
 import { deletePost, toggleLikes } from "@/actions/postActions";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ViewPost from "./ViewPost";
 import SafeImage from "../SafeImage";
 import getSmartDateTime from "@/helpers/getSmartDate";
@@ -14,25 +14,28 @@ import {
 } from "../ui/dropdown-menu";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
+import Link from "next/link";
 
 export default function PostCard({ post, priority, loggedInUser }) {
   const [likedList, setLikedList] = useState(
     post.likes.map((id) => id.toString()),
   );
   const userId = loggedInUser?._id?.toString();
-  const isLiked = likedList.includes(userId);
+  const [isLiked, setIsLiked] = useState(likedList.includes(userId));
 
   const router = useRouter();
 
   const handleToggleLikes = async () => {
+
     const updatedLikes = isLiked
       ? likedList.filter((id) => id !== userId)
       : [...likedList, userId];
     setLikedList(updatedLikes);
+    setIsLiked(!isLiked)
 
     try {
-      const response = await toggleLikes(post.postId);
-      if (!response.success) return setLikedList(post.likes);
+      const response = await toggleLikes(post._id);
+      if (response.success) return setLikedList(post.likes)
     } catch (error) {
       setLikedList(post.likes);
     }
@@ -69,9 +72,9 @@ export default function PostCard({ post, priority, loggedInUser }) {
             )}
           </div>
           <div>
-            <h4 className="font-semibold text-[15px] hover:underline cursor-pointer">
+            <Link className="font-semibold text-[15px] hover:underline cursor-pointer" href={`/user/${post.author.username}`}>
               {post.author.firstName} {post.author.lastName}
-            </h4>
+            </Link>
             <p className="text-gray-500 text-[13px]">
               {getSmartDateTime(post.createdAt)}
             </p>
@@ -84,9 +87,9 @@ export default function PostCard({ post, priority, loggedInUser }) {
             </div>
           </DropdownMenuTrigger>
           <DropdownMenuContent className={'bg-white absolute -top-1 right-1'}>
-            {loggedInUser._id === post.author._id &&
+            {loggedInUser._id.toString() === post.author._id.toString() &&
               <DropdownMenuItem>
-                <div className="w-full cursor-pointer hover:underline" onClick={() => handleDeletePost(post._id)}>
+                <div className="w-full cursor-pointer hover:underline" onClick={() => handleDeletePost(post._id.toString())}>
                   Delete Post
                 </div>
               </DropdownMenuItem>
@@ -131,29 +134,25 @@ export default function PostCard({ post, priority, loggedInUser }) {
         </div>
         <div className="flex space-x-3">
           <span>{post.comments.length} comments</span>
-          <span>12 shares</span>
         </div>
       </div>
 
       {/* Action Buttons */}
       <div className="flex px-2 py-1">
         <button
-          className="w-[33%] flex items-center justify-center space-x-2 p-2 hover:bg-gray-100 rounded-lg text-gray-600 font-medium cursor-pointer"
+          className="w-[50%] flex items-center justify-center space-x-2 py-2 hover:bg-gray-100 rounded-lg text-gray-600 font-medium cursor-pointer"
           onClick={handleToggleLikes}
         >
-          {!isLiked ? (
-            <Heart size={20} />
-          ) : (
+          {isLiked ? (
             <Heart size={20} fill="red" className="text-red-600" />
+          ) : (
+            <Heart size={20} />
           )}
           <span>Like</span>
         </button>
-        <div className="w-[33%] cursor-pointer">
+        <div className="w-[50%] cursor-pointer">
           <ViewPost post={post} />
         </div>
-        <button className="w-[33%] flex items-center justify-center space-x-2 p-2 hover:bg-gray-100 rounded-lg text-gray-600 font-medium cursor-pointer">
-          <Share2 size={20} /> <span>Share</span>
-        </button>
       </div>
     </div>
   );

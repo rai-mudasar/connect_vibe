@@ -114,6 +114,7 @@ export async function getAllPost() {
 }
 
 export async function toggleLikes(postId) {
+  console.log('Entered back');
   const session = await getServerSession(authOptions);
 
   try {
@@ -121,14 +122,10 @@ export async function toggleLikes(postId) {
     const post = await postModel.findById(postId);
 
     if (!post) {
-      return {
-        success: false,
-        message: "No post found!",
-        data: [],
-      };
+      throw new Error("No post found!")
     }
 
-    const hasLiked = post.likes.some((id) => id.toString() === session.user.id);
+    const hasLiked = post.likes.includes(session.user.id);
 
     if (hasLiked) {
       await postModel.findByIdAndUpdate(postId, {
@@ -149,9 +146,8 @@ export async function toggleLikes(postId) {
     console.log("Error in like action : ", error);
     return {
       success: false,
-      message: `Error in like action : ${error}`,
-      data: [],
-    };
+      message: `Error in like action : ${error.message || error}`
+    }
   }
 }
 
