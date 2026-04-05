@@ -52,9 +52,9 @@ export default function ProfileHeader({ currentProfileUser, isOwnProfile }) {
   };
 
   const handleRemoveCoverImage = async (imageUrl) => {
-    if(imageUrl) {
+    if (imageUrl) {
       const response = await deleteCoverImage(imageUrl)
-      if(response.success) {
+      if (response.success) {
         toast.success(response.message)
       } else {
         toast.error(response.message)
@@ -78,8 +78,9 @@ export default function ProfileHeader({ currentProfileUser, isOwnProfile }) {
         ref={profileInputRef}
         onChange={handleUpdateProfileImage}
       />
-      <section className="h-50 md:h-90 relative rounded-b-3xl object-cover overflow-hidden">
-        <Image fill={true} src={currentProfileUser.coverImageUrl} alt="User Cover Photo" />
+      <section className="h-50 md:h-90 relative rounded-b-3xl object-cover overflow-hidden bg-neutral-200 border border-neutral-300 flex justify-center items-center">
+        {currentProfileUser.coverImageUrl === "" && <p className="font-semibold lg:text-5xl">Upload a cover Image</p>}
+        {currentProfileUser.coverImageUrl !== "" && <Image fill={true} src={currentProfileUser.coverImageUrl} alt="User Cover Photo" />}
         {isOwnProfile && (
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -96,7 +97,7 @@ export default function ProfileHeader({ currentProfileUser, isOwnProfile }) {
 
             <DropdownMenuContent className={"bg-white mr-8 md:mr-0"}>
               <DropdownMenuGroup>
-                <DropdownMenuItem q
+                <DropdownMenuItem
                   onClick={handleCoverInputRef}
                   className={"cursor-pointer"}
                 >
@@ -119,17 +120,15 @@ export default function ProfileHeader({ currentProfileUser, isOwnProfile }) {
       {/* Profile Section */}
       <section className="h-51 md:h-51 flex flex-row items-start md:items-center pl-3 md:px-17 -mt-5 md:mt-0 relative">
         <div className=" relative">
-          {currentProfileUser.profileImageUrl && (
-            <Avatar className="w-26 md:w-40 h-26 md:h-40 border-3 md:border-0 border-white bg-neutral-300">
-              <SafeImage
-                src={currentProfileUser?.profileImageUrl}
-                fill
-                alt="User Profile Image"
-                className="object-contain"
-              />
-              <AvatarFallback className={'text-4xl font-bold'}>{currentProfileUser?.firstName?.[0]}</AvatarFallback>
-            </Avatar>
-          )}
+          <Avatar className="w-26 md:w-40 h-26 md:h-40 border-3 md:border-0 border-white bg-neutral-300">
+            <SafeImage
+              src={currentProfileUser?.profileImageUrl !== "" ? currentProfileUser?.profileImageUrl : null}
+              fill
+              alt="User Profile Image"
+              className="object-contain"
+            />
+            <AvatarFallback className={'text-4xl font-bold'}>{currentProfileUser?.firstName?.[0]}</AvatarFallback>
+          </Avatar>
           {isOwnProfile && (
             <div
               className="w-7 md:w-9 h-7 md:h-9 bg-[#D6D9DD] rounded-full absolute bottom-4 right-0 flex justify-center items-center cursor-pointer"

@@ -29,6 +29,7 @@ export default function CreatePostDialog({ loggedInUser }) {
   useEffect(() => {
     setIsMounted(true);
   }, []);
+
   const handlePost = async () => {
     if (!image && !text) return alert("Please add some content or an image");
 
@@ -57,18 +58,18 @@ export default function CreatePostDialog({ loggedInUser }) {
   if (!isMounted) {
     return (
       <div className="flex items-center gap-2 p-4 bg-white rounded-lg shadow-sm cursor-pointer hover:bg-gray-50">
-        <Avatar>
+        <Avatar className="w-8 h-8 bg-neutral-300 z-50 border font-semibold">
           <SafeImage
-            src={loggedInUser?.profileImageUrl}
+            src={loggedInUser?.profileImageUrl !== "" ? loggedInUser?.profileImageUrl : null}
             fill
             alt="LoggedIn User Image"
             className="object-contain"
           />
-          <AvatarFallback>{loggedInUser?.firstName?.[0]}</AvatarFallback>
+          <AvatarFallback className=" bg-neutral-300">{loggedInUser?.firstName?.[0]}</AvatarFallback>
         </Avatar>
         <div className="bg-gray-100 rounded-full py-2 px-4 flex-1 text-gray-500 text-sm">
           What's on your mind, {loggedInUser?.firstName}{" "}
-          {loggedInUser?.lastName}?
+          {loggedInUser?.lastName} ?
         </div>
       </div>
     );
@@ -77,7 +78,7 @@ export default function CreatePostDialog({ loggedInUser }) {
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
         <DialogTrigger asChild>
           <div className="flex items-center gap-2 p-4 bg-white rounded-lg shadow-sm cursor-pointer hover:bg-gray-50">
-            <Avatar>
+            <Avatar className="w-8 h-8 bg-neutral-300 z-50 border font-semibold">
               <SafeImage
                 src={loggedInUser?.profileImageUrl}
                 fill

@@ -1,5 +1,6 @@
 import { UserCheck, UserMinus, UserPlus, X } from "lucide-react";
 import SafeImage from "../SafeImage";
+import { Avatar, AvatarFallback } from "../ui/avatar";
 
 export default function UserCard({ user, type, onAction }) {
   const currentButton = [
@@ -14,12 +15,15 @@ export default function UserCard({ user, type, onAction }) {
   return (
     <div className="w-30 md:w-40 h-49 md:h-65 rounded-lg shadow-xl border border-neutral-300 overflow-hidden">
       <div className="w-full h-[60%] relative">
-        <SafeImage
-          src={user.profileImageUrl}
-          fill={true}
-          alt={`${user.firstName}'s profile`}
-          className="object-cover"
-        />
+        <Avatar className="w-full h-full bg-neutral-300 rounded-none">
+          <SafeImage
+            src={user.profileImageUrl !== "" ? user.profileImageUrl : null}
+            fill={true}
+            alt={`${user.firstName}'s profile`}
+            className="object-cover"
+          />
+          <AvatarFallback className={'text-6xl md:text-8xl font-semibold'}>{user?.firstName?.[0]}</AvatarFallback>
+        </Avatar>
       </div>
 
       <div className="w-full h-[40%] bg-white p-2 flex flex-col justify-between">

@@ -33,7 +33,7 @@ export default function FriendsPage() {
   const tabs = [
     { id: "friends", label: "All Friends", icon: <UserCheck size={20} /> },
     { id: "nearby", label: "Nearby People", icon: <Users size={20} /> },
-    { id: "pending", label: "Pending Requests", icon: <UserPlus size={20} /> },
+    { id: "pending", label: "Pending Approvals", icon: <UserPlus size={20} /> },
     { id: "sent", label: "Sent Requests", icon: <Send size={20} /> },
   ];
 
@@ -149,7 +149,7 @@ export default function FriendsPage() {
       <div className="flex-1 overflow-y-auto p-6">
         <div className="max-w-5xl mx-auto">
           <div className="flex justify-between items-center mb-6 ml-7 md:ml-0">
-            <h1 className="text-xl font-semibold capitalize">{activeTab}</h1>
+            <h1 className="text-xl font-semibold">{tabs.map(tab => tab.id === activeTab ? tab.label : "" )}</h1>
             <span className="text-sm text-gray-500 font-medium">
               {data.length} People
             </span>
@@ -160,7 +160,7 @@ export default function FriendsPage() {
               <Loader2 className="animate-spin text-[#1877F2]" size={40} />
             </div>
           ) : data.length > 0 ? (
-            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
+            <div className="grid grid-cols-2 mob:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-9 pl-4">
               {data.map((user) => (
                 <UserCard key={user._id} user={user} type={activeTab} onAction={handleOnAction} />
               ))}
