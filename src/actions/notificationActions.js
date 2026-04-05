@@ -69,6 +69,7 @@ export async function getLoggedInUserNotifications(loggedInUserId) {
   }
 
   try {
+    await connectToDb()
     const notifications = await notificationModel
       .find({
         recipientId: loggedInUserId,
@@ -107,6 +108,8 @@ export async function readNotificationById(notificationId) {
     };
   }
   try {
+    await connectToDb()
+    
     const updatedNotification = await notificationModel.findByIdAndUpdate(
       notificationId,
       {

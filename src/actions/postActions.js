@@ -119,6 +119,7 @@ export async function toggleLikes(postId) {
 
   try {
     await connectToDb();
+
     const post = await postModel.findById(postId);
 
     if (!post) {
@@ -234,6 +235,7 @@ export async function addComment(postId, comment) {
 export async function deletePost(postId) {
   try {
     await connectToDb();
+    
     const session = await getServerSession(authOptions);
     if (!session) throw new Error("You must be logged in");
 

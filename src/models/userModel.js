@@ -14,7 +14,7 @@ const userSchema = new mongoose.Schema(
     verificationOtp: { type: Number },
     verificationOtpExpiry: { type: Date },
 
-    coverImageUrl: { type: String, default: "/images/cover-image.png" },
+    coverImageUrl: { type: String },
     bio: { type: String, maxLength: 160, default: "No bio ever added" },
     location: { type: String, default: "None" },
     occupation: { type: String, default: "None" },

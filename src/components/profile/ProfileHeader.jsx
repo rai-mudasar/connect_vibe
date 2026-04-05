@@ -53,7 +53,7 @@ export default function ProfileHeader({ currentProfileUser, isOwnProfile }) {
 
   const handleRemoveCoverImage = async (imageUrl) => {
     if (imageUrl) {
-      const response = await deleteCoverImage(imageUrl)
+      const response = await deleteCoverImage(imageUrl, currentProfileUser._id)
       if (response.success) {
         toast.success(response.message)
       } else {
@@ -62,6 +62,7 @@ export default function ProfileHeader({ currentProfileUser, isOwnProfile }) {
 
     }
   };
+  
   return (
     <div className="w-[95%] md:w-[70%]">
       <input

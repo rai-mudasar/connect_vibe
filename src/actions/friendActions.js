@@ -196,6 +196,7 @@ export async function handleSentFriendRequest(targetUserId) {
     await Promise.all([loggedInUser.save(), targetUser.save()]);
 
     revalidatePath(`/friends`);
+    revalidatePath(`/profile/${loggedInUser.username}`);
     return {
       success: true,
       message: "Sent friend request successfully",

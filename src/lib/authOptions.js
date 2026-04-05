@@ -57,28 +57,22 @@ export const authOptions = {
         token.id = user._id?.toString();
         token.isVerified = user.isVerified;
         token.username = user.username;
-        token.profileImageUrl = user.profileImageUrl;
-        token.firstName = user.firstName
-        token.lastName = user.lastName
       }
 
-      if (trigger === "update" && session) {
-        token.id = session.user.id;
-        token.isVerified = session.user.isVerified;
-        token.username = session.user.username;
-        token.profileImageUrl = session.user.profileImageUrl;
-      }
+      // if (trigger === "update" && session) {
+      //   token.id = session.user.id;
+      //   token.isVerified = session.user.isVerified;
+      //   token.username = session.user.username;
+      //   token.profileImageUrl = session.user.profileImageUrl;
+      // }
       return token;
     },
 
     async session({ session, token }) {
       if (token) {
         session.user.id = token.id;  
-        session.user.firstName = token.firstName,
-        session.user.lastName = token.lastName,
         session.user.isVerified = token.isVerified;
         session.user.username = token.username;
-        session.user.profileImageUrl = token.profileImageUrl;
       }
       return session;
     },

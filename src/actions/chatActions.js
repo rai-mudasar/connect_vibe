@@ -9,7 +9,7 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/authOptions";
 
 export async function getFriends(loggedInUserId) {
-  connectToDb();
+  await connectToDb();
   const user = await userModel
     .findById(loggedInUserId)
     .populate("friends", "firstName lastName profileImageUrl");
@@ -59,6 +59,8 @@ export async function getOrCreateConversation(currentUserId, targetUserId) {
 
 export async function getChattingPartner(conversationId) {
   try {
+    await connectToDb()
+    
     const session = await getServerSession(authOptions);
     if (!session || !session.user) return {
       success: false,
@@ -72,7 +74,6 @@ export async function getChattingPartner(conversationId) {
         return;
       }
     })
-    console.log(partner);
   } catch (error) {
     console.log(`Error in getting conversation partner : ${error.message || error}`)
 

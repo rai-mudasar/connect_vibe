@@ -14,6 +14,8 @@ export async function updateProfileImage(fileImage, username) {
   }
 
   try {
+    await connectToDb()
+
     const user = await userModel.findOne({ username });
     if (!user) {
       return {
@@ -53,6 +55,8 @@ export async function updateCoverImage(fileImage, username) {
   }
 
   try {
+    await connectToDb()
+
     const user = await userModel.findOne({
       username,
     });
@@ -64,14 +68,16 @@ export async function updateCoverImage(fileImage, username) {
       };
     }
 
-    if (user.coverImageUrl) {
-      await deleteFromCloudinary(user.coverImageUrl);
-    }
+    const oldCoverImageUrl = user.coverImageUrl;
 
     const response = await uploadToCloudinary(fileImage);
     if (response.success) {
       user.coverImageUrl = response.url;
       await user.save();
+
+      if (user.oldCoverImageUrl) {
+        await deleteFromCloudinary(user.oldCoverImageUrl);
+      }
 
       revalidatePath(`${process.env.NEXTAUTH_URL}/${user.username}`);
       return {
@@ -91,6 +97,8 @@ export async function updateCoverImage(fileImage, username) {
 
 export async function deleteCoverImage(coverUrl, userId) {
   try {
+    await connectToDb()
+
     await deleteFromCloudinary(coverUrl);
 
     const res = await userModel.findByIdAndUpdate(userId, {
@@ -114,33 +122,33 @@ export async function deleteCoverImage(coverUrl, userId) {
 
 export async function updateProfile(userId, data) {
   try {
+    await connectToDb()
+
     const user = await userModel.findById(userId);
 
-    if (!user)
-      return {
-        success: false,
-        message: "No user found",
-      };
+    if (!user) {
+      throw new Error("No user found")
+    }
 
-    ((user.firstName = data.firstName),
-      (user.lastName = data.lastName),
-      (user.bio = data.bio),
-      (user.location = data.location),
-      (user.occupation = data.occupation),
-      (user.relationshipStatus = data.relationshipStatus));
-
-    await user.save();
+    await userModel.findByIdAndUpdate(userId, {
+      firstName: data.firstName,
+      lastName: data.lastName,
+      bio: data.bio,
+      location: data.location,
+      occupation: data.occupation,
+      relationshipStatus: data.relationshipStatus
+    })
 
     return {
       success: true,
       message: "Updated Successfully",
     };
   } catch (error) {
-    console.log("Updating Profile action with error : ", error);
+    console.log("Updating Profile action with error : ", error.message || error);
 
     return {
       success: false,
-      message: "Something went wrong!",
+      message: `Something went wrong with error : ${error.message || error} !`,
     };
   }
 }
@@ -190,10 +198,16 @@ export async function getUserByFirstName(searchName) {
     };
   }
 
-  const regex = new RegExp(`^${searchName}`, "i");
+  await connectToDb()
+  // const regex = new RegExp(`^${searchName}`, "i");
 
   const users = await userModel
-    .find({ firstName: regex })
+    .find({
+      $or: [
+        { firstName: { $regex: searchName, $options: "i" } },
+        { lastName: { $regex: searchName, $options: "i" } }
+      ]
+    })
     .select("username firstName lastName profileImageUrl location occupation")
     .lean();
 

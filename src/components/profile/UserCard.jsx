@@ -1,6 +1,7 @@
 import { UserCheck, UserMinus, UserPlus, X } from "lucide-react";
 import SafeImage from "../SafeImage";
 import { Avatar, AvatarFallback } from "../ui/avatar";
+import Link from "next/link";
 
 export default function UserCard({ user, type, onAction }) {
   const currentButton = [
@@ -27,16 +28,18 @@ export default function UserCard({ user, type, onAction }) {
       </div>
 
       <div className="w-full h-[40%] bg-white p-2 flex flex-col justify-between">
-        <h1 className="text-[15px] md:text-[17px] text-black font-bold truncate">
-          {`${user.firstName} ${user.lastName}`}
-        </h1>
+        <Link href={`/user/${user.username}`}>
+          <h1 className="text-[15px] md:text-[17px] text-black font-bold truncate hover:underline">
+            {`${user.firstName} ${user.lastName}`}
+          </h1>
+        </Link>
 
         <button
           onClick={() => onAction(user._id, type)}
           className="w-full h-8 md:h-10 bg-blue-50 hover:bg-blue-100 transition-colors rounded-lg flex justify-center items-center gap-1 md:gap-2"
         >
           <span className="text-[#2296D5]">{currentButton.icon}</span>
-          <p className="text-[12px] md:text-sm text-[#2296D5] font-semibold">
+          <p className="text-[12px] md:text-sm text-[#2296D5] font-semibold cursor-pointer">
             {currentButton.label}
           </p>
         </button>
