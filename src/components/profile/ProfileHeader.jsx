@@ -1,8 +1,5 @@
 "use client";
 
-import { Camera, ImageUp, Trash2 } from "lucide-react";
-import Image from "next/image";
-import { useRef } from "react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -10,17 +7,18 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
+import { useRef } from "react";
 import { toast } from "sonner";
-import { deleteCoverImage, updateCoverImage, updateProfileImage } from "@/actions/userActions";
-import { Avatar, AvatarFallback } from "../ui/avatar";
+import SafeImage from "../SafeImage";
 import { useSession } from "next-auth/react";
 import EditProfileDialog from "./EditProfileDialog";
-import SafeImage from "../SafeImage";
+import { Avatar, AvatarFallback } from "../ui/avatar";
+import { Camera, ImageUp, Trash2 } from "lucide-react";
+import { deleteCoverImage, updateCoverImage, updateProfileImage } from "@/actions/userActions";
 
 export default function ProfileHeader({ currentProfileUser, isOwnProfile }) {
   const coverInputRef = useRef(null);
   const profileInputRef = useRef(null);
-  const { update } = useSession();
 
   const handleCoverInputRef = () => coverInputRef.current?.click();
   const handleProfileInputRef = () => profileInputRef.current?.click();
@@ -44,7 +42,6 @@ export default function ProfileHeader({ currentProfileUser, isOwnProfile }) {
     const response = await updateProfileImage(file, currentProfileUser.username);
 
     if (response.success) {
-      await update({ profileImageUrl: response.newProfileImageUrl });
       toast.success(response.message);
     } else {
       toast.error(response.message);
@@ -55,6 +52,7 @@ export default function ProfileHeader({ currentProfileUser, isOwnProfile }) {
     if (imageUrl) {
       const response = await deleteCoverImage(imageUrl, currentProfileUser._id)
       if (response.success) {
+        currentProfileUser.coverImageUrl = "";
         toast.success(response.message)
       } else {
         toast.error(response.message)
@@ -62,7 +60,7 @@ export default function ProfileHeader({ currentProfileUser, isOwnProfile }) {
 
     }
   };
-  
+
   return (
     <div className="w-[95%] md:w-[70%]">
       <input
@@ -81,7 +79,14 @@ export default function ProfileHeader({ currentProfileUser, isOwnProfile }) {
       />
       <section className="h-50 md:h-90 relative rounded-b-3xl object-cover overflow-hidden bg-neutral-200 border border-neutral-300 flex justify-center items-center">
         {currentProfileUser.coverImageUrl === "" && <p className="font-semibold lg:text-5xl">Upload a cover Image</p>}
-        {currentProfileUser.coverImageUrl !== "" && <Image fill={true} src={currentProfileUser.coverImageUrl} alt="User Cover Photo" />}
+        {currentProfileUser.coverImageUrl !== "" &&
+          <SafeImage
+            src={currentProfileUser?.coverImageUrl !== "" ? currentProfileUser?.coverImageUrl : null}
+            fill
+            alt="User cover Image"
+            className="object-contain"
+          />
+        }
         {isOwnProfile && (
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -106,7 +111,7 @@ export default function ProfileHeader({ currentProfileUser, isOwnProfile }) {
                   <span>Upload Photo</span>
                 </DropdownMenuItem>
                 <DropdownMenuItem
-                  onClick={handleRemoveCoverImage}
+                  onClick={() => handleRemoveCoverImage(currentProfileUser.coverImageUrl)}
                   className={"cursor-pointer"}
                 >
                   <Trash2 size={18} />

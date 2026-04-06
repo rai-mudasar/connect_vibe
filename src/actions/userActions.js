@@ -74,9 +74,8 @@ export async function updateCoverImage(fileImage, username) {
     if (response.success) {
       user.coverImageUrl = response.url;
       await user.save();
-
-      if (user.oldCoverImageUrl) {
-        await deleteFromCloudinary(user.oldCoverImageUrl);
+      if (oldCoverImageUrl !== '') {
+        await deleteFromCloudinary(oldCoverImageUrl);
       }
 
       revalidatePath(`${process.env.NEXTAUTH_URL}/${user.username}`);
@@ -96,16 +95,22 @@ export async function updateCoverImage(fileImage, username) {
 }
 
 export async function deleteCoverImage(coverUrl, userId) {
+
   try {
-    await connectToDb()
+    await connectToDb();
+ 
+    const user = await userModel.findById(userId);
 
-    await deleteFromCloudinary(coverUrl);
+    if (!user) throw new Error("No user found for this cover Image");
 
-    const res = await userModel.findByIdAndUpdate(userId, {
-      coverImageUrl: ''
-    })
+    user.coverImageUrl = '';
 
-    console.log('Cover image res : ', res);
+    const res = await Promise.all[
+      deleteFromCloudinary(coverUrl),
+      user.save()
+    ]
+
+    console.log("res : ", res)
 
     return {
       success: true,
@@ -199,7 +204,6 @@ export async function getUserByFirstName(searchName) {
   }
 
   await connectToDb()
-  // const regex = new RegExp(`^${searchName}`, "i");
 
   const users = await userModel
     .find({

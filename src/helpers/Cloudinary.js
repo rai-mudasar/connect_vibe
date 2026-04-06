@@ -58,15 +58,14 @@ export async function deleteFromCloudinary(fileLink) {
       });
     });
 
-    if (response.result !== "ok")
-      throw new Error("Something went wrong with cloudinary Delete!");
+    // if (response.result === "ok") return
+    if (response.result === "not found") throw new Error("No cover image found!");
+    if (response.result !== "ok") throw new Error("Something went wrong with cloudinary Delete!");
   } catch (error) {
     console.log(
       `Cloudinary Delete image with error : ${error.message || error}`,
     );
 
-    throw new Error(
-      error.message || error || "Something went wrong with cloudinary Delete!",
-    );
+    throw new Error(`Cloudinary Delete image with error : ${error.message || error}`);
   }
 }
