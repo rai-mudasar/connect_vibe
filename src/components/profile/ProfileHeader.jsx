@@ -39,7 +39,7 @@ export default function ProfileHeader({ currentProfileUser, isOwnProfile }) {
   const handleUpdateProfileImage = async (e) => {
     const file = e.target.files?.[0];
 
-    const response = await updateProfileImage(file, currentProfileUser.username);
+    const response = await updateProfileImage(file, currentProfileUser?.username);
 
     if (response.success) {
       toast.success(response.message);
@@ -78,8 +78,8 @@ export default function ProfileHeader({ currentProfileUser, isOwnProfile }) {
         onChange={handleUpdateProfileImage}
       />
       <section className="h-50 md:h-90 relative rounded-b-3xl object-cover overflow-hidden bg-neutral-200 border border-neutral-300 flex justify-center items-center">
-        {currentProfileUser.coverImageUrl === "" && <p className="font-semibold lg:text-5xl">Upload a cover Image</p>}
-        {currentProfileUser.coverImageUrl !== "" &&
+        {currentProfileUser?.coverImageUrl === "" && <p className="font-semibold lg:text-5xl">Upload a cover Image</p>}
+        {currentProfileUser?.coverImageUrl !== "" &&
           <SafeImage
             src={currentProfileUser?.coverImageUrl !== "" ? currentProfileUser?.coverImageUrl : null}
             fill
@@ -111,7 +111,7 @@ export default function ProfileHeader({ currentProfileUser, isOwnProfile }) {
                   <span>Upload Photo</span>
                 </DropdownMenuItem>
                 <DropdownMenuItem
-                  onClick={() => handleRemoveCoverImage(currentProfileUser.coverImageUrl)}
+                  onClick={() => handleRemoveCoverImage(currentProfileUser?.coverImageUrl)}
                   className={"cursor-pointer"}
                 >
                   <Trash2 size={18} />
@@ -152,11 +152,11 @@ export default function ProfileHeader({ currentProfileUser, isOwnProfile }) {
         <div className="flex flex-col ml-3 md:ml-5 mt-9 md:mt-0 md:gap-1">
           <div>
             <h2 className="text-xl md:text-2xl font-bold">
-              {currentProfileUser.firstName} {currentProfileUser.lastName}
+              {currentProfileUser?.firstName} {currentProfileUser?.lastName}
             </h2>
           </div>
           <div className="text-[12px] md:text-lg font-semibold ml-1 md:ml-0 text-gray-500">
-            <p>{currentProfileUser.bio}</p>
+            <p>{currentProfileUser?.bio}</p>
           </div>
         </div>
 

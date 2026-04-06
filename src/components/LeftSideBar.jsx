@@ -20,7 +20,7 @@ const LeftSidebar = ({loggedInUser}) => {
             />
             <AvatarFallback className={'text-md font-bold'}>{loggedInUser?.firstName?.[0]}</AvatarFallback>
           </Avatar>
-          <p className="font-medium text-[15px] text-gray-800">{`${loggedInUser.firstName} ${loggedInUser.lastName}`}</p>
+          <p className="font-medium text-[15px] text-gray-800">{`${loggedInUser?.firstName} ${loggedInUser?.lastName}`}</p>
         </div>
       </div> 
 

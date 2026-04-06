@@ -171,7 +171,7 @@ export async function getLoggedInUser(sessionId) {
 
     const loggedInUser = await userModel
       .findById(sessionId)
-      .select("firstName lastName email profileImageUrl")
+      .select("username firstName lastName email profileImageUrl")
       .lean();
 
     if (!loggedInUser) {

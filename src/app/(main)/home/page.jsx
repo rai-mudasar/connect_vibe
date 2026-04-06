@@ -11,7 +11,7 @@ export default async function HomePage() {
   const session = await getServerSession(authOptions);
 
   const res = await getLoggedInUser(session?.user?.id);
-  if (res.success) {
+  if (res?.success) {
     loggedInUser = res.data;
   }
 
