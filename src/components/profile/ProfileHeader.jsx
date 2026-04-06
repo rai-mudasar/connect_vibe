@@ -78,7 +78,7 @@ export default function ProfileHeader({ currentProfileUser, isOwnProfile }) {
         onChange={handleUpdateProfileImage}
       />
       <section className="h-50 md:h-90 relative rounded-b-3xl object-cover overflow-hidden bg-neutral-200 border border-neutral-300 flex justify-center items-center">
-        {currentProfileUser?.coverImageUrl === "" && <p className="font-semibold lg:text-5xl">Upload a cover Image</p>}
+        {!currentProfileUser.coverImageUrl || currentProfileUser?.coverImageUrl === "" && <p className="font-semibold lg:text-5xl">Upload a cover Image</p>}
         {currentProfileUser?.coverImageUrl !== "" &&
           <SafeImage
             src={currentProfileUser?.coverImageUrl !== "" ? currentProfileUser?.coverImageUrl : null}
