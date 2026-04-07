@@ -43,7 +43,7 @@ export default function PeopleYouMayKnow() {
             </Link>
           </div>
 
-          <div className="flex flex-row grow gap-5 mx-5 mt-3 overflow-x-scroll hide-scrollbar">
+          <div className="w-[88vw] flex flex-row gap-5 mt-3 px-3 pb-8 overflow-x-scroll hide-scrollbar">
             {users.map((user) => (
               <UserCard key={user._id} user={user} type={"nearby"} onAction={handleOnAction} />
             ))}

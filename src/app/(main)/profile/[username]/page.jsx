@@ -29,7 +29,7 @@ export default async function ProfilePage({ params }) {
 
   return (
     <div>
-      <div className="w-full max-h-full flex flex-col justify-center items-center pt-13 pb-2 bg-white">
+      <div className="w-screen max-h-screen flex flex-col justify-center items-center pt-13 pb-2 bg-white">
         <ProfileHeader
           currentProfileUser={JSON.parse(JSON.stringify(profileUser))}
           isOwnProfile={session?.user?.id === String(profileUser._id)}
