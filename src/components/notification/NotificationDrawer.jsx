@@ -60,19 +60,19 @@ export default function NotificationDrawer({
     setIsMounted(true);
   }, []);
 
-  // useEffect(() => {
-  //   const channel = pusherClient.subscribe(`user-${loggedInUserId}`);
+  useEffect(() => {
+    const channel = pusherClient.subscribe(`user-${loggedInUserId}`);
 
-  //   channel.bind("new-notification", (newNotification) => {
-  //     setNotifications((prev) => [newNotification, ...prev]);
-  //     router.refresh();
-  //   });
+    channel.bind("new-notification", (newNotification) => {
+      setNotifications((prev) => [newNotification, ...prev]);
+      router.refresh();
+    });
 
-  //   return () => {
-  //     channel.unbind_all();
-  //     pusherClient.unsubscribe(`user-${loggedInUserId}`);
-  //   };
-  // }, [loggedInUserId]);
+    return () => {
+      channel.unbind_all();
+      pusherClient.unsubscribe(`user-${loggedInUserId}`);
+    };
+  }, [loggedInUserId]);
 
   if (!isMounted) {
     return <Bell className="w-5 md:w-6 h-5 md:h-6" />;
