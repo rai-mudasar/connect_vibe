@@ -11,14 +11,14 @@ export default async function ChatLayout({ children }) {
   const friends = await getFriends(loggedInUserId);
 
   return (
-    <div className="flex w-full h-full overflow-hidden bg-white">
+    <div className="flex w-screen h-screen overflow-hidden bg-white">
       <ChatSidebar
         loggedInUserTotalChats={loggedInUserTotalChats}
         friends={friends}
         loggedInUserId={loggedInUserId}
       />
 
-      <main className="flex-1 w-full h-full">{children}</main>
+      <main>{children}</main>
     </div>
   );
 }

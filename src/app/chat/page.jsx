@@ -1,8 +1,8 @@
 import React from "react";
 
-export default function page() {
+export default function chatPage() {
   return (
-    <div className="w-full h-screen hidden sm:flex justify-center items-center sm:text-xl md:text-3xl text-center">
+    <div className="sm:w-[calc(100vw-320px)] h-full hidden sm:flex justify-center items-center sm:text-xl md:text-3xl text-center p-8">
       Click any chat to start a conversation
     </div>
   );

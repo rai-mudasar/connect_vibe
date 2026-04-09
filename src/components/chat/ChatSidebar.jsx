@@ -4,6 +4,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { getOrCreateConversation } from "@/actions/chatActions";
 import { User, MessageSquarePlus } from "lucide-react";
 import SafeImage from "../SafeImage";
+import Link from "next/link";
 
 export default function ChatSidebar({
   loggedInUserTotalChats,
@@ -29,13 +30,21 @@ export default function ChatSidebar({
 
   return (
     <div
-      className={`${isChatting ? "hidden md:flex" : "flex"} w-screen sm:w-80 h-screen bg-white border-r flex-col`}
+      className={`${isChatting ? "hidden sm:flex" : "flex"} w-screen sm:w-80 h-screen bg-white border-r flex-col`}
     >
-      <div className="p-4 border-b">
-        <h2 className="text-xl font-bold text-gray-800">Messages</h2>
+      <div className="w-full h-18 border-b flex flex-row items-center justify-between px-7">
+        <h2 className="text-xl md:text-2xl font-bold text-gray-800">Messages</h2>
+        <Link href={'/'} className="w-8 md:w-10 h-8 md:h-10 relative cursor-pointer">
+          <SafeImage
+            src="/svg/fb_icon.svg"
+            alt="Facebook Icon"
+            fill
+            className={'w-8 md:w-8.5 h-8 md:h-8.5 object-cover'}
+          />
+        </Link>
       </div>
 
-      <div className="flex-1 overflow-y-auto">
+      <div className="overflow-y-auto">
         {/* --- RECENT CHATS --- */}
         <div className="p-2">
           <p className="text-xs font-semibold text-gray-500 uppercase px-2 mb-2">
@@ -52,9 +61,13 @@ export default function ChatSidebar({
                   onClick={() => router.push(`/chat/${chat._id}`)}
                   className="flex items-center gap-3 p-3 hover:bg-gray-100 rounded-lg cursor-pointer transition"
                 >
-                  <div className="w-12 h-12 bg-gray-200 rounded-full flex items-center justify-center overflow-hidden">
+                  <div className="w-12 h-12 bg-gray-200 rounded-full flex items-center justify-center overflow-hidden relative">
                     {otherUser?.profileImageUrl ? (
-                      <img src={otherUser.profileImageUrl} alt="profile" />
+                      <SafeImage
+                        src={otherUser.profileImageUrl}
+                        alt={"Friend Profile Image"}
+                        fill
+                      />
                     ) : (
                       <User size={24} />
                     )}
@@ -100,7 +113,6 @@ export default function ChatSidebar({
                   src={friend.profileImageUrl}
                   alt={"Friend Profile Image"}
                   fill
-
                 />
               </div>
               <p className="font-medium text-gray-700 group-hover:text-blue-600">{`${friend.firstName} ${friend.lastName}`}</p>
