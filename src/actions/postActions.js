@@ -9,6 +9,9 @@ import { revalidatePath } from "next/cache";
 import { sendNotification } from "./notificationActions";
 import { deleteFromCloudinary } from "@/helpers/Cloudinary";
 import userModel from "@/models/userModel";
+import { getSessionUser } from "./userActions";
+import { New_Amsterdam } from "next/font/google";
+import mongoose from "mongoose";
 
 // export async function updatePost(postId, imageFile, postCaption) {
 //   if (!imageFile) {
@@ -114,27 +117,26 @@ export async function getAllPost() {
 }
 
 export async function toggleLikes(postId) {
-  console.log('Entered back');
-  const session = await getServerSession(authOptions);
 
   try {
-    await connectToDb();
-
-    const post = await postModel.findById(postId);
+    const [sessionUser, post] = await Promise.all([
+      getSessionUser(),
+      postModel.findById(postId)
+    ])
 
     if (!post) {
       throw new Error("No post found!")
     }
 
-    const hasLiked = post.likes.includes(session.user.id);
+    const hasLiked = post.likes.includes(sessionUser.id);
 
     if (hasLiked) {
       await postModel.findByIdAndUpdate(postId, {
-        $pull: { likes: session.user.id },
+        $pull: { likes: sessionUser.id },
       });
     } else {
       await postModel.findByIdAndUpdate(postId, {
-        $addToSet: { likes: session.user.id },
+        $addToSet: { likes: sessionUser.id },
       });
     }
 
@@ -144,10 +146,10 @@ export async function toggleLikes(postId) {
       message: hasLiked ? "Unliked" : "Liked",
     };
   } catch (error) {
-    console.log("Error in like action : ", error);
+    console.log(`Error in like post action : ${error.message || error}`);
     return {
       success: false,
-      message: `Error in like action : ${error.message || error}`
+      message: `Error in like post action : ${error.message || error}`
     }
   }
 }
@@ -183,65 +185,68 @@ export async function getPostAllcomments(postId) {
   }
 }
 
-export async function addComment(postId, comment) {
-  const session = await getServerSession(authOptions);
-  const loggedInUserId = session.user.id;
+export async function addNewComment(postId, comment) {
+  const session = await mongoose.startSession();
+  session.startTransaction();
 
   try {
-    await connectToDb();
+    const sessionUser = await getSessionUser();
 
-    const newComment = await commentModel.create({
+    const newComment = new commentModel({
       postId,
-      author: loggedInUserId,
+      author: sessionUser.id,
       content: comment,
     });
 
-    const post = await postModel.findByIdAndUpdate(
+    await newComment.save({ session })
+
+    const updatedPost = await postModel.findByIdAndUpdate(
       postId,
       { $push: { comments: newComment._id } },
-      { new: true },
-    );
+      { new: true, session },
+    )
 
-    if (!post) {
-      return {
-        success: false,
-        message: "No post found for this comment",
-      };
+    if (!updatedPost) throw new Error("Post not found");
+
+    await session.commitTransaction()
+    session.endSession()
+    revalidatePath(`/home`);
+
+    const receiverId = JSON.parse(JSON.stringify(updatedPost?.author));
+    if (sessionUser.id !== receiverId) {
+      await sendNotification(
+        sessionUser.id,
+        receiverId,
+        "COMMENT",
+      );
     }
-
-    revalidatePath(`${process.env.NEXTAUTH_URL}/home`);
-
-    const receiverId = post.author._id.toString();
-    const response = await sendNotification(
-      loggedInUserId,
-      receiverId,
-      "COMMENT",
-    );
-    if (response.success) {
-      return {
-        success: true,
-        message: response.message,
-      };
-    }
+    const updatedComment = await commentModel.findById(newComment.id).populate("author", "firstName lastName profileImageUrl")
+    return {
+      success: true,
+      message: "Comment Posted",
+      data: JSON.parse(JSON.stringify(updatedComment)),
+    };
   } catch (error) {
-    console.log("Error in comment action : ", error);
+    await session.abortTransaction();
+    session.endSession();
+    console.log(`Error in post comment action and transation aborted with error : ${error.message || error}`);
+
     return {
       success: false,
-      message: `Error in comment action : ${error.message}`,
+      message: `Error in post comment action and transation aborted with error : ${error.message || error}`,
     };
   }
 }
 
 export async function deletePost(postId) {
   try {
-    await connectToDb();
-    
-    const session = await getServerSession(authOptions);
-    if (!session) throw new Error("You must be logged in");
+    const [sessionUser, post] = await Promise.all([
+      getSessionUser(),
+      postModel.findById(postId)
+    ])
 
-    const post = await postModel.findById(postId);
     if (!post) throw new Error("Post not exist!");
-    if (session.user.id !== post.author._id.toString())
+    if (sessionUser.id !== post.author._id.toString())
       throw new Error("Unathorized! You can only delete what is yours.");
 
     if (post.media) {
@@ -260,10 +265,10 @@ export async function deletePost(postId) {
       message: "Post deleted successfully!",
     };
   } catch (error) {
-    console.log(`Error in Post deletion : ${error.message || error}`);
+    console.log(`Error in Post deletion action : ${error.message || error}`);
     return {
       success: false,
-      message: `Error in Post deletion : ${error.message || error}`,
+      message: `Error in Post deletion action : ${error.message || error}`,
     };
   }
 }

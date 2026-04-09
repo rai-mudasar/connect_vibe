@@ -4,6 +4,17 @@ import connectToDb from "@/lib/dbConnect";
 import userModel from "@/models/userModel";
 import { revalidatePath } from "next/cache";
 import { deleteFromCloudinary, uploadToCloudinary } from "@/helpers/Cloudinary";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/lib/authOptions";
+
+export async function getSessionUser() {
+  const [_, session] = await Promise.all([
+    connectToDb(),
+    getServerSession(authOptions),
+  ])
+  if (!session || !session.user) throw new Error("Unauthorized! You must logged In to perform such operation.");
+  return session.user;
+}
 
 export async function updateProfileImage(fileImage, username) {
   if (!fileImage) {

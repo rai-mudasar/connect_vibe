@@ -1,6 +1,5 @@
 "use client";
 
-import { useState } from "react";
 import {
   Dialog,
   DialogContent,
@@ -9,22 +8,32 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { toast } from "sonner";
+import { useEffect, useRef, useState } from "react";
+import SafeImage from "../SafeImage";
 import { Button } from "@/components/ui/button";
+import { MessageCircle, Send } from "lucide-react";
 import { Textarea } from "@/components/ui/textarea";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { addNewComment, getPostAllcomments } from "@/actions/postActions";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
-import { MessageCircle, Send } from "lucide-react";
-import { formatDistanceToNow } from "date-fns";
-import { addComment, getPostAllcomments } from "@/actions/postActions";
-import { toast } from "sonner";
-import SafeImage from "../SafeImage";
 
 export default function ViewPost({ post }) {
   const [newComment, setNewComment] = useState("");
-  const [loadedComments, setLoadedComments] = useState(null);
-
+  const [loadedComments, setLoadedComments] = useState([]);
   const [loading, setLoading] = useState(false);
 
+  const scrollRef = useRef(null);
+
+  useEffect(() => {
+    if (scrollRef.current) {
+      scrollRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [loadedComments]);
+
+  const handleDialogState = (open) => {
+    if (open) handleLoadComments()
+  }
   const handleLoadComments = async () => {
     try {
       const response = await getPostAllcomments(post._id);
@@ -41,9 +50,10 @@ export default function ViewPost({ post }) {
   const handlePostComment = async () => {
     setLoading(true);
     try {
-      const response = await addComment(post._id, newComment);
+      const response = await addNewComment(post._id, newComment);
       if (response.success) {
         setNewComment("");
+        setLoadedComments((prev) => [...prev, response.data])
         toast.success(response.message);
       } else {
         toast.error(response.message);
@@ -56,7 +66,7 @@ export default function ViewPost({ post }) {
   };
 
   return (
-    <Dialog onOpenChange={handleLoadComments}>
+    <Dialog onOpenChange={handleDialogState}>
       <DialogTrigger asChild>
         <Button
           className="w-full flex items-center justify-center mt-0.5 p-2 hover:bg-gray-100 rounded-lg text-[16px] text-gray-600 font-medium cursor-pointer"
@@ -66,9 +76,9 @@ export default function ViewPost({ post }) {
         </Button>
       </DialogTrigger>
 
-      <DialogContent className="sm:max-w-150 max-h-[calc(100vh-200px)] md:max-h-[calc(100vh-70px)] flex flex-col p-0 gap-0 bg-white overflow-y-scroll">
+      <DialogContent className="sm:max-w-150 max-h-[calc(100vh-200px)] md:max-h-[calc(100vh-70px)] flex flex-col p-0 gap-0 bg-white">
         <DialogHeader className="p-4 border-b">
-          <DialogTitle>Post by {post.author.firstName}</DialogTitle>
+          <DialogTitle>Post by {`${post.author.firstName} ${post.author.lastName}`}</DialogTitle>
           <DialogDescription className="sr-only">
             This dialog shows the full content of the post and its comments.
           </DialogDescription>
@@ -89,7 +99,7 @@ export default function ViewPost({ post }) {
               </div>
               <p className="text-sm text-gray-800 mb-3">{post.caption}</p>
               <div className="w-full bg-gray-100 flex justify-center">
-                <div className="w-full h-120 relative">
+                <div className="w-full h-120 relative border-t">
                   {post.media && (
                     <SafeImage
                       src={post.media}
@@ -106,8 +116,8 @@ export default function ViewPost({ post }) {
             <div className="space-y-4">
               <h4 className="text-sm font-semibold text-gray-500">Comments</h4>
               {loadedComments?.length > 0 ? (
-                loadedComments.map((comment, id) => (
-                  <div key={id} className="flex gap-3">
+                loadedComments.map((comment) => (
+                  <div key={comment._id} className="flex gap-3">
                     <Avatar className="h-7 w-7">
                       <AvatarImage src={comment.author.profileImageUrl} />
                       <AvatarFallback>
@@ -128,6 +138,7 @@ export default function ViewPost({ post }) {
                 </p>
               )}
             </div>
+            <div ref={scrollRef} />
           </ScrollArea>
         </div>
 
@@ -144,7 +155,7 @@ export default function ViewPost({ post }) {
               size="icon"
               onClick={handlePostComment}
               disabled={!newComment.trim() || loading}
-              // className="rounded-full shrink-0"
+            // className="rounded-full shrink-0"
             >
               <Send size={28} />
             </Button>

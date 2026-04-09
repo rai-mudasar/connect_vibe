@@ -2,7 +2,7 @@
 
 import { Heart, MoreHorizontal } from "lucide-react";
 import { deletePost, toggleLikes } from "@/actions/postActions";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import ViewPost from "./ViewPost";
 import SafeImage from "../SafeImage";
 import getSmartDateTime from "@/helpers/getSmartDate";
@@ -26,7 +26,6 @@ export default function PostCard({ post, priority, loggedInUser }) {
   const router = useRouter();
 
   const handleToggleLikes = async () => {
-
     const updatedLikes = isLiked
       ? likedList.filter((id) => id !== userId)
       : [...likedList, userId];
@@ -38,6 +37,7 @@ export default function PostCard({ post, priority, loggedInUser }) {
       if (response.success) return setLikedList(post.likes)
     } catch (error) {
       setLikedList(post.likes);
+      toast.error(error.message || error)
     }
   };
 

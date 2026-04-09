@@ -7,24 +7,17 @@ import { revalidatePath } from "next/cache";
 
 export async function sendNotification(senderId, receiverId, notificationType) {
   if (!notificationType || !receiverId || !senderId) {
-    return {
-      success: false,
-      message: "Invalid notification parameters",
-    };
+    throw new Error("Invalid notification parameters")
+
   }else if(senderId === receiverId){
-    return {
-      success: true,
-      message: "Same user notification not recommended",
-    };
+    throw new Error("Same user notification not recommended")
+
   } else if (
     notificationType !== "LIKE" &&
     notificationType !== "FRIEND_REQUEST" &&
     notificationType !== "COMMENT"
   ) {
-    return {
-      success: false,
-      message: "Invalid notification type",
-    };
+    throw new Error("Invalid notification type")
   }
 
   try {
@@ -44,19 +37,10 @@ export async function sendNotification(senderId, receiverId, notificationType) {
       );
 
       revalidatePath("/home");
-
-      return {
-        success: true,
-        message: "Notification sent successfully",
-      };
     }
   } catch (error) {
-    console.log("Error in sending notification: ", error);
-
-    return {
-      success: false,
-      message: "Error in sending notification" || error.message,
-    };
+    console.error(`Error in sending notification ${error.message || error}`);
+    throw new Error(`Error in sending notification ${error.message || error}`)
   }
 }
 
