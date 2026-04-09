@@ -7,6 +7,7 @@ import messageModel from "@/models/messageModel";
 import conversationModel from "@/models/conversationModel";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/authOptions";
+import { getSessionUser } from "./userActions";
 
 export async function getFriends(loggedInUserId) {
   await connectToDb();
@@ -57,42 +58,31 @@ export async function getOrCreateConversation(currentUserId, targetUserId) {
   return JSON.parse(JSON.stringify(chat));
 }
 
-export async function getChattingPartner(conversationId) {
+export async function getInitialChatData(conversationId) {
+  if (!conversationId) return;
   try {
-    await connectToDb()
+    const sessionUser = await getSessionUser();
+
+
+    const [messages, conversation] = await Promise.all([
+      messageModel.find({ conversationId }).sort({ createdAt: 1 }),
+      conversationModel.findById(conversationId).populate('participants', 'firstName lastName')
+    ])
+
+    const chattingPartner = (JSON.parse(JSON.stringify(conversation.participants[0]._id)) !== sessionUser.id) ? conversation.participants[0] : conversation.participants[1];
     
-    const session = await getServerSession(authOptions);
-    if (!session || !session.user) return {
-      success: false,
-      message: "Unauthorized!",
-    }
+    return {
+      success: true,
+      message: "Successfully executed",
+      data: JSON.parse(JSON.stringify({ "chattingUser": chattingPartner, "messages": messages }))
+    };
 
-    const conversation = await conversationModel.findById(conversationId).populate('participants', 'firstName lastName profileImageUrl').lean();
-    conversation.participants.map(user => {
-      if (user.id !== session.user.id) {
-        const partner = user;
-        return;
-      }
-    })
   } catch (error) {
-    console.log(`Error in getting conversation partner : ${error.message || error}`)
-
     return {
       success: false,
-      message: `Error in getting conversation partner : ${error.message || error}`,
+      message: `Error in getting initial chat data action : ${error.message || error}`,
     }
   }
-}
-
-export async function getMessages(conversationId) {
-  if (!conversationId) return [];
-  await connectToDb();
-
-  const messages = await messageModel
-    .find({ conversationId })
-    .sort({ createdAt: 1 });
-
-  return JSON.parse(JSON.stringify(messages));
 }
 
 export async function sendMessage(conversationId, senderId, text) {
