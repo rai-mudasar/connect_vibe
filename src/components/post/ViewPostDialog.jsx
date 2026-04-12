@@ -18,7 +18,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { addNewComment, getPostAllcomments } from "@/actions/postActions";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 
-export default function ViewPost({ post }) {
+export default function ViewPostDialog({ post }) {
   const [newComment, setNewComment] = useState("");
   const [loadedComments, setLoadedComments] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -34,6 +34,7 @@ export default function ViewPost({ post }) {
   const handleDialogState = (open) => {
     if (open) handleLoadComments()
   }
+
   const handleLoadComments = async () => {
     try {
       const response = await getPostAllcomments(post._id);
@@ -53,7 +54,7 @@ export default function ViewPost({ post }) {
       const response = await addNewComment(post._id, newComment);
       if (response.success) {
         setNewComment("");
-        setLoadedComments((prev) => [...prev, response.data])
+        setLoadedComments((prev) => prev? [...prev, response.data] : null)
         toast.success(response.message);
       } else {
         toast.error(response.message);

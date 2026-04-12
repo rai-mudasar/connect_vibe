@@ -1,9 +1,14 @@
 "use client";
 
-import React, { useState, useEffect } from "react"; // Added useEffect
-import { Users, UserPlus, Send, UserCheck, Loader2, Menu } from "lucide-react";
-import UserCard from "@/components/profile/UserCard";
-import { Card } from "@/components/ui/card";
+
+import {
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
 import {
   getFriends,
   getPendingRequests,
@@ -14,15 +19,11 @@ import {
   handleApproveFriendRequest,
   handleRejectFriendRequest,
 } from "@/actions/friendActions";
-import {
-  Sheet,
-  SheetContent,
-  SheetDescription,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-} from "@/components/ui/sheet";
 import { toast } from "sonner";
+import { Card } from "@/components/ui/card";
+import React, { useState, useEffect } from "react";
+import UserCard from "@/components/profile/UserCard";
+import { Users, UserPlus, Send, UserCheck, Loader2, Menu } from "lucide-react";
 
 export default function FriendsPage() {
   const [activeTab, setActiveTab] = useState("friends");

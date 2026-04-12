@@ -4,8 +4,8 @@ import CreatePostDialog from "./CreatePostDialogue";
 
 const PostFeed = ({ loggedInUser, posts, isOwnProfile, className }) => {
   return (
-    <main
-      className={`max-w-170 w-full flex flex-col gap-3 md:gap-5 ${className} relative`}
+    <div
+      className={`w-full flex flex-col gap-3 md:gap-5 ${className} relative`}
     >
       {isOwnProfile && <CreatePostDialog loggedInUser={loggedInUser} />}
 
@@ -26,7 +26,7 @@ const PostFeed = ({ loggedInUser, posts, isOwnProfile, className }) => {
             loggedInUser={loggedInUser}
           />
         ))}
-    </main>
+    </div>
   );
 };
 

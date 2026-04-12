@@ -1,7 +1,7 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
 import axios from "axios";
+import SafeImage from "../SafeImage";
 import {
   Dialog,
   DialogContent,
@@ -9,13 +9,13 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
-import { Textarea } from "@/components/ui/textarea";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { ImagePlus, X } from "lucide-react";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
-import SafeImage from "../SafeImage";
+import { ImagePlus, X } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Textarea } from "@/components/ui/textarea";
+import { useState, useRef, useEffect } from "react";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 export default function CreatePostDialog({ loggedInUser }) {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -57,8 +57,8 @@ export default function CreatePostDialog({ loggedInUser }) {
 
   if (!isMounted) {
     return (
-      <div className="flex items-center gap-2 p-4 bg-white rounded-lg shadow-sm cursor-pointer hover:bg-gray-50 z-30">
-        <Avatar className="w-8 h-8 bg-neutral-300 z-50 border font-semibold">
+      <div className="flex items-center gap-2 p-4 bg-white rounded-lg shadow-sm cursor-pointer hover:bg-gray-50 z-20">
+        <Avatar className="w-10 h-10 bg-neutral-300 z-50 border font-semibold">
           <SafeImage
             src={loggedInUser?.profileImageUrl !== "" ? loggedInUser?.profileImageUrl : null}
             fill
@@ -78,7 +78,7 @@ export default function CreatePostDialog({ loggedInUser }) {
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
         <DialogTrigger asChild>
           <div className="flex items-center gap-2 p-4 bg-white rounded-lg shadow-sm cursor-pointer hover:bg-gray-50 z-30">
-            <Avatar className="w-8 h-8 bg-neutral-300 z-50 border font-semibold">
+            <Avatar className="w-10 h-10 bg-neutral-300 z-50 border font-semibold">
               <SafeImage
                 src={loggedInUser?.profileImageUrl}
                 fill

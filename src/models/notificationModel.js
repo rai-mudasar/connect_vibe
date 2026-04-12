@@ -14,10 +14,10 @@ const notificationSchema = new mongoose.Schema(
     },
     type: {
       type: String,
-      enum: ["LIKE", "FRIEND_REQUEST", "COMMENT"],
+      enum: ["LIKE", "UNLIKE", "FRIEND_REQUEST", "COMMENT"],
       required: true,
     },
-    link: { 
+    redirectUrl: { 
         type: String 
     },
     isRead: { 

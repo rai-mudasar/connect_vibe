@@ -52,7 +52,7 @@ export default function NavBar({ loggedInUser, notifications }) {
               className={`${
                 isActive
                   ? "text-blue-600 border-b-2 border-blue-600"
-                  : "text-gray-600 hover:text-blue-500"
+                  : "text-gray-600 hover:text-blue-600"
               } px-1 py-2 text-sm font-medium transition-colors`}
             >
               {link.icon}
@@ -64,17 +64,17 @@ export default function NavBar({ loggedInUser, notifications }) {
       <section className="w-[15%] absolute md:relative top-1 right-2 flex items-center justify-end gap-2 mr-3 sm:space-x-2">
         <Link
           href={"/chat"}
-          className="p-2 bg-gray-200 hover:bg-gray-300 rounded-full cursor-pointer inline-flex"
+          className="p-2 bg-[#F0F2F5] hover:bg-[#1877F2] hover:text-white rounded-full cursor-pointer inline-flex"
         >
-          <MessageCircle size={20} className="text-black" />
+          <MessageCircle className="w-5 md:w-6 h-5 md:h-6" />
         </Link>
 
         <NotificationDrawer
           initialNotifications={notifications}
           loggedInUserId={loggedInUser.id}
         />
-        <button onClick={() => signOut()}>
-          <LogOut className="w-5.5 md:w-7 h-5.5 md:h-7" />
+        <button onClick={() => signOut()} className="cursor-pointer">
+          <LogOut className="w-5 md:w-6 h-5 md:h-6" />
         </button>
       </section>
     </nav>

@@ -4,16 +4,18 @@ import connectToDb from "@/lib/dbConnect";
 import { pusherServer } from "@/lib/pusher";
 import notificationModel from "@/models/notificationModel";
 import { revalidatePath } from "next/cache";
+import { getSessionUser } from "./userActions";
 
-export async function sendNotification(senderId, receiverId, notificationType) {
-  if (!notificationType || !receiverId || !senderId) {
+export async function sendNotification(senderId, receiverId, notificationType, redirectUrl) {
+  if (!senderId || !receiverId || !notificationType || !redirectUrl) {
     throw new Error("Invalid notification parameters")
 
-  }else if(senderId === receiverId){
+  } else if (senderId === receiverId) {
     throw new Error("Same user notification not recommended")
 
   } else if (
     notificationType !== "LIKE" &&
+    notificationType !== "UNLIKE" &&
     notificationType !== "FRIEND_REQUEST" &&
     notificationType !== "COMMENT"
   ) {
@@ -21,13 +23,15 @@ export async function sendNotification(senderId, receiverId, notificationType) {
   }
 
   try {
-    await connectToDb();
-
-    const notification = await notificationModel.create({
-      recipientId: receiverId,
-      senderId: senderId,
-      type: notificationType,
-    });
+    const [_, notification] = await Promise.all([
+      getSessionUser(),
+      notificationModel.create({
+        recipientId: receiverId,
+        senderId: senderId,
+        type: notificationType,
+        redirectUrl: redirectUrl,
+      }),
+    ])
 
     if (notification) {
       await pusherServer.trigger(
@@ -85,38 +89,31 @@ export async function getLoggedInUserNotifications(loggedInUserId) {
 }
 
 export async function readNotificationById(notificationId) {
-  if (!notificationId) {
-    return {
-      success: false,
-      message: "No NotificationId Received!",
-    };
-  }
-  try {
-    await connectToDb()
-    
-    const updatedNotification = await notificationModel.findByIdAndUpdate(
-      notificationId,
-      {
-        isRead: true,
-      },
-    );
+  if (!notificationId) throw new Error('No NotificationId Received!')
 
-    if (!updatedNotification) {
-      return {
-        success: false,
-        message: "Invalid NotificationId Received!",
-      };
-    }
+  try {
+    const [_, updatedNotification] = await Promise.all([
+      getSessionUser(),
+      notificationModel.findByIdAndUpdate(
+        notificationId,
+        {
+          isRead: true,
+        },
+      )
+    ]);
+
+    if (!updatedNotification) throw new Error("Invalid NotificationId or Notification not found!")
+
     return {
       success: true,
       message: "Read succcessfully",
     };
   } catch (error) {
-    console.log("Error in notification by id read action : ", error);
+    console.log(`Error in readNotificationById action : ${error.message || error}`);
 
     return {
       success: false,
-      message: `Error in notification by id read action : ${error.message}`,
+      message: `Error in readNotificationById action : ${error.message || error}`,
     };
   }
 };

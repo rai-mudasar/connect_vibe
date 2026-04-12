@@ -15,6 +15,7 @@ import { readNotificationById } from "@/actions/notificationActions";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import getSmartDateTime from "@/helpers/getSmartDate";
+import Link from "next/link";
 
 export default function NotificationDrawer({
   loggedInUserId,
@@ -30,16 +31,6 @@ export default function NotificationDrawer({
     (notification) => !notification.isRead,
   ).length;
 
-  // Handle opening the drawer
-  const handleOpenChange = async (newOpenState) => {
-    setOpen(newOpenState);
-
-    if (newOpenState && unreadCount > 0) {
-      setNotifications((prev) => prev.map((not) => ({ ...not, isRead: true })));
-
-        await markAllNotificationsAsRead(userId);
-    }
-  };
 
   const handleReadNotification = async (notificationId) => {
     setNotifications((prev) =>
@@ -47,11 +38,12 @@ export default function NotificationDrawer({
         not._id === notificationId ? { ...not, isRead: true } : not,
       ),
     );
+    setOpen(!open)
     const response = await readNotificationById(notificationId);
 
-    if(response.success) {
+    if (response.success) {
       router.refresh()
-    } else{
+    } else {
       toast.error(response.message)
     }
   };
@@ -60,27 +52,27 @@ export default function NotificationDrawer({
     setIsMounted(true);
   }, []);
 
-  useEffect(() => {
-    const channel = pusherClient.subscribe(`user-${loggedInUserId}`);
+  // useEffect(() => {
+  //   const channel = pusherClient.subscribe(`user-${loggedInUserId}`);
 
-    channel.bind("new-notification", (newNotification) => {
-      setNotifications((prev) => [newNotification, ...prev]);
-      router.refresh();
-    });
+  //   channel.bind("new-notification", (newNotification) => {
+  //     setNotifications((prev) => [newNotification, ...prev]);
+  //     router.refresh();
+  //   });
 
-    return () => {
-      channel.unbind_all();
-      pusherClient.unsubscribe(`user-${loggedInUserId}`);
-    };
-  }, [loggedInUserId]);
+  //   return () => {
+  //     channel.unbind_all();
+  //     pusherClient.unsubscribe(`user-${loggedInUserId}`);
+  //   };
+  // }, [loggedInUserId]);
 
   if (!isMounted) {
-    return <Bell className="w-5 md:w-6 h-5 md:h-6" />;
+    return <Bell className="w-5 md:w-6 h-5 md:h-6 cursor-pointer" />;
   }
   return (
-    <Sheet open={open} onOpenChange={handleOpenChange}>
-      <SheetTrigger className="relative p-2 rounded-full hover:bg-gray-100 transition">
-        <Bell className="w-5.5 md:w-7 h-5.5 md:h-7" />
+    <Sheet open={open} onOpenChange={state => setOpen(state)}>
+      <SheetTrigger className="relative p-2 rounded-full bg-[#F0F2F5] hover:bg-[#1877F2] transition cursor-pointer">
+        <Bell className="w-5 md:w-6 h-5 md:h-6" />
         {unreadCount > 0 && (
           <span className="absolute top-0 right-0 bg-red-500 text-white text-[10px] w-5 h-5 flex items-center justify-center rounded-full border-2 border-white animate-pulse">
             {unreadCount}
@@ -104,55 +96,61 @@ export default function NotificationDrawer({
           </SheetDescription>
         </SheetHeader>
 
-        <div className="mt-4 space-y-3 overflow-y-auto h-[calc(100vh-100px)] pr-2 px-2">
+        <div className="space-y-3 overflow-y-auto h-[calc(100vh-100px)] pr-2 px-2">
           {notifications.length > 0 ? (
             notifications.map((notification) => (
               // if there is navigation change the following div to link
-              <div
-                key={notification._id}
-                className={`p-3 rounded-xl border transition-colors ${
-                  notification.isRead
-                    ? "bg-white border-gray-100"
-                    : "bg-blue-50 border-blue-100 shadow-sm"
-                }`}
-              >
-                <div className="flex gap-3">
-                  <div
-                    className="flex-1"
-                    onClick={() => handleReadNotification(notification._id)}
-                  >
+              <Link href={`${notification.redirectUrl}`} key={notification._id}>
+                <div
+                  className={`p-3 rounded-xl border transition-colors hover:text-white mt-4 ${notification.isRead
+                    ? "bg-white hover:bg-gray-300 border-gray-200 "
+                    : "bg-blue-100 hover:bg-blue-400 border-blue-200 shadow-sm"
+                    }`}
+                >
+                  <div className="flex gap-3">
                     <div
-                      className={`text-sm ${notification.isRead ? "text-gray-600" : "text-gray-900 font-semibold"}`}
+                      className="flex-1"
+                      onClick={() => handleReadNotification(notification._id)}
                     >
-                      {notification.type === "LIKE" && (
-                        <div className="flex gap-1">
-                          <h1>{`${notification.senderId.firstName} ${notification.senderId.lastName}`}</h1>
-                          <span className="font-normal">likes your post.</span>
-                        </div>
-                      )}
-                      {notification.type === "COMMENT" && (
-                        <div className="flex gap-1">
-                          <h1>{`${notification.senderId.firstName} ${notification.senderId.lastName}`}</h1>
-                          <span className="font-normal">
-                            commented on your post.
-                          </span>
-                        </div>
-                      )}
-                      {notification.type === "FRIEND_REQUEST" && (
-                        <div className="flex gap-1">
-                          <h1>{`${notification.senderId.firstName} ${notification.senderId.lastName}`}</h1>
-                          <span className="font-normal">
-                            send you a friend request.
-                          </span>
-                        </div>
-                      )}
+                      <div
+                        className={`text-sm ${notification.isRead ? "" : "text-gray-900 font-semibold"}`}
+                      >
+                        {notification.type === "LIKE" && (
+                          <div className="flex gap-1">
+                            <h1>{`${notification.senderId.firstName} ${notification.senderId.lastName}`}</h1>
+                            <span className="font-normal">likes your post.</span>
+                          </div>
+                        )}
+                        {notification.type === "UNLIKE" && (
+                          <div className="flex gap-1">
+                            <h1>{`${notification.senderId.firstName} ${notification.senderId.lastName}`}</h1>
+                            <span className="font-normal">unlikes your post.</span>
+                          </div>
+                        )}
+                        {notification.type === "COMMENT" && (
+                          <div className="flex gap-1">
+                            <h1>{`${notification.senderId.firstName} ${notification.senderId.lastName}`}</h1>
+                            <span className="font-normal">
+                              commented on your post.
+                            </span>
+                          </div>
+                        )}
+                        {notification.type === "FRIEND_REQUEST" && (
+                          <div className="flex gap-1">
+                            <h1>{`${notification.senderId.firstName} ${notification.senderId.lastName}`}</h1>
+                            <span className="font-normal">
+                              send you a friend request.
+                            </span>
+                          </div>
+                        )}
+                      </div>
+                      <p className="text-[11px] font-semibold text-[#1877F2] mt-1">
+                        {getSmartDateTime(notification.createdAt)}
+                      </p>
                     </div>
-                    <p className="text-[10px] text-gray-400 mt-1">
-                      {getSmartDateTime(notification.createdAt)}
-                    </p>
                   </div>
                 </div>
-              </div>
+              </Link>
             ))
           ) : (
             <div className="flex flex-col items-center justify-center h-64 text-gray-400">

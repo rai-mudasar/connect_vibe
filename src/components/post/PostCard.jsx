@@ -1,9 +1,9 @@
 "use client";
 
 import { Heart, MoreHorizontal } from "lucide-react";
-import { deletePost, toggleLikes } from "@/actions/postActions";
+import { deletePostById, toggleLikes } from "@/actions/postActions";
 import { useState } from "react";
-import ViewPost from "./ViewPost";
+import ViewPostDialog from "./ViewPostDialog";
 import SafeImage from "../SafeImage";
 import getSmartDateTime from "@/helpers/getSmartDate";
 import {
@@ -43,7 +43,7 @@ export default function PostCard({ post, priority, loggedInUser }) {
 
   const handleDeletePost = async (postId) => {
     try {
-      const response = await deletePost(postId);
+      const response = await deletePostById(postId);
 
       if (response.success) {
         router.refresh()
@@ -57,8 +57,8 @@ export default function PostCard({ post, priority, loggedInUser }) {
   };
 
   return (
-    <div className="bg-white rounded-xl shadow-sm border border-gray-200 mb-2 md:mb-4 overflow-hidden relative">
-      {/* Post Header */}
+    <div className="w-full bg-white rounded-xl shadow-sm border border-gray-200 mb-2 md:mb-4 overflow-hidden relative">
+
       <div className="flex items-center justify-between p-4 pb-2 relative">
         <div className="flex items-center space-x-2">
           <div className="w-10 h-10 bg-gray-300 rounded-full overflow-hidden relative">
@@ -109,7 +109,6 @@ export default function PostCard({ post, priority, loggedInUser }) {
         <p className="text-[15px]">{post.caption}</p>
       </div>
 
-      {/* Optional Post Image */}
       {post.media && (
         <div className="w-full bg-gray-100 flex justify-center">
           <div className="w-full h-120 relative">
@@ -123,8 +122,7 @@ export default function PostCard({ post, priority, loggedInUser }) {
           </div>
         </div>
       )}
-
-      {/* Engagement Stats */}
+ 
       <div className="px-4 py-2 flex justify-between text-gray-500 text-[14px] border-b border-gray-100 mx-2">
         <div className="flex items-center space-x-1">
           <div className="bg-blue-500 rounded-full p-1">
@@ -132,12 +130,11 @@ export default function PostCard({ post, priority, loggedInUser }) {
           </div>
           <span>{post.likes.length}</span>
         </div>
-        <div className="flex space-x-3">
+        <Link href={`/post/${post._id}`} className="flex space-x-3">
           <span>{post.comments.length} comments</span>
-        </div>
+        </Link>
       </div>
 
-      {/* Action Buttons */}
       <div className="flex px-2 py-1">
         <button
           className="w-[50%] flex items-center justify-center space-x-2 py-2 hover:bg-gray-100 rounded-lg text-gray-600 font-medium cursor-pointer"
@@ -151,7 +148,7 @@ export default function PostCard({ post, priority, loggedInUser }) {
           <span>Like</span>
         </button>
         <div className="w-[50%] cursor-pointer">
-          <ViewPost post={post} />
+          <ViewPostDialog post={post} />
         </div>
       </div>
     </div>

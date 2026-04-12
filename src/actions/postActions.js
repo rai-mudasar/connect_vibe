@@ -84,6 +84,32 @@ import mongoose from "mongoose";
 //   }
 // }
 
+export async function getPostById(postId) {
+  try {
+    if (!postId) throw new Error("Post id is required!")
+
+    const [loggedInUser, post] = await Promise.all([
+      getSessionUser(),
+      postModel.findById(postId).populate('author', 'firstName lastName profileImageUrl').lean()
+    ])
+
+    if (!post) throw new Error('Post not found!')
+
+    return {
+      success: true,
+      message: 'Successfully completed!',
+      data: { "loggedInUser": loggedInUser, 'fetchedPost': JSON.parse(JSON.stringify(post)) }
+    }
+  } catch (error) {
+    console.error(`Error in get post by id action : ${error.message || error}`);
+
+    return {
+      success: false,
+      message: `Error in get post by id action : ${error.message || error}`,
+    };
+  }
+}
+
 export async function getAllPost() {
   try {
     connectToDb();
@@ -131,13 +157,34 @@ export async function toggleLikes(postId) {
     const hasLiked = post.likes.includes(sessionUser.id);
 
     if (hasLiked) {
-      await postModel.findByIdAndUpdate(postId, {
-        $pull: { likes: sessionUser.id },
-      });
+      const [updatedPost, _] = await Promise.all([
+        postModel.findByIdAndUpdate(postId, {
+          $pull: { likes: sessionUser.id },
+        }),
+
+        sendNotification(
+          sessionUser.id,
+          JSON.parse(JSON.stringify(post.author._id)),
+          'UNLIKE',
+          `${process.env.NEXTAUTH_URL}/post/${postId}`
+        )
+      ]);
+
+      if (!updatedPost) throw new Error("Something went wrong!")
     } else {
-      await postModel.findByIdAndUpdate(postId, {
-        $addToSet: { likes: sessionUser.id },
-      });
+      const [updatedPost, _] = await Promise.all([
+        postModel.findByIdAndUpdate(postId, {
+          $addToSet: { likes: sessionUser.id },
+        }),
+
+        sendNotification(
+          sessionUser.id,
+          JSON.parse(JSON.stringify(post.author._id)),
+          'LIKE',
+          `${process.env.NEXTAUTH_URL}/post/${postId}`
+        )
+      ]);
+      if (!updatedPost) throw new Error("Something went wrong!")
     }
 
     revalidatePath(`${process.env.NEXTAUTH_URL}/home`);
@@ -156,8 +203,8 @@ export async function toggleLikes(postId) {
 
 export async function getPostAllcomments(postId) {
   try {
-    connectToDb();
 
+    await getSessionUser()
     const allComments = await commentModel
       .find({ postId })
       .sort({ createdAt: -1 })
@@ -166,7 +213,7 @@ export async function getPostAllcomments(postId) {
 
     if (!allComments || allComments.length === 0) {
       return {
-        success: false,
+        success: true,
         message: "No Comment Available",
       };
     }
@@ -218,6 +265,7 @@ export async function addNewComment(postId, comment) {
         sessionUser.id,
         receiverId,
         "COMMENT",
+        `${process.env.NEXTAUTH_URL}/post/${updatedPost._id}`
       );
     }
     const updatedComment = await commentModel.findById(newComment.id).populate("author", "firstName lastName profileImageUrl")
@@ -238,7 +286,7 @@ export async function addNewComment(postId, comment) {
   }
 }
 
-export async function deletePost(postId) {
+export async function deletePostById(postId) {
   try {
     const [sessionUser, post] = await Promise.all([
       getSessionUser(),
