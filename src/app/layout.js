@@ -21,6 +21,9 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en" suppressHydrationWarning>
+      <head>
+        <meta name="google-site-verification" content="60DnIXcZogDPYNWq4_TsY8neI2B6Q8vEw-0jKfD2Vjc" />
+      </head>
       <body 
         className={`${geistSans.variable} ${geistMono.variable} antialiased  hide-scrollbar`}
       >
