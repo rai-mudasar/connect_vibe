@@ -26,18 +26,24 @@ export default function PostCard({ post, priority, loggedInUser }) {
   const router = useRouter();
 
   const handleToggleLikes = async () => {
-    const updatedLikes = isLiked
-      ? likedList.filter((id) => id !== userId)
-      : [...likedList, userId];
-    setLikedList(updatedLikes);
-    setIsLiked(!isLiked)
+    const userId = loggedInUser?._id;
+    if (!userId) return toast.error("Please login to like");
+
+    const wasLiked = isLiked;
+    setIsLiked(!isLiked);
+    setLikedList(prev => wasLiked
+      ? prev.filter(id => id !== userId)
+      : [...prev, userId]
+    );
+    router.refresh()
 
     try {
       const response = await toggleLikes(post._id);
-      if (response.success) return setLikedList(post.likes)
+      if (!response.success) throw new Error();
     } catch (error) {
+      setIsLiked(wasLiked);
       setLikedList(post.likes);
-      toast.error(error.message || error)
+      toast.error(`Could not update like : ${error.message || error}`);
     }
   };
 
@@ -122,7 +128,7 @@ export default function PostCard({ post, priority, loggedInUser }) {
           </div>
         </div>
       )}
- 
+
       <div className="px-4 py-2 flex justify-between text-gray-500 text-[14px] border-b border-gray-100 mx-2">
         <div className="flex items-center space-x-1">
           <div className="bg-blue-500 rounded-full p-1">

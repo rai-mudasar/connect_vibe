@@ -1,8 +1,11 @@
+
 import userModel from "@/models/userModel";
 import connectToDb from "@/lib/dbConnect";
-import { NextResponse } from "next/server";
+import { connection, NextResponse } from "next/server";
+
 
 export async function GET(request) {
+  await connection()
   await connectToDb();
 
   try {

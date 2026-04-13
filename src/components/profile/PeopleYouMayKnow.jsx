@@ -1,35 +1,31 @@
 'use client'
 
 import Link from 'next/link'
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import UserCard from './UserCard'
 import { toast } from 'sonner';
-import { getNearbyPeople, handleSentFriendRequest } from '@/actions/friendActions';
+import { handleSentFriendRequest } from '@/actions/friendActions';
+import { useRouter } from 'next/navigation';
 
-export default function PeopleYouMayKnow() {
-  const [users, setUsers] = useState([])
+export default function PeopleYouMayKnow({ knowUsers }) {
+  const [users, setUsers] = useState(knowUsers)
 
-  useEffect(() => {
-    fetchData()
-  }, [])
-
-  const fetchData = async () => {
-    const res = await getNearbyPeople();
-    if (res?.success) {
-      setUsers(res.data)
-      return
-    }
-  }
+  const router = useRouter()
 
   const handleOnAction = async (id, type) => {
-    let res;
-    if (type === "nearby") res = await handleSentFriendRequest(id);
+    const oldUsers = [...users];
+    setUsers(users.filter( user => user._id !== id))
+    
+    if (type === "nearby") {
+      const res = await handleSentFriendRequest(id);
 
-    if (res.success) {
-      toast.success(res.message)
-      fetchData();
-    } else {
-      toast.error(`Error : ${res.message}`)
+      if (res.success) {
+        toast.success(res.message)
+        router.refresh()
+      } else {
+        setUsers(oldUsers)
+        toast.error(`Error : ${res.message}`)
+      }
     }
   }
   return (

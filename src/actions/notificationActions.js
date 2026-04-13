@@ -1,17 +1,18 @@
 "use server";
 
-import connectToDb from "@/lib/dbConnect";
 import { pusherServer } from "@/lib/pusher";
 import notificationModel from "@/models/notificationModel";
 import { revalidatePath } from "next/cache";
 import { getSessionUser } from "./userActions";
+import { connection } from "next/server";
+import userModel from "@/models/userModel";
 
 export async function sendNotification(senderId, receiverId, notificationType, redirectUrl) {
   if (!senderId || !receiverId || !notificationType || !redirectUrl) {
     throw new Error("Invalid notification parameters")
 
   } else if (senderId === receiverId) {
-    throw new Error("Same user notification not recommended")
+    return
 
   } else if (
     notificationType !== "LIKE" &&
@@ -34,6 +35,7 @@ export async function sendNotification(senderId, receiverId, notificationType, r
     ])
 
     if (notification) {
+      // const newNotification = notificationModel.findById(notification._id).select('senderId').populate('senderId', 'username firstName lastName profileImageUrl').lean()
       await pusherServer.trigger(
         `user-${receiverId}`,
         "new-notification",
@@ -48,42 +50,34 @@ export async function sendNotification(senderId, receiverId, notificationType, r
   }
 }
 
-export async function getLoggedInUserNotifications(loggedInUserId) {
-  if (!loggedInUserId) {
-    return {
-      success: false,
-      message: "No receipient Id",
-    };
-  }
+export async function getLoggedInUserNotifications() {
+  await connection()
 
   try {
-    await connectToDb()
-    const notifications = await notificationModel
-      .find({
-        recipientId: loggedInUserId,
-      })
-      .populate("senderId", "firstName lastName profileImageUrl")
-      .lean();
+    const sessionUser = await getSessionUser()
+    const [notifications, loggedInUser] = await Promise.all([
+      notificationModel
+        .find({ recipientId: sessionUser.id })
+        .populate("senderId", "username firstName lastName profileImageUrl")
+        .lean(),
 
-    if (notifications) {
-      return {
-        success: true,
-        message: "Notification Fetched",
-        data: JSON.parse(JSON.stringify(notifications)),
-      };
-    } else {
-      return {
-        success: true,
-        message: "Notification Fetched Null",
-        data: [],
-      };
-    }
+      userModel
+        .findById(sessionUser.id)
+        .select('username')
+        .lean()
+    ])
+
+    return {
+      success: true,
+      message: "Notification Fetched",
+      data: { notifications: JSON.parse(JSON.stringify(notifications)), loggedInUser: JSON.parse(JSON.stringify(loggedInUser)) },
+    };
   } catch (error) {
-    console.log("Error in notification fetch action : ", error);
+    console.error(`Error in getLoggedInUserNotifications action : ${error.messsage || error}`);
 
     return {
       success: false,
-      message: `Error in notification fetch action : ${error.messsage}`,
+      message: `Error in getLoggedInUserNotifications action : ${error.messsage || error}`,
     };
   }
 }
@@ -109,7 +103,7 @@ export async function readNotificationById(notificationId) {
       message: "Read succcessfully",
     };
   } catch (error) {
-    console.log(`Error in readNotificationById action : ${error.message || error}`);
+    console.error(`Error in readNotificationById action : ${error.message || error}`);
 
     return {
       success: false,

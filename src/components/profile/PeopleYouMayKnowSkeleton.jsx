@@ -4,7 +4,7 @@ import Link from 'next/link'
 import React from 'react'
 
 
-export default function PeopleYouMayKnowSuspense() {
+export default function PeopleYouMayKnowSkeleton() {
     return (
         <div>
             <div className="flex justify-between mx-5 font-semibold text-md md:text-lg">

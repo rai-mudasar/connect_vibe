@@ -6,6 +6,7 @@ import { revalidatePath } from "next/cache";
 import { deleteFromCloudinary, uploadToCloudinary } from "@/helpers/Cloudinary";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/authOptions";
+import { connection } from "next/server";
 
 export async function getSessionUser() {
   const [_, session] = await Promise.all([
@@ -109,7 +110,7 @@ export async function deleteCoverImage(coverUrl, userId) {
 
   try {
     await connectToDb();
- 
+
     const user = await userModel.findById(userId);
 
     if (!user) throw new Error("No user found for this cover Image");
@@ -169,28 +170,18 @@ export async function updateProfile(userId, data) {
   }
 }
 
-export async function getLoggedInUser(sessionId) {
-  if (!sessionId) {
-    return {
-      success: false,
-      message: "No id to get for loggedIn user!",
-    };
-  }
+export async function getLoggedInUser() {
+  await connection()
 
   try {
-    await connectToDb();
+    const sessionUser = await getSessionUser();
 
     const loggedInUser = await userModel
-      .findById(sessionId)
+      .findById(sessionUser.id)
       .select("username firstName lastName email profileImageUrl")
       .lean();
 
-    if (!loggedInUser) {
-      return {
-        success: false,
-        message: "No user found for this Id!",
-      };
-    }
+    if (!loggedInUser) throw new Error("No user found for this Id!")
 
     return {
       success: true,
@@ -198,10 +189,39 @@ export async function getLoggedInUser(sessionId) {
       data: JSON.parse(JSON.stringify(loggedInUser)),
     };
   } catch (error) {
-    console.log("Error in getting loggedIn user action : ", error);
+    console.error(`Error in getLoggedInUser action : ${error.message || error}`);
     return {
       success: false,
-      message: `Error in getting loggedIn user action : ${error.message}`,
+      message: `Error in getLoggedInUser action : ${error.message || error}`,
+    };
+  }
+}
+
+export async function getLoggedInUserProfile(username) {
+  try {
+    const [sessionUser, loggedInUser] = await Promise.all([
+
+      getSessionUser(),
+      userModel
+        .findOne({ username })
+        .select("username firstName lastName profileImageUrl coverImageUrl bio location occupation relationshipStatus")
+        .lean()
+    ])
+
+    if (!loggedInUser) throw new Error("No user found for this username!")
+
+    const isOwnProfile = sessionUser.id === String(loggedInUser._id) ? true : false;
+
+    return {
+      success: true,
+      message: "LoggedInUser profile found!",
+      data: JSON.parse(JSON.stringify({loggedInUser: loggedInUser , isOwnProfile: isOwnProfile})),
+    };
+  } catch (error) {
+    console.error(`Error in getLoggedInUserProfile action : ${error.message || error}`);
+    return {
+      success: false,
+      message: `Error in getLoggedInUserProfile action : ${error.message || error}`,
     };
   }
 }

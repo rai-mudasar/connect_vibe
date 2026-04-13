@@ -1,16 +1,13 @@
 "use server";
 
-import { authOptions } from "@/lib/authOptions";
-import connectToDb from "@/lib/dbConnect";
-import commentModel from "@/models/commentModel";
+import userModel from "@/models/userModel";
 import postModel from "@/models/postModel";
-import { getServerSession } from "next-auth";
+import commentModel from "@/models/commentModel";
+import { connection } from "next/server";
 import { revalidatePath } from "next/cache";
+import { getSessionUser } from "./userActions";
 import { sendNotification } from "./notificationActions";
 import { deleteFromCloudinary } from "@/helpers/Cloudinary";
-import userModel from "@/models/userModel";
-import { getSessionUser } from "./userActions";
-import { New_Amsterdam } from "next/font/google";
 import mongoose from "mongoose";
 
 // export async function updatePost(postId, imageFile, postCaption) {
@@ -110,34 +107,61 @@ export async function getPostById(postId) {
   }
 }
 
-export async function getAllPost() {
+export async function getAllPosts() {
+  await connection()
   try {
-    connectToDb();
+    const [_, allPosts] = await Promise.all([
+      getSessionUser(),
+      postModel
+        .find({})
+        .sort({ createdAt: -1 })
+        .populate("author", "firstName lastName username profileImageUrl")
+        .lean(),
+    ]);
 
-    const posts = await postModel
-      .find({})
-      .sort({ createdAt: -1 })
-      .populate("author", "firstName lastName username profileImageUrl")
-      .lean();
+    return {
+      success: true,
+      message: "Fetched Successfully",
+      data: JSON.parse(JSON.stringify(allPosts)),
+    };
+  } catch (error) {
+    console.error(`Error in getting All post action : ${error.message || error}`);
+    return {
+      success: false,
+      message: `Error in getting All post action : ${error.message || error}`,
+    };
+  }
+}
 
-    if (!posts || posts.length === 0) {
+export async function getAllPostByAuthorId(authorId) {
+  try {
+    const [sessionUser, allPosts] = await Promise.all([
+      getSessionUser(),
+      postModel
+        .find({ author: authorId })
+        .sort({ createdAt: -1 })
+        .populate("author", "username firstName lastName profileImageUrl")
+        .lean(),
+    ]);
+
+    if (!allPosts || allPosts.length === 0) {
       return {
-        success: false,
-        message: "No post Available",
-        data: [],
-      };
+        success: true,
+        message: 'No post found',
+        data: []
+      }
     }
 
     return {
       success: true,
       message: "Fetched Successfully",
-      data: JSON.parse(JSON.stringify(posts)),
+      data: JSON.parse(JSON.stringify(allPosts)),
     };
   } catch (error) {
-    console.log("Error in getting All post action : ", error);
+    console.error(`Error in getAllPostByAuthorId action : ${error.message || error}`);
     return {
       success: false,
-      message: "Error in getting All post action",
+      message: `Error in getAllPostByAuthorId action : ${error.message || error}`,
     };
   }
 }
@@ -203,18 +227,20 @@ export async function toggleLikes(postId) {
 
 export async function getPostAllcomments(postId) {
   try {
-
-    await getSessionUser()
-    const allComments = await commentModel
-      .find({ postId })
-      .sort({ createdAt: -1 })
-      .populate("author", "firstName lastName profileImageUrl")
-      .lean();
+    const [_, allComments] = await Promise.all([
+      getSessionUser(),
+      commentModel
+        .find({ postId })
+        .sort({ createdAt: -1 })
+        .populate("author", "firstName lastName profileImageUrl")
+        .lean(),
+    ]);
 
     if (!allComments || allComments.length === 0) {
       return {
         success: true,
         message: "No Comment Available",
+        data: []
       };
     }
 
@@ -224,10 +250,10 @@ export async function getPostAllcomments(postId) {
       data: JSON.parse(JSON.stringify(allComments)),
     };
   } catch (error) {
-    console.log("Error in getting All comment action : ", error);
+    console.error(`Error in getting All comment action : ${error.message || error}`);
     return {
       success: false,
-      message: "Error in getting All comment action",
+      message: `Error in getting All comment action : ${error.message || error}`,
     };
   }
 }

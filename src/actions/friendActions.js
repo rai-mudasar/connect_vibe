@@ -1,38 +1,32 @@
 "use server";
 
-import connectToDb from "@/lib/dbConnect";
 import userModel from "@/models/userModel";
-import { authOptions } from "@/lib/authOptions";
-import { getServerSession } from "next-auth";
 import { revalidatePath } from "next/cache";
+import { getSessionUser } from "./userActions";
 
-async function getAuthSession() {
-  await connectToDb();
-  const session = await getServerSession(authOptions);
-  if (!session) throw new Error("Unauthorized");
-  return session;
-}
 
 export async function getFriends() {
   try {
-    const session = await getAuthSession();
-
-    const user = await userModel
+    const [_, user] = await Promise.all([
+      getSessionUser(),
+      userModel
       .findById(session.user.id)
       .populate(
         "friends",
         "firstName lastName username profileImageUrl occupation",
       )
-      .lean();
+      .lean(),
+    ])
 
     return {
       success: true,
       data: JSON.parse(JSON.stringify(user.friends || [])),
     };
   } catch (error) {
+    console.error(`Error in getFriends action : ${error.message || error}`)
     return {
       success: false,
-      message: error.message,
+      message: `Error in getFriends action : ${error.message || error}`,
       data: [],
     };
   }
@@ -40,18 +34,13 @@ export async function getFriends() {
 
 export async function getNearbyPeople() {
   try {
-    const session = await getAuthSession();
-    const userId = session.user.id;
+    const sessionUser = await getSessionUser();
+    const loggedInUserId = sessionUser.id;
 
-    // Fetch the current user to see who they are already connected with
-    const currentUser = await userModel.findById(userId);
+    const currentUser = await userModel.findById(loggedInUserId).select('friends friendRequestsSent friendRequestsReceived');
 
-    // Find users who:
-    // 1. Are NOT the current user
-    // 2. Are NOT already friends
-    // 3. Haven't sent/received a request to/from the current user
     const excludeIds = [
-      userId,
+      loggedInUserId,
       ...currentUser.friends,
       ...currentUser.friendRequestsSent,
       ...currentUser.friendRequestsReceived,
@@ -62,25 +51,31 @@ export async function getNearbyPeople() {
         _id: { $nin: excludeIds },
         isBanned: false,
       })
-      .select("firstName lastName username profileImageUrl occupation")
-      .limit(20)
+      .select("username firstName lastName profileImageUrl")
+      .limit(10)
       .lean();
 
     return {
       success: true,
+      message: "Fetch Successfully!",
       data: JSON.parse(JSON.stringify(users)),
     };
   } catch (error) {
-    return { success: false, message: error.message, data: [] };
+    console.error(`Error in getNearbyPeople action : ${error.message || error}`);
+    return { 
+      success: false, 
+      message: `Error in getNearbyPeople action : ${error.message || error}`, 
+      data: [] 
+    };
   }
 }
 
 export async function getPendingRequests() {
   try {
-    const session = await getAuthSession();
+    const sessionUser = await getSessionUser();
 
     const user = await userModel
-      .findById(session.user.id)
+      .findById(sessionUser.id)
       .populate(
         "friendRequestsReceived",
         "firstName lastName username profileImageUrl occupation",
@@ -102,10 +97,10 @@ export async function getPendingRequests() {
 
 export async function getSentRequests() {
   try {
-    const session = await getAuthSession();
+    const sessionUser = await getSessionUser();
 
     const user = await userModel
-      .findById(session.user.id)
+      .findById(sessionUser.id)
       .populate(
         "friendRequestsSent",
         "firstName lastName username profileImageUrl occupation",
@@ -117,40 +112,28 @@ export async function getSentRequests() {
       data: JSON.parse(JSON.stringify(user.friendRequestsSent || [])),
     };
   } catch (error) {
+    console.error(`Error in getSentRequests action : ${error.message || error}`)
     return {
       success: false,
-      message: error.message,
+      message: `Error in getSentRequests action : ${error.message || error}`,
       data: [],
     };
   }
 }
 
 export async function handleUnfriend(targetUserId) {
-  const session = await getAuthSession();
+  const sessionUser = await getSessionUser();
 
   try {
     const [targetUser, loggedInUser] = await Promise.all([
       userModel.findById(targetUserId),
-      userModel.findById(session.user.id),
+      userModel.findById(sessionUser.id),
     ]);
 
-    if (!targetUser)
-      return {
-        success: false,
-        message: "Target user not found",
-      };
-    if (!loggedInUser)
-      return {
-        success: false,
-        message: "Session user not found",
-      };
+    if (!targetUser) throw new Error("Target user not found")
+    if (!loggedInUser) throw new Error("LoggedIn user not found")
 
-    if (!loggedInUser.friends.includes(targetUserId)) {
-      return {
-        success: false,
-        message: "This user is not in your friend list",
-      };
-    }
+    if (!loggedInUser.friends.includes(targetUserId)) throw new Error("This user is not in your friend list")
 
     loggedInUser.friends.pull(targetUserId);
     targetUser.friends.pull(loggedInUser._id);
@@ -162,33 +145,25 @@ export async function handleUnfriend(targetUserId) {
       message: "Unfriended successfully",
     };
   } catch (error) {
-    console.error(error);
+    console.error(`Error in handleUnfriend action : ${error.message || error}`);
     return {
       success: false,
-      message: `An error occurred while unfriending : ${error.message || error}`,
+      message: `Error in handleUnfriend action : ${error.message || error}`,
     };
   }
 }
 
 export async function handleSentFriendRequest(targetUserId) {
-  const session = await getAuthSession();
+  const sessionUser = await getSessionUser();
 
   try {
     const [targetUser, loggedInUser] = await Promise.all([
       userModel.findById(targetUserId),
-      userModel.findById(session.user.id),
+      userModel.findById(sessionUser.id),
     ]);
 
-    if (!targetUser)
-      return {
-        success: false,
-        message: "Target user not found",
-      };
-    if (!loggedInUser)
-      return {
-        success: false,
-        message: "LoggedIn user not found",
-      };
+    if (!targetUser) throw new Error("Target user not found")
+    if (!loggedInUser) throw new Error("LoggedIn user not found")
 
     loggedInUser.friendRequestsSent.addToSet(targetUserId);
     targetUser.friendRequestsReceived.addToSet(loggedInUser._id);
@@ -211,24 +186,16 @@ export async function handleSentFriendRequest(targetUserId) {
 }
 
 export async function handleApproveFriendRequest(targetUserId) {
-  const session = await getAuthSession();
+  const sessionUser = await getSessionUser();
 
   try {
     const [targetUser, loggedInUser] = await Promise.all([
       userModel.findById(targetUserId),
-      userModel.findById(session.user.id),
+      userModel.findById(sessionUser.id),
     ]);
 
-    if (!targetUser)
-      return {
-        success: false,
-        message: "Target user not found",
-      };
-    if (!loggedInUser)
-      return {
-        success: false,
-        message: "Session user not found",
-      };
+    if (!targetUser) throw new Error("Target user not found")
+    if (!loggedInUser) throw new Error("LoggedIn user not found")
 
     loggedInUser.friends.addToSet(targetUserId);
     loggedInUser.friendRequestsReceived.pull(targetUserId)
@@ -243,51 +210,43 @@ export async function handleApproveFriendRequest(targetUserId) {
       message: "Approve friend request successfully",
     };
   } catch (error) {
-    console.error(error);
+    console.error(`Error in handleApproveFriendRequest action : ${error.message || error}`);
     return {
       success: false,
-      message: `An error occurred while approving friend Request : ${error.message || error}`,
+      message: `Error in handleApproveFriendRequest action : ${error.message || error}`,
     };
   }
 }
 
 export async function handleRejectFriendRequest(targetUserId) {
-  const session = await getAuthSession();
+  const sessionUser = await getSessionUser();
 
   try {
     const [targetUser, loggedInUser] = await Promise.all([
       userModel.findById(targetUserId),
-      userModel.findById(session.user.id),
+      userModel.findById(sessionUser.id),
     ]);
 
-    if (!targetUser) {
-      return {
-        success: false,
-        message: "Target user not found",
-      };
-    }
-
-    if (!loggedInUser) {
-      return {
-        success: false,
-        message: "LoggedIn user not found",
-      };
-    }
+    if (!targetUser) throw new Error("Target user not found")
+    if (!loggedInUser) throw new Error("LoggedIn user not found")
 
     loggedInUser.friendRequestsSent.pull(targetUserId);
     targetUser.friendRequestsReceived.pull(loggedInUser._id);
 
     await Promise.all([loggedInUser.save(), targetUser.save()]);
 
+    revalidatePath(`/friends`)
+    revalidatePath(`/profile/${loggedInUser?.username}`)
+
     return {
       success: true,
       message: "Cancelled sent friend request successfully",
     };
   } catch (error) {
-    console.error(error);
+    console.error(`Error in handleRejectFriendRequest action : ${error.message || error}`);
     return {
       success: false,
-      message: `An error occurred while cancelling send friend Request : ${error.message || error}`,
+      message: `Error in handleRejectFriendRequest action : ${error.message || error}`,
     };
   }
 }

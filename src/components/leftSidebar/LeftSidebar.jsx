@@ -1,9 +1,7 @@
-"use client";
+import SafeImage from "../SafeImage";
+import { Avatar, AvatarFallback } from "../ui/avatar";
 
-import SafeImage from "./SafeImage";
-import { Avatar, AvatarFallback } from "./ui/avatar";
-
-const LeftSidebar = ({ loggedInUser }) => {
+export default function LeftSidebar({ loggedInUser }) {
 
   return (
     <div className="w-0 md:min-w-70 md:w-[23%] hidden md:block p-2 bg-[#F2F4F7] dark:bg-[#333334] border-r border-gray-300 z-9 fixed">
@@ -35,5 +33,3 @@ const LeftSidebar = ({ loggedInUser }) => {
     </div>
   );
 };
-
-export default LeftSidebar;

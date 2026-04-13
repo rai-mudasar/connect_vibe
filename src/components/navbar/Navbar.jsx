@@ -8,13 +8,13 @@ import {
   LogOut,
 } from "lucide-react";
 import Link from "next/link";
-import SafeImage from "./SafeImage";
+import SafeImage from "../SafeImage";
 import { signOut } from "next-auth/react";
 import { usePathname } from "next/navigation";
-import { FacebookSearchDialog } from "./FacebookSearchDialog";
-import NotificationDrawer from "./notification/NotificationDrawer";
+import { FacebookSearchDialog } from "../FacebookSearchDialog";
+import NotificationDrawer from "../notification/NotificationDrawer";
 
-export default function NavBar({ loggedInUser, notifications }) {
+export default function Navbar({ loggedInUser, notifications }) {
   const pathname = usePathname();
 
   const navLinks = [
@@ -23,7 +23,7 @@ export default function NavBar({ loggedInUser, notifications }) {
     {
       icon: <User2Icon />,
       name: "Profile",
-      href: `/profile/${loggedInUser.username}`,
+      href: loggedInUser?.username ? `/profile/${loggedInUser.username}` : '#',
     },
   ];
 
@@ -71,7 +71,7 @@ export default function NavBar({ loggedInUser, notifications }) {
 
         <NotificationDrawer
           initialNotifications={notifications}
-          loggedInUserId={loggedInUser.id}
+          loggedInUserId={loggedInUser._id}
         />
         <button onClick={() => signOut()} className="cursor-pointer">
           <LogOut className="w-5 md:w-6 h-5 md:h-6" />
