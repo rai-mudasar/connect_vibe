@@ -1,6 +1,7 @@
 "use server";
 
 import userModel from "@/models/userModel";
+import { connection } from "next/server";
 import { revalidatePath } from "next/cache";
 import { getSessionUser } from "./userActions";
 
@@ -33,6 +34,7 @@ export async function getFriends() {
 }
 
 export async function getNearbyPeople() {
+  await connection();
   try {
     const sessionUser = await getSessionUser();
     const loggedInUserId = sessionUser.id;

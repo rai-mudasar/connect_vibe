@@ -1,5 +1,6 @@
 "use server";
 
+import { connection } from "next/server";
 import { pusherServer } from "@/lib/pusher";
 import { getSessionUser } from "./userActions";
 import connectToDb from "@/lib/dbConnect";
@@ -8,6 +9,8 @@ import messageModel from "@/models/messageModel";
 import conversationModel from "@/models/conversationModel";
 
 export async function getFriends() {
+  await connection();
+
   try {
     const sessionUser = await getSessionUser()
     const user = await userModel
@@ -32,6 +35,7 @@ export async function getFriends() {
 }
 
 export async function getLoggedInUserAllConversations() {
+  await connection();
   try {
     const sessionUser = await getSessionUser();
 
