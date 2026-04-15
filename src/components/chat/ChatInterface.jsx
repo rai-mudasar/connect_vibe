@@ -1,13 +1,13 @@
 "use client";
 
+import SafeImage from "../SafeImage";
 import { useRouter } from "next/navigation";
 import { pusherClient } from "@/lib/pusher";
 import { sendMessage } from "@/actions/chatActions";
 import { useState, useEffect, useRef } from "react";
-import { ArrowLeft, ChevronLeft, MoreVertical } from "lucide-react";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "../ui/dropdown-menu";
 import { Avatar, AvatarFallback } from "../ui/avatar";
-import SafeImage from "../SafeImage";
+import { ArrowLeft, MoreVertical } from "lucide-react";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "../ui/dropdown-menu";
 
 export default function ChatInterface({
   conversationId,
