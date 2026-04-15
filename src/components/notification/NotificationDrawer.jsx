@@ -100,7 +100,7 @@ export default function NotificationDrawer({
           {notifications.length > 0 ? (
             notifications.map((notification) => (
               // if there is navigation change the following div to link
-              <Link href={`${notification.redirectUrl}`} key={notification._id}>
+              <Link href={`${process.env.NEXTAUTH_URL}${notification.redirectUrl}`} key={notification._id}>
                 <div
                   className={`p-3 rounded-xl border transition-colors hover:text-white mt-4 ${notification.isRead
                     ? "bg-white hover:bg-gray-300 border-gray-200 "

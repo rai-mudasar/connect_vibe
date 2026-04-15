@@ -205,7 +205,7 @@ export async function toggleLikes(postId) {
           sessionUser.id,
           JSON.parse(JSON.stringify(post.author._id)),
           'LIKE',
-          `${process.env.NEXTAUTH_URL}/post/${postId}`
+          `/post/${postId}`
         )
       ]);
       if (!updatedPost) throw new Error("Something went wrong!")
@@ -291,7 +291,7 @@ export async function addNewComment(postId, comment) {
         sessionUser.id,
         receiverId,
         "COMMENT",
-        `${process.env.NEXTAUTH_URL}/post/${updatedPost._id}`
+        `/post/${updatedPost._id}`
       );
     }
     const updatedComment = await commentModel.findById(newComment.id).populate("author", "firstName lastName profileImageUrl")
