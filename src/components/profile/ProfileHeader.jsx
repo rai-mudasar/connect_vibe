@@ -10,7 +10,6 @@ import {
 import { useRef } from "react";
 import { toast } from "sonner";
 import SafeImage from "../SafeImage";
-import { useSession } from "next-auth/react";
 import EditProfileDialog from "./EditProfileDialog";
 import { Avatar, AvatarFallback } from "../ui/avatar";
 import { Camera, ImageUp, Trash2 } from "lucide-react";

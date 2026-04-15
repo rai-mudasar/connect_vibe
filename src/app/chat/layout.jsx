@@ -1,23 +1,13 @@
-import { getLoggedInUserAllConversations, getFriends } from "@/actions/chatActions";
-import ChatSidebar from "@/components/chat/ChatSidebar";
-import { authOptions } from "@/lib/authOptions";
-import { getServerSession } from "next-auth";
+import { Suspense } from "react";
+import ChatSdebarWrapper from "@/components/chat/ChatSdebarWrapper";
+import ChatSidebarSkeleton from "@/components/chat/ChatSidebarSkeleton";
 
-export default async function ChatLayout({ children }) {
-  const session = await getServerSession(authOptions);
-  const loggedInUserId = session.user.id;
-
-  const loggedInUserTotalChats = await getLoggedInUserAllConversations(loggedInUserId);
-  const friends = await getFriends(loggedInUserId);
-
+export default function ChatLayout({ children }) {
   return (
     <div className="flex w-screen h-screen overflow-hidden bg-white">
-      <ChatSidebar
-        loggedInUserTotalChats={loggedInUserTotalChats}
-        friends={friends}
-        loggedInUserId={loggedInUserId}
-      />
-
+      <Suspense fallback={<ChatSidebarSkeleton />}>
+        <ChatSdebarWrapper />
+      </Suspense>
       <main>{children}</main>
     </div>
   );

@@ -1,7 +1,7 @@
-import CredentialsProvider from "next-auth/providers/credentials";
-import userModel from "@/models/userModel";
-import dbConnect from "@/lib/dbConnect";
 import bcrypt from "bcryptjs";
+import dbConnect from "@/lib/dbConnect";
+import userModel from "@/models/userModel";
+import CredentialsProvider from "next-auth/providers/credentials";
 
 export const authOptions = {
   providers: [
@@ -52,19 +52,12 @@ export const authOptions = {
   ],
 
   callbacks: {
-    async jwt({ token, user, trigger, session }) {
+    async jwt({ token, user }) {
       if (user) {
         token.id = user._id?.toString();
         token.isVerified = user.isVerified;
         token.username = user.username;
       }
-
-      // if (trigger === "update" && session) {
-      //   token.id = session.user.id;
-      //   token.isVerified = session.user.isVerified;
-      //   token.username = session.user.username;
-      //   token.profileImageUrl = session.user.profileImageUrl;
-      // }
       return token;
     },
 

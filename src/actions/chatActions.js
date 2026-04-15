@@ -1,37 +1,58 @@
 "use server";
 
-import connectToDb from "@/lib/dbConnect";
 import { pusherServer } from "@/lib/pusher";
+import { getSessionUser } from "./userActions";
+import connectToDb from "@/lib/dbConnect";
 import userModel from "@/models/userModel";
 import messageModel from "@/models/messageModel";
 import conversationModel from "@/models/conversationModel";
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/lib/authOptions";
-import { getSessionUser } from "./userActions";
 
-export async function getFriends(loggedInUserId) {
-  await connectToDb();
-  const user = await userModel
-    .findById(loggedInUserId)
-    .populate("friends", "firstName lastName profileImageUrl");
+export async function getFriends() {
+  try {
+    const sessionUser = await getSessionUser()
+    const user = await userModel
+      .findById(sessionUser.id)
+      .populate("friends", "firstName lastName profileImageUrl")
+      .lean();
 
-  if (!user) return [];
+    if (!user) throw new Error("User not found!");
 
-  return JSON.parse(JSON.stringify(user.friends));
+    return {
+      success: true,
+      message: 'Fetched Successfully',
+      data: {'loggedInUserId': sessionUser.id, 'friends': JSON.parse(JSON.stringify(user.friends))}
+    };
+  } catch (error) {
+    console.error(`Error in getFriends action : ${error.message || error}`)
+    return {
+      success: false,
+      message: `Error in getFriends action : ${error.message || error}`,
+    }
+  }
 }
 
-export async function getLoggedInUserAllConversations(loggedInUserId) {
-  await connectToDb();
+export async function getLoggedInUserAllConversations() {
+  try {
+    const sessionUser = await getSessionUser();
 
-  const loggedInUserTotalConversations = await conversationModel
-    .find({
-      participants: { $in: [loggedInUserId] },
-    })
-    .populate("participants", "firstName lastName profileImageUrl")
-    .populate("lastMessage", "text createdAt")
-    .sort({ updatedAt: -1 });
+    const loggedInUserTotalConversations = await conversationModel
+      .find({ participants: { $in: [sessionUser.id] } })
+      .populate("participants", "firstName lastName profileImageUrl")
+      .populate("lastMessage", "text createdAt")
+      .sort({ updatedAt: -1 });
 
-  return JSON.parse(JSON.stringify(loggedInUserTotalConversations));
+    return {
+      success: true,
+      message: 'Fetched Successfully',
+      data: JSON.parse(JSON.stringify(loggedInUserTotalConversations))
+    };
+  } catch (error) {
+    console.error(`Error in getLoggedInUserAllConversations action : ${error.message || error}`)
+    return {
+      success: false,
+      message: `Error in getLoggedInUserAllConversations action : ${error.message || error}`,
+    }
+  }
 }
 
 export async function getOrCreateConversation(currentUserId, targetUserId) {
@@ -66,11 +87,11 @@ export async function getInitialChatData(conversationId) {
 
     const [messages, conversation] = await Promise.all([
       messageModel.find({ conversationId }).sort({ createdAt: 1 }),
-      conversationModel.findById(conversationId).populate('participants', 'firstName lastName')
+      conversationModel.findById(conversationId).populate('participants', 'firstName lastName profileImageUrl bio')
     ])
 
     const chattingPartner = (JSON.parse(JSON.stringify(conversation.participants[0]._id)) !== sessionUser.id) ? conversation.participants[0] : conversation.participants[1];
-    
+
     return {
       success: true,
       message: "Successfully executed",
@@ -78,6 +99,7 @@ export async function getInitialChatData(conversationId) {
     };
 
   } catch (error) {
+    console.error(`Error in getting initial chat data action : ${error.message || error}`)
     return {
       success: false,
       message: `Error in getting initial chat data action : ${error.message || error}`,

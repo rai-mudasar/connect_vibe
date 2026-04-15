@@ -1,11 +1,11 @@
 import { Suspense } from "react";
-import Loading from "@/components/Loading";
 import NavbarWrapper from "@/components/navbar/NavbarWrapper";
+import NavbarSkeleton from "@/components/navbar/NavbarSkeleton";
 
 export default function MainLayout({ children }) {
   return (
     <div className="w-full relative">
-      <Suspense fallback={<Loading />}>
+      <Suspense fallback={<NavbarSkeleton />}>
         <NavbarWrapper />
       </Suspense>
       <main>{children}</main>

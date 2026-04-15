@@ -2,7 +2,7 @@ import ProfileHeader from "@/components/profile/ProfileHeader";
 import UserDetail from "@/components/profile/UserDetail";
 import { Suspense } from "react";
 import { getLoggedInUserProfile } from "@/actions/userActions";
-import ProfilePostFeedWrapper from "@/components/post/ProfilePostFeedWrapper";
+import ProfilePostFeedWrapper from "@/components/profile/ProfilePostFeedWrapper";
 
 export default async function ProfilePage({ params }) {
   const { username } = await params;
