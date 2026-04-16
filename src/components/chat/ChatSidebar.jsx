@@ -3,12 +3,12 @@
 import Link from "next/link";
 import SafeImage from "../SafeImage";
 import { useEffect, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { User, MessageSquarePlus } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
-import { getOrCreateConversation } from "@/actions/chatActions";
+import { getLoggedInUserAllConversations, getOrCreateConversation } from "@/actions/chatActions";
 
 export default function ChatSidebar({
-  loggedInUserTotalChats,
   friends,
   loggedInUserId,
 }) {
@@ -18,12 +18,15 @@ export default function ChatSidebar({
   const [loading, setLoading] = useState(false);
   const [activeId, setActiveId] = useState('')
 
+  const { data: loggedInUserTotalChats } = useQuery({
+    queryKey: ['conversations'],
+    queryFn: async () => await getLoggedInUserAllConversations(),
+  });
 
-
-  useEffect(() => {
-    const id = pathname.split('/')
-    setActiveId(id[2])
-  }, [pathname])
+  // useEffect(() => {
+  //   const id = pathname.split('/')
+  //   setActiveId(id[2])
+  // }, [pathname])
 
   const handleOpenOrStartChat = async (targetUserId) => {
     setLoading(true);
@@ -43,7 +46,7 @@ export default function ChatSidebar({
     >
       <div className="w-full h-18 flex flex-row items-center justify-between pl-4 pr-7">
         <h2 className="text-xl md:text-2xl font-bold text-gray-800">Messages</h2>
-        <Link href={'/'} className="w-8 md:w-10 h-8 md:h-10 relative cursor-pointer">
+        <Link href={'/home'} className="w-8 md:w-10 h-8 md:h-10 relative cursor-pointer">
           <SafeImage
             src="/svg/fb_icon.svg"
             alt="Facebook Icon"
@@ -59,7 +62,7 @@ export default function ChatSidebar({
           <p className="text-xs font-semibold text-gray-500 uppercase px-2 mb-2">
             Recent
           </p>
-          {loggedInUserTotalChats.length > 0 ? (
+          {loggedInUserTotalChats?.length > 0 ? (
             loggedInUserTotalChats.map((chat) => {
               const otherUser = chat.participants.find(
                 (participant) => participant._id !== loggedInUserId,

@@ -71,7 +71,7 @@ export default function Navbar({ loggedInUser, notifications }) {
 
         <NotificationDrawer
           initialNotifications={notifications}
-          loggedInUserId={loggedInUser._id}
+          loggedInUserId={loggedInUser?._id}
         />
         <button onClick={() => signOut()} className="cursor-pointer">
           <LogOut className="w-5 md:w-6 h-5 md:h-6" />

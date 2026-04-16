@@ -13,7 +13,7 @@ export default function HomePage() {
         </Suspense>
       </div>
       <div className="w-screen md:w-150 mx-4 z-20">
-        <Suspense fallback={<Loading className={"h-[calc(100vh-56px)] md:pl-70"} />}>
+        <Suspense fallback={<Loading className={"h-screen md:pl-70"} />}>
           <HomePostFeedWrapper />
         </Suspense>
         <div className="flex md:hidden w-full h-3"></div>

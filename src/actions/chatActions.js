@@ -41,20 +41,39 @@ export async function getLoggedInUserAllConversations() {
 
     const loggedInUserTotalConversations = await conversationModel
       .find({ participants: { $in: [sessionUser.id] } })
-      .populate("participants", "firstName lastName profileImageUrl")
+      .populate("participants", "firstName lastName profileImageUrl bio")
       .populate("lastMessage", "text createdAt")
       .sort({ updatedAt: -1 });
 
-    return {
-      success: true,
-      message: 'Fetched Successfully',
-      data: JSON.parse(JSON.stringify(loggedInUserTotalConversations))
-    };
+    return JSON.parse(JSON.stringify(loggedInUserTotalConversations))
+    
   } catch (error) {
     console.error(`Error in getLoggedInUserAllConversations action : ${error.message || error}`)
     return {
       success: false,
       message: `Error in getLoggedInUserAllConversations action : ${error.message || error}`,
+    }
+  }
+}
+
+export async function getConversationsById(chatId) {
+  try {
+    const [_, conversation] = await Promise.all([
+      getSessionUser(),
+      conversationModel
+      .findById(chatId)
+      .populate("participants", "firstName lastName profileImageUrl bio")
+      .populate("lastMessage", "text createdAt")
+      .sort({ updatedAt: -1 }),
+    ]) 
+
+    return JSON.parse(JSON.stringify(conversation))
+
+  } catch (error) {
+    console.error(`Error in getConversationsById action : ${error.message || error}`)
+    return {
+      success: false,
+      message: `Error in getConversationsById action : ${error.message || error}`,
     }
   }
 }
@@ -86,20 +105,15 @@ export async function getOrCreateConversation(currentUserId, targetUserId) {
 export async function getInitialChatData(conversationId) {
   if (!conversationId) return;
   try {
-    const sessionUser = await getSessionUser();
-
-
-    const [messages, conversation] = await Promise.all([
-      messageModel.find({ conversationId }).sort({ createdAt: 1 }),
-      conversationModel.findById(conversationId).populate('participants', 'firstName lastName profileImageUrl bio')
+    const [sessionUser, messages] = await Promise.all([
+      getSessionUser(),
+      messageModel.find({ conversationId: conversationId}).sort({ createdAt: 1 }),
     ])
-
-    const chattingPartner = (JSON.parse(JSON.stringify(conversation.participants[0]._id)) !== sessionUser.id) ? conversation.participants[0] : conversation.participants[1];
 
     return {
       success: true,
       message: "Successfully executed",
-      data: JSON.parse(JSON.stringify({ "chattingUser": chattingPartner, "messages": messages }))
+      data: JSON.parse(JSON.stringify({ "currentLoggedInUserId": sessionUser.id, "messages": messages }))
     };
 
   } catch (error) {

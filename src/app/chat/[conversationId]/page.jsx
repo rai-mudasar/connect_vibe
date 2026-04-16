@@ -1,33 +1,24 @@
-import { getInitialChatData } from "@/actions/chatActions";
-import ChatInterface from "@/components/chat/ChatInterface";
-import { authOptions } from "@/lib/authOptions";
-import { getServerSession } from "next-auth";
+import ChatHeader from "@/components/chat/ChatHeader";
+import { Suspense } from "react";
+import ChatInterfaceWrapper from "@/components/chat/ChatInterfaceWrapper";
+import ChatFooter from "@/components/chat/ChatFooter";
+import Loading from "@/components/Loading";
 
 export default async function ConversationPage({ params }) {
   const { conversationId } = await params;
-  const session = await getServerSession(authOptions);
-  let initialChatData;
-
-  try {
-    const response = await getInitialChatData(conversationId);
-    if (!response.success) {
-      throw new Error(response.message)
-    }
-
-    initialChatData = response.data;
-
-  } catch (error) {
-    console.error(`Error : ${error.message || error}`)
-  }
 
   return (
-    <div className="w-screen sm:w-[calc(100vw-320px)] h-screen">
-      <ChatInterface
-        key={conversationId}
-        conversationId={conversationId}
-        currentLoggedInUser={session.user}
-        initialChatData={initialChatData}
-      />
+    <div className="w-screen sm:w-[calc(100vw-320px)] h-dvh flex flex-col overflow-hidden">
+
+      <ChatHeader conversationId={conversationId} />
+
+      <div className="flex-1 overflow-y-auto bg-gray-300 hide-scrollbar">
+        <Suspense fallback={<Loading className={'bg-gray-300'} />}>
+          <ChatInterfaceWrapper conversationId={conversationId} />
+        </Suspense>
+      </div>
+
+      <ChatFooter conversationId={conversationId} />
     </div>
   );
 }
