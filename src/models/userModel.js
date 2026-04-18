@@ -31,6 +31,7 @@ const userSchema = new mongoose.Schema(
     ],
 
     posts: [{ type: mongoose.Schema.Types.ObjectId, ref: "post" }],
+    postCount: { type: Number, default: 0 },
     savedPosts: [{ type: mongoose.Schema.Types.ObjectId, ref: "post" }],
 
     notifications: [
@@ -45,8 +46,9 @@ const userSchema = new mongoose.Schema(
       },
       showEmail: { type: Boolean, default: false },
     },
-
+    
     isBanned: { type: Boolean, default: false },
+    lastSeen: Date,
   },
   { timestamps: true },
 );

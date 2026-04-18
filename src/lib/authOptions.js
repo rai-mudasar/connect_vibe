@@ -55,8 +55,9 @@ export const authOptions = {
     async jwt({ token, user }) {
       if (user) {
         token.id = user._id?.toString();
-        token.isVerified = user.isVerified;
+        token.role = user.role;
         token.username = user.username;
+        token.isVerified = user.isVerified;
       }
       return token;
     },
@@ -64,8 +65,9 @@ export const authOptions = {
     async session({ session, token }) {
       if (token) {
         session.user.id = token.id;  
-        session.user.isVerified = token.isVerified;
+        session.user.role = token.role
         session.user.username = token.username;
+        session.user.isVerified = token.isVerified;
       }
       return session;
     },
