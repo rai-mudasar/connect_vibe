@@ -14,19 +14,12 @@ export async function proxy(request) {
     (url.pathname === "/" ||
       url.pathname.startsWith("/home") ||
       url.pathname.startsWith("/friends") ||
-      url.pathname.startsWith("/profile"))
+      url.pathname.startsWith("/profile") ||
+      url.pathname.startsWith("/chat") ||
+      url.pathname.startsWith("/admin") ||
+      url.pathname.startsWith("/admin/:path") )
   ) {
     return NextResponse.redirect(new URL("/login", request.url));
-  }
-
-  if (
-    token && (token.role === 'admin') &&
-    (url.pathname === "/" ||
-      url.pathname.startsWith("/login") ||
-      url.pathname.startsWith("/signup") ||
-      url.pathname.startsWith("/verify"))
-  ) {
-    return NextResponse.redirect(new URL("/admin", request.url));
   }
 
   if (
@@ -35,9 +28,16 @@ export async function proxy(request) {
       url.pathname.startsWith("/login") ||
       url.pathname.startsWith("/signup") ||
       url.pathname.startsWith("/verify"))
-  ) {
-    return NextResponse.redirect(new URL("/home", request.url));
-  }
+    ) {
+      return NextResponse.redirect(new URL("/home", request.url));
+    }
+
+    if (
+      token && (token.role !== 'admin') &&
+      (url.pathname.startsWith("/admin"))
+    ) {
+      return NextResponse.redirect(new URL("/home", request.url));
+    }
 
 
   return NextResponse.next();
@@ -52,6 +52,6 @@ export const config = {
     "/friends",
     "/profile/:path*",
     "/verify/:path*",
-    // "/admin/:path*",
+    "/admin/:path*",
   ],
 };

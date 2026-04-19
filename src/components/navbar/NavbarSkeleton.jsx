@@ -61,9 +61,7 @@ export default function NavbarSkeleton() {
                 <div className="relative p-2 rounded-full bg-[#F0F2F5] hover:bg-[#1877F2] transition cursor-pointer">
                     <Bell className="w-5 md:w-6 h-5 md:h-6" />
                 </div>
-                <button className="cursor-pointer">
-                    <LogOut className="w-5 md:w-6 h-5 md:h-6" />
-                </button>
+                <div className="w-9 md:w-10 h-9 md:h-10 border-white bg-neutral-300"></div>
             </section>
         </nav>
     );
