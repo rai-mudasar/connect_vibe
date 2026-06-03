@@ -42,17 +42,12 @@ export default function ChatSidebar({
 
   return (
     <div
-      className={`${isChatting ? "hidden sm:flex" : "flex"} w-screen sm:w-80 h-screen bg-gray-100 flex-col`}
+      className={`${isChatting ? "hidden sm:flex" : "flex"} w-screen sm:w-80 h-screen bg-bg flex-col border-r border-border`}
     >
       <div className="w-full h-18 flex flex-row items-center justify-between pl-4 pr-7">
-        <h2 className="text-xl md:text-2xl font-bold text-gray-800">Messages</h2>
-        <Link href={'/home'} className="w-8 md:w-10 h-8 md:h-10 relative cursor-pointer">
-          <SafeImage
-            src="/svg/fb_icon.svg"
-            alt="Facebook Icon"
-            fill
-            className={'w-8 md:w-8.5 h-8 md:h-8.5 object-cover'}
-          />
+        <h2 className="text-xl md:text-2xl font-bold text-secondary">Messages</h2>
+        <Link href={'/home'} className="relative cursor-pointer">
+          <p className="text-[22px] text-secondary font-semibold">Connect<span className="text-primary">Vibe.</span></p>
         </Link>
       </div>
 

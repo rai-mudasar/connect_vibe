@@ -71,7 +71,7 @@ export default function NotificationDrawer({
   }
   return (
     <Sheet open={open} onOpenChange={state => setOpen(state)}>
-      <SheetTrigger className="w-9 md:w-10 h-9 md:h-10 relative flex justify-center items-center rounded-full bg-[#F0F2F5] hover:bg-[#1877F2] transition cursor-pointer">
+      <SheetTrigger className="w-9 md:w-10 h-9 md:h-10 relative flex justify-center items-center rounded-full bg-bg hover:bg-primary text-primary hover:text-secondary border border-border transition cursor-pointer">
         <Bell className="w-5 md:w-6 h-5 md:h-6" />
         {unreadCount > 0 && (
           <span className="absolute top-0 right-0 bg-red-500 text-white text-[10px] w-5 h-5 flex items-center justify-center rounded-full border-2 border-white animate-pulse">

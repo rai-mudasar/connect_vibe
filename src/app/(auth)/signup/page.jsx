@@ -90,12 +90,12 @@ const Signup = () => {
   };
 
   return (
-    <div className="h-screen w-full bg-[#F0F2F5] px-4 md:px-0 pt-20 sm:pt-15 md:pt-10 flex flex-col items-center gap-9">
-      <div className="text-[#0866FF] text-3xl md:text-5xl font-bold">
-        facebook
+    <div className="h-screen w-full bg-bg px-4 md:px-0 pt-20 sm:pt-15 md:pt-10 flex flex-col items-center gap-9">
+      <div className="text-primary text-3xl md:text-5xl font-bold">
+        <span className="text-secondary">Connect</span>Vibe.
       </div>
-      <div className="p-10 shadow-xl/30 rounded-4xl bg-white mx-4">
-        <div className="w-68 md:w-80">
+      <div className="p-10 shadow-xl/10 shadow-[#032062] rounded-4xl bg-card border border-border">
+        <div className="w-68 md:w-80 text-secondary">
           <Form {...form}>
             <form
               onSubmit={form.handleSubmit(onSubmit)}
@@ -108,10 +108,18 @@ const Signup = () => {
                   <FormItem>
                     <FormLabel className="text-[18px]">Username</FormLabel>
                     <FormControl>
-                      <Input placeholder="username" {...field} />
+                      <Input
+                        id="username"
+                        placeholder="username"
+                        autoComplete="username"
+                        autoFocus
+                        required
+                        className={'border-border focus-visible:ring-[1px] md:focus-visible:ring-[2px]'}
+                        {...field}
+                      />
                     </FormControl>
                     <p
-                      className={`text-sm ${usernameMessage === "Username is available" ? "text-green-500" : "text-red-500"}`}
+                      className={`text-sm ${usernameMessage === "Username is available" ? "text-green-400" : "text-red-500"}`}
                     >
                       {usernameMessage}
                     </p>
@@ -128,7 +136,14 @@ const Signup = () => {
                   <FormItem>
                     <FormLabel className="text-[18px]">Email</FormLabel>
                     <FormControl>
-                      <Input placeholder="email@gmail.com" {...field} />
+                      <Input
+                        id="email"
+                        placeholder="email@gmail.com"
+                        autoComplete="email"
+                        required
+                        className={'border-border focus-visible:ring-[1px] md:focus-visible:ring-[2px]'}
+                        {...field}
+                      />
                     </FormControl>
                     <FormMessage className={'text-red-600'} />
                   </FormItem>
@@ -146,7 +161,9 @@ const Signup = () => {
                         <Input
                           type={showPassword ? "text" : "password"}
                           placeholder="password"
+                          required
                           autoComplete="new-password"
+                          className={'border-border focus-visible:ring-[1px] md:focus-visible:ring-[2px]'}
                           {...field}
                         />
 
@@ -159,9 +176,9 @@ const Signup = () => {
                           }
                         >
                           {showPassword ? (
-                            <EyeOff className="h-5 w-5" />
+                            <EyeOff className="h-5 w-5 text-label" />
                           ) : (
-                            <Eye className="h-5 w-5" />
+                            <Eye className="h-5 w-5 text-label" />
                           )}
                         </button>
                       </div>
@@ -174,12 +191,13 @@ const Signup = () => {
               <Button
                 type="submit"
                 disabled={isSubmitting || !isUsernameAvailable}
-                className="bg-[#0866FF] text-white text-[18px] md:text-[21px] font-semibold"
+                className="bg-bg hover:bg-primary border border-border text-primary hover:text-secondary font-semibold text-[18px] md:text-[21px]"
               >
                 {isSubmitting ? (
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin">
-                    Signing Up
-                  </Loader2>
+                  <>
+                    <p>signing up</p>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  </>
                 ) : (
                   "Signup"
                 )}
@@ -188,11 +206,11 @@ const Signup = () => {
           </Form>
         </div>
 
-        <div className="text-sm mt-6 font-semibold flex gap-3 text-[#0866FF] cursor-pointer">
-          <p className="text-black cursor-default">
+        <div className="text-sm mt-6 font-semibold flex gap-3 text-primary cursor-pointer">
+          <p className="text-label cursor-default">
             Do you already have an account ?
           </p>
-          <Link href={"/login"}> Login </Link>
+          <Link href={"/login"} > Login </Link>
         </div>
       </div>
     </div>

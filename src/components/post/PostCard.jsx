@@ -63,7 +63,7 @@ export default function PostCard({ post, priority, loggedInUser }) {
   };
 
   return (
-    <div className="w-full bg-white rounded-xl shadow-sm border border-gray-200 mb-2 md:mb-4 overflow-hidden relative">
+    <div className="w-full bg-card rounded-xl shadow-sm border border-border mb-2 md:mb-4 overflow-hidden relative text-secondary">
 
       <div className="flex items-center justify-between p-4 pb-2 relative">
         <div className="flex items-center space-x-2">
@@ -131,7 +131,7 @@ export default function PostCard({ post, priority, loggedInUser }) {
 
       <div className="px-4 py-2 flex justify-between text-gray-500 text-[14px] border-b border-gray-100 mx-2">
         <div className="flex items-center space-x-1">
-          <div className="bg-blue-500 rounded-full p-1">
+          <div className="bg-primary rounded-full p-1">
             <Heart size={12} className="text-white" />
           </div>
           <span>{post.likes.length}</span>

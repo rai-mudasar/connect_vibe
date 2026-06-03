@@ -16,8 +16,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata = {
-  title: "Facebook | Clone",
-  description: "Final Year Project",
+  title: "Connect Vibe",
+  description: "Dost ki vibe sa connect kro!",
 };
 
 export default function RootLayout({ children }) {

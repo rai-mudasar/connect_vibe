@@ -1,6 +1,6 @@
+import { NextResponse } from "next/server";
 import bcryptjs from "bcryptjs";
 import connectToDb from "@/lib/dbConnect";
-import { NextResponse } from "next/server";
 import userModel from "@/models/userModel";
 import sendEmailToUser from "@/helpers/sendEmail";
 
@@ -11,8 +11,6 @@ export async function POST(request) {
     const { email, username, password } = await request.json();
     const otp = Math.floor(100000 + Math.random() * 900000).toString();
 
-    console.log('Username : ', username);
-    console.log('Email : ', email);
     const existingVerifiedUser = await userModel.findOne({
       $or: [{ email: email }, { username: username }],
       isVerified: true,

@@ -6,7 +6,7 @@ import { authOptions } from "@/lib/authOptions"
 import { getLoggedInUser } from "@/actions/userActions"
 
 export const metadata = {
-  title: "Admin Panel — Facebook Clone",
+  title: "Admin Panel | Connect Vibe",
 }
 
 export default async function AdminLayout({ children }) {

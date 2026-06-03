@@ -1,5 +1,6 @@
 "use server";
 
+import mongoose from "mongoose";
 import userModel from "@/models/userModel";
 import postModel from "@/models/postModel";
 import commentModel from "@/models/commentModel";
@@ -8,78 +9,6 @@ import { revalidatePath } from "next/cache";
 import { getSessionUser } from "./userActions";
 import { sendNotification } from "./notificationActions";
 import { deleteFromCloudinary } from "@/helpers/Cloudinary";
-import mongoose from "mongoose";
-
-// export async function updatePost(postId, imageFile, postCaption) {
-//   if (!imageFile) {
-//     return {
-//       success: false,
-//       message: "No file image reached",
-//     }
-//   }
-
-//   try {
-//     const session = await getServerSession(authOptions);
-
-//     if (!session || !session.user) {
-//       return {
-//         success: false,
-//         message: "Unauthorize",
-//       }
-//     }
-
-//     const post = await postModel.findById(postId)
-
-//     if (!post) {
-//       return {
-//         success: false,
-//         message: "Post not found to edit",
-//       }
-//     }
-
-//     if (!post.author._id === session.user.id) {
-//       return {
-//         success: false,
-//         message: "You can edit what you own",
-//       }
-//     }
-
-//     const response = await uploadToCloudinary(imageFile);
-
-//     const newPost = new postModel({
-//       author: session.user.id,
-//       media: response.url,
-//       mediaType: "image",
-//       caption: postCaption,
-//     });
-
-//     await newPost.save();
-
-//     const user = await userModel.findByIdAndUpdate(
-//       session.user.id,
-//       { $push: { posts: newPost._id } },
-//       { new: true },
-//     );
-
-//     if (!user) {
-//       return {
-//           success: false,
-//           message: "No user found for this post",
-//         }
-//     }
-
-//     return {
-//       success: true,
-//       message: "Image Posted to user feed",
-//     }
-//   } catch (error) {
-//     console.log("Error is Create Post route : ", error);
-//     return {
-//       success: false,
-//       message: "Error is Create Post route",
-//     }
-//   }
-// }
 
 export async function getPostById(postId) {
   try {
@@ -329,8 +258,10 @@ export async function deletePostById(postId) {
 
     await Promise.all([
       postModel.findByIdAndDelete(postId),
-      userModel.findByIdAndUpdate(post.author._Id, {
+      commentModel.deleteMany({ postId: postId }),
+      userModel.findByIdAndUpdate(post.author._id, {
         $pull: { posts: postId },
+        $inc: { postCount: -1 },
       }),
     ]);
 

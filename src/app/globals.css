@@ -1,5 +1,15 @@
 @import "tailwindcss";
 
+@theme {
+  --color-primary: #D85A30;
+  --color-primary-hover: #c24f28;
+  --color-secondary: #ffffff;
+  --color-bg: #031a50 ;
+  --color-border: #0d2d7a;
+  --color-label: #7a93c8;
+  --color-card: #082363;
+}
+
 @utility hide-scrollbar {
   &::-webkit-scrollbar {
     display: none;
@@ -7,8 +17,35 @@
 
   scrollbar-width: none;
   -ms-overflow-style: none;
-};
+}
 
 @theme {
   --breakpoint-mob: 500px;
+}
+
+@layer base {
+  ::-webkit-scrollbar {
+    width: 5px;
+    height: 2px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 10px;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: #a1cbfd;
+    border-radius: 10px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: #0469f7;
+  }
+
+  /* For Firefox (Firefox uses different properties) */
+  /* * {
+    scrollbar-width: thin;
+    scrollbar-color: #cbd5e1 #0469f7;
+  } */
 }

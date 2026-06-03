@@ -32,12 +32,12 @@ export function FacebookSearchDialog() {
 
   return (
     <div className="relative">
-      <div className="w-40 md:w-60 h-8 md:h-10 text-[#333334] dark:text-white bg-[#F0F2F5] dark:bg-neutral-700 rounded-2xl flex items-center justify-center pl-2 md:pl-6 gap-2 ">
+      <div className="w-60 h-8 md:h-10 text-[#333334] dark:text-white bg-[#F0F2F5] dark:bg-neutral-700 rounded-2xl hidden md:flex items-center justify-center pl-2 md:pl-6 gap-2 ">
         <Search size={28} className="text-neutral-400 stroke-[2px]" />
         <Input
           value={inputData}
           onChange={(e) => setInputData(e.target.value)}
-          placeholder={"Search Facebook"}
+          placeholder={"Search Connect Vibe"}
           className={
             "bg-transparent border-0 placeholder:text-neutral-500 dark:placeholder:text-neutral-400 w-full h-full text-sm -ml-3 rounded-2xl shadow-none focus-visible:ring-0"
           }

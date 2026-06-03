@@ -200,7 +200,6 @@ export async function getLoggedInUser() {
 export async function getLoggedInUserProfile(username) {
   try {
     const [sessionUser, loggedInUser] = await Promise.all([
-
       getSessionUser(),
       userModel
         .findOne({ username })
@@ -208,7 +207,7 @@ export async function getLoggedInUserProfile(username) {
         .lean()
     ])
 
-    if (!loggedInUser) throw new Error("No user found for this username!")
+    if (!loggedInUser) throw new Error(`No user found for this username : ${username}!`)
 
     const isOwnProfile = sessionUser.id === String(loggedInUser._id) ? true : false;
 

@@ -76,8 +76,8 @@ export default function ProfileHeader({ currentProfileUser, isOwnProfile }) {
         ref={profileInputRef}
         onChange={handleUpdateProfileImage}
       />
-      <section className="h-50 md:h-90 relative rounded-b-3xl object-cover overflow-hidden bg-neutral-200 border border-neutral-300 flex justify-center items-center">
-        {(!currentProfileUser?.coverImageUrl || currentProfileUser?.coverImageUrl === "") && <p className="font-semibold lg:text-5xl">Upload a cover Image</p>}
+      <section className="h-50 md:h-90 relative rounded-b-3xl object-cover overflow-hidden bg-card border border-border flex justify-center items-center">
+        {(!currentProfileUser?.coverImageUrl || currentProfileUser?.coverImageUrl === "") && <p className="font-semibold lg:text-5xl text-primary">{isOwnProfile ? 'Upload a cover Image' : 'No Cover Image!'}</p>}
         {currentProfileUser?.coverImageUrl !== "" &&
           <SafeImage
             src={currentProfileUser?.coverImageUrl !== "" ? currentProfileUser?.coverImageUrl : null}
@@ -89,10 +89,10 @@ export default function ProfileHeader({ currentProfileUser, isOwnProfile }) {
         {isOwnProfile && (
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <div className="absolute bottom-5 right-5 border-2 text-black font-semibold bg-[#F2F2F2] px-4 py-2 rounded-[10px] flex gap-2 cursor-pointer">
+              <div className="absolute bottom-5 right-5 border border-border text-primary font-semibold bg-bg px-4 py-2 rounded-[10px] flex gap-2 cursor-pointer">
                 <Camera
-                  className="text-[#F2F2F2]"
-                  fill="black"
+                  className="text-primary"
+                  fill=""
                   size={28}
                   strokeWidth="1px"
                 />
@@ -100,7 +100,7 @@ export default function ProfileHeader({ currentProfileUser, isOwnProfile }) {
               </div>
             </DropdownMenuTrigger>
 
-            <DropdownMenuContent className={"bg-white mr-8 md:mr-0"}>
+            <DropdownMenuContent className={"bg-card text-primary border-border mr-8 md:mr-0"}>
               <DropdownMenuGroup>
                 <DropdownMenuItem
                   onClick={handleCoverInputRef}
@@ -125,7 +125,7 @@ export default function ProfileHeader({ currentProfileUser, isOwnProfile }) {
       {/* Profile Section */}
       <section className="h-51 md:h-51 flex flex-row items-start md:items-center pl-3 md:px-17 -mt-5 md:mt-0 relative">
         <div className=" relative">
-          <Avatar className="w-26 md:w-40 h-26 md:h-40 border-3 md:border-0 border-white bg-neutral-300">
+          <Avatar className="w-26 md:w-40 h-26 md:h-40 border-3 md:border-0 border-border bg-neutral-300">
             <SafeImage
               src={currentProfileUser?.profileImageUrl !== "" ? currentProfileUser?.profileImageUrl : null}
               fill
@@ -136,12 +136,12 @@ export default function ProfileHeader({ currentProfileUser, isOwnProfile }) {
           </Avatar>
           {isOwnProfile && (
             <div
-              className="w-7 md:w-9 h-7 md:h-9 bg-[#D6D9DD] rounded-full absolute bottom-4 right-0 flex justify-center items-center cursor-pointer"
+              className="w-7 md:w-9 h-7 md:h-9 bg-primary rounded-full absolute bottom-4 right-0 flex justify-center items-center cursor-pointer"
               onClick={handleProfileInputRef}
             >
               <Camera
-                className="text-[#D6D9DD] w-6 md:w-7 h-6 md:h-7"
-                fill="black"
+                className="text-primary w-6 md:w-7 h-6 md:h-7"
+                fill=""
                 strokeWidth="1px"
               />
             </div>
@@ -150,11 +150,11 @@ export default function ProfileHeader({ currentProfileUser, isOwnProfile }) {
 
         <div className="flex flex-col ml-3 md:ml-5 mt-9 md:mt-0 md:gap-1">
           <div>
-            <h2 className="text-xl md:text-2xl font-bold">
+            <h2 className="text-xl md:text-2xl font-bold text-primary">
               {currentProfileUser?.firstName} {currentProfileUser?.lastName}
             </h2>
           </div>
-          <div className="text-[12px] md:text-lg font-semibold ml-1 md:ml-0 text-gray-500">
+          <div className="text-[12px] md:text-lg font-semibold ml-1 md:ml-0 text-label">
             <p>{currentProfileUser?.bio}</p>
           </div>
         </div>

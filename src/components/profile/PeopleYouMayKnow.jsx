@@ -1,11 +1,11 @@
 'use client'
 
 import Link from 'next/link'
-import React, { useState } from 'react'
 import UserCard from './UserCard'
+import React, { useState } from 'react'
 import { toast } from 'sonner';
-import { handleSentFriendRequest } from '@/actions/friendActions';
 import { useRouter } from 'next/navigation';
+import { handleSentFriendRequest } from '@/actions/friendActions';
 
 export default function PeopleYouMayKnow({ knowUsers }) {
   const [users, setUsers] = useState(knowUsers)
@@ -32,9 +32,9 @@ export default function PeopleYouMayKnow({ knowUsers }) {
     <div>
       {users.length !== 0 && (
         <div>
-          <div className="flex justify-between mx-5 font-semibold text-md md:text-lg">
+          <div className="flex justify-between mx-5 font-semibold text-secondary text-md md:text-lg">
             <p>People You May Know</p>
-            <Link href={"/friends"} className="text-[#0f81ec]">
+            <Link href={"/friends"} className="text-label">
               See more
             </Link>
           </div>

@@ -8,16 +8,11 @@ import { getSessionUser } from "./userActions";
 
 export async function getFriends() {
   try {
-    const [_, user] = await Promise.all([
-      getSessionUser(),
-      userModel
-      .findById(session.user.id)
-      .populate(
-        "friends",
-        "firstName lastName username profileImageUrl occupation",
-      )
-      .lean(),
-    ])
+    const sessionUser = await getSessionUser();
+    const user = await userModel
+      .findById(sessionUser.id)
+      .populate("friends", "firstName lastName username profileImageUrl occupation")
+      .lean();
 
     return {
       success: true,
@@ -64,10 +59,10 @@ export async function getNearbyPeople() {
     };
   } catch (error) {
     console.error(`Error in getNearbyPeople action : ${error.message || error}`);
-    return { 
-      success: false, 
-      message: `Error in getNearbyPeople action : ${error.message || error}`, 
-      data: [] 
+    return {
+      success: false,
+      message: `Error in getNearbyPeople action : ${error.message || error}`,
+      data: []
     };
   }
 }

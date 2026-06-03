@@ -9,7 +9,7 @@ export default function ChatSidebarSkeleton({isChatting}) {
                 <div className="w-8 md:w-10 h-8 md:h-10 relative cursor-pointer">
                     <SafeImage
                         src="/svg/fb_icon.svg"
-                        alt="Facebook Icon"
+                        alt="ConnectVibe Icon"
                         fill
                         className={'w-8 md:w-8.5 h-8 md:h-8.5 object-cover'}
                     />

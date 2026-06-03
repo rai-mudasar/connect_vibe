@@ -8,7 +8,7 @@ export default async function sendEmailToUser({ username, email, otp, emailType 
   try {
     const response = await sendEmail({
       to: email,
-      subject: `Facebook | ${emailType}`,
+      subject: `Connect Vibe | ${emailType}`,
       html: emailHtml,
     });
 

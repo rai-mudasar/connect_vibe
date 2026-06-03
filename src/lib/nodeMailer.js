@@ -10,7 +10,7 @@ export const transporter = nodemailer.createTransport({
 
 export const sendEmail = async ({ to, subject, html }) => {
   const mailOptions = {
-    from: `"Facebook Clone" <${process.env.EMAIL_USER}>`,
+    from: `"Connect Vibe" <${process.env.EMAIL_USER}>`,
     to,
     subject,
     html,

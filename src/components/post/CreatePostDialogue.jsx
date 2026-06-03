@@ -57,7 +57,7 @@ export default function CreatePostDialog({ loggedInUser }) {
 
   if (!isMounted) {
     return (
-      <div className="flex items-center gap-2 p-4 bg-white rounded-lg shadow-sm cursor-pointer hover:bg-gray-50 z-20">
+      <div className="flex items-center gap-2 p-4 bg-card rounded-lg shadow-sm cursor-pointer hover:bg-gray-50 z-20">
         <Avatar className="w-10 h-10 bg-neutral-300 z-50 border font-semibold">
           <SafeImage
             src={loggedInUser?.profileImageUrl !== "" ? loggedInUser?.profileImageUrl : null}
@@ -77,7 +77,7 @@ export default function CreatePostDialog({ loggedInUser }) {
     return (
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
         <DialogTrigger asChild>
-          <div className="flex items-center gap-2 p-4 bg-white rounded-lg shadow-sm cursor-pointer hover:bg-gray-50 z-30">
+          <div className="flex items-center gap-2 p-4 bg-card border border-border rounded-lg shadow-sm cursor-pointer hover:bg-gray-50 z-30">
             <Avatar className="w-10 h-10 bg-neutral-300 z-50 border font-semibold">
               <SafeImage
                 src={loggedInUser?.profileImageUrl}

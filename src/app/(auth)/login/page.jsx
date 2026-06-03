@@ -13,11 +13,11 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import { signIn } from "next-auth/react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Eye, EyeOff, Loader2 } from "lucide-react";
 import { loginSchema } from "@/schemas/loginSchema";
-import { signIn } from "next-auth/react";
+import { Eye, EyeOff, Loader2 } from "lucide-react";
 import Link from "next/link";
 
 const Login = () => {
@@ -43,27 +43,27 @@ const Login = () => {
         redirect: false,
       });
 
-      if(response?.error){
+      if (response?.error) {
         toast.error(response.error);
       }
-      
-      if(response.ok){
+
+      if (response.ok) {
         toast.success("Login Successfully")
         router.replace("/home")
       }
-      } catch (error) {
+    } catch (error) {
       console.log("Error in SignIn page : ", error);
     } finally {
       setIsSubmitting(false);
     }
   };
   return (
-    <div className="h-screen w-full bg-[#F0F2F5] pt-20 sm:pt-15 md:pt-10 flex flex-col items-center gap-9">
-      <div className="text-[#0866FF] text-3xl md:text-5xl font-bold">
-        facebook
+    <div className="h-screen w-full bg-bg pt-20 sm:pt-15 md:pt-10 flex flex-col items-center gap-9">
+      <div className="text-primary text-3xl md:text-5xl font-bold">
+        <span className="text-secondary">Connect</span>Vibe.
       </div>
-      <div className="p-10 shadow-xl/30 rounded-4xl bg-white">
-        <div className="w-68 md:w-80">
+      <div className="p-10 shadow-xl/10 shadow-[#032062] rounded-4xl bg-card border border-border">
+        <div className="w-68 md:w-80 text-secondary">
           <Form {...form}>
             <form
               onSubmit={form.handleSubmit(onSubmit)}
@@ -84,6 +84,7 @@ const Login = () => {
                         autoComplete="email"
                         autoFocus
                         required
+                        className={'border-border focus-visible:ring-[1px] md:focus-visible:ring-[2px]'}
                         {...field}
                       />
                     </FormControl>
@@ -108,6 +109,7 @@ const Login = () => {
                           type={showPassword ? "text" : "password"}
                           required
                           autoComplete="current-password"
+                          className={'border-border focus-visible:ring-[1px] md:focus-visible:ring-[2px]'}
                           {...field}
                         />
                         <button
@@ -119,9 +121,9 @@ const Login = () => {
                           }
                         >
                           {showPassword ? (
-                            <EyeOff className="h-5 w-5" />
+                            <EyeOff className="h-5 w-5 text-label" />
                           ) : (
-                            <Eye className="h-5 w-5" />
+                            <Eye className="h-5 w-5 text-label" />
                           )}
                         </button>
                       </div>
@@ -134,10 +136,13 @@ const Login = () => {
               <Button
                 type="submit"
                 disabled={isSubmitting}
-                className="bg-[#0866FF] text-white font-semibold text-[18px] md:text-[21px]"
+                className="bg-bg hover:bg-primary border border-border text-primary hover:text-secondary font-semibold text-[18px] md:text-[21px]"
               >
                 {isSubmitting ? (
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  <>
+                    <p>loging in</p>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  </>
                 ) : (
                   "Log In"
                 )}
@@ -146,8 +151,8 @@ const Login = () => {
           </Form>
         </div>
 
-        <div className="text-sm mt-6 font-semibold flex gap-3 text-[#0866FF] cursor-pointer">
-          <p className="text-black cursor-default">Don't have an account ?</p>
+        <div className="text-sm mt-6 font-semibold flex gap-3 text-primary hover:text-primary-hover cursor-pointer">
+          <p className="text-label cursor-default">Don't have an account ?</p>
           <Link href={"/signup"}> Signup </Link>
         </div>
       </div>

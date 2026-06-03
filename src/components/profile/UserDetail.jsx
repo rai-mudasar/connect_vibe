@@ -17,25 +17,25 @@ export default function UserDetail({ currentProfileUser }) {
   // Define the details to map through for cleaner code
   const details = [
     {
-      icon: <Briefcase className="h-5 w-5 text-gray-500" />,
+      icon: <Briefcase className="h-5 w-5 text-primary" />,
       label: "Occupation",
       value: currentProfileUser?.occupation,
       prefix: "Works as ",
     },
     {
-      icon: <MapPin className="h-5 w-5 text-gray-500" />,
+      icon: <MapPin className="h-5 w-5 text-primary" />,
       label: "Location",
       value: currentProfileUser?.location,
       prefix: "Lives in ",
     },
     {
-      icon: <Heart className="h-5 w-5 text-gray-500" />,
+      icon: <Heart className="h-5 w-5 text-primary" />,
       label: "Relationship",
       value: currentProfileUser?.relationshipStatus && currentProfileUser.relationshipStatus !== "None" ? currentProfileUser.relationshipStatus : null,
       prefix: "Relationship Status ",
     },
     {
-      icon: <Calendar className="h-5 w-5 text-gray-500" />,
+      icon: <Calendar className="h-5 w-5 text-primary" />,
       label: "Joined",
       value: joinedDate,
       prefix: "Joined ",
@@ -43,14 +43,14 @@ export default function UserDetail({ currentProfileUser }) {
   ];
 
   return (
-    <Card className="w-full shadow-sm border-none bg-white">
+    <Card className="w-full shadow-sm border-none bg-card">
       <CardHeader className="pb-2">
-        <CardTitle className="text-xl font-bold">Personal Detail</CardTitle>
+        <CardTitle className="text-xl font-bold text-secondary">Personal Detail</CardTitle>
       </CardHeader>
       <CardContent className="flex flex-col gap-4">
         {currentProfileUser?.bio && (
-          <div className="text-center pb-2 border-b">
-            <p className="text-[15px] text-gray-800 italic">"{currentProfileUser.bio}"</p>
+          <div className="text-center pb-2 border-b border-border">
+            <p className="text-[15px] text-primary italic">"{currentProfileUser.bio}"</p>
           </div>
         )}
 
@@ -61,8 +61,8 @@ export default function UserDetail({ currentProfileUser }) {
               <div key={index} className="flex items-center gap-3 text-[15px]">
                 {detail.icon}
                 <p>
-                  <span className="text-gray-600">{detail.prefix}</span>
-                  <span className="font-semibold">{detail.value}</span>
+                  <span className="text-label">{detail.prefix}</span>
+                  <span className="font-semibold text-secondary">{detail.value}</span>
                 </p>
               </div>
             ) : null

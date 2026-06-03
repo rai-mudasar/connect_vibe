@@ -57,6 +57,7 @@ export async function POST(request) {
     });
 
     user.posts.addToSet(newPost._id)
+    user.postCount += 1
     await Promise.all([newPost.save(), user.save()]);
 
 

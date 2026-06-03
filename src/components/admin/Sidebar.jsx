@@ -3,6 +3,7 @@
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { useState } from "react"
+import SafeImage from "../SafeImage"
 
 const navItems = [
   {
@@ -81,7 +82,7 @@ export default function Sidebar() {
 
       {/* Mobile toggle button */}
       <button
-        className="fixed top-4 left-4 z-30 md:hidden bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-2 shadow"
+        className={`fixed top-2.5 left-4 z-30 md:hidden bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-2 shadow ${mobileOpen ? "hidden" : ""}`}
         onClick={() => setMobileOpen(!mobileOpen)}
       >
         <svg className="w-5 h-5 text-gray-600 dark:text-gray-300" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
@@ -100,11 +101,14 @@ export default function Sidebar() {
         `}
       >
         {/* Logo */}
-        <div className="flex items-center gap-3 px-4 py-4 border-b border-gray-200 dark:border-gray-700">
-          <div className="w-8 h-8 rounded-lg bg-[#1877f2] flex items-center justify-center shrink-0">
-            <svg className="w-4 h-4 fill-white" viewBox="0 0 24 24">
-              <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z" />
-            </svg>
+        <div className="flex items-center gap-3 px-4 py-[7.5px] border-b border-gray-200 dark:border-gray-700">
+          <div className="w-8 md:w-10 h-8 md:h-10 relative rounded-full bg-[#1877f2] flex items-center justify-center shrink-0">
+            <SafeImage
+              src="/svg/fb_icon.svg"
+              alt="ConnectVibe Icon"
+              fill
+              className={'w-8 md:w-10 h-8 md:h-10 object-cover'}
+            />
           </div>
           {!collapsed && (
             <span className="text-sm font-semibold text-gray-900 dark:text-white whitespace-nowrap">

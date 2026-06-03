@@ -1,8 +1,9 @@
 "use client"
 
-import Image from "next/image"
+import SafeImage from "../SafeImage"
 import { useState } from "react"
 import { deletePostById } from "@/actions/postActions"
+import { Avatar, AvatarFallback } from "../ui/avatar"
 
 export default function PostsTable({ initialPosts }) {
   const [posts, setPosts] = useState(initialPosts)
@@ -44,21 +45,23 @@ export default function PostsTable({ initialPosts }) {
               <tr key={post._id} className="hover:bg-gray-50 dark:hover:bg-gray-700/30 transition-colors">
                 <td className="px-6 py-3">
                   <div className="flex items-center gap-3">
-                    {post.author?.avatar ? (
-                      <Image src={post.author.avatar} alt={post.author.name} width={30} height={30} className="rounded-full object-cover" />
-                    ) : (
-                      <div className="w-8 h-8 rounded-full bg-blue-100 dark:bg-blue-900/40 flex items-center justify-center text-xs font-semibold text-blue-600 dark:text-blue-400 shrink-0">
-                        {post.author?.name?.[0]?.toUpperCase() || "?"}
-                      </div>
-                    )}
+                    <Avatar className="w-8 md:w-8 h-8 md:h-8 border-3 md:border-0 border-white bg-neutral-300">
+                      <SafeImage
+                        src={post.author?.profileImageUrl !== "" ? post.author?.profileImageUrl : null}
+                        fill
+                        alt="User Profile Image"
+                        className="object-contain"
+                      />
+                      <AvatarFallback className={'text-md font-bold'}>{post.author?.firstName?.[0]}</AvatarFallback>
+                    </Avatar>
                     <span className="font-medium text-gray-900 dark:text-white whitespace-nowrap">
-                      {post.author?.name || "Deleted user"}
+                      {post.author?.firstName + " " + post.author?.lastName || "Deleted user"}
                     </span>
                   </div>
                 </td>
                 <td className="px-6 py-3 max-w-xs">
-                  <p className="text-gray-600 dark:text-gray-400 truncate">{post.text || "(No text)"}</p>
-                  {post.image && (
+                  <p className="text-gray-600 dark:text-gray-400 truncate">{post.caption || "(No text)"}</p>
+                  {post?.media && (
                     <span className="text-xs text-blue-500 dark:text-blue-400">+ image</span>
                   )}
                 </td>

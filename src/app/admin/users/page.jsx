@@ -4,8 +4,6 @@ import UsersTable from "@/components/admin/UsersTable"
 export default async function UsersPage() {
   const users = await getUsers()
 
-  console.log('Users : ', users);
-
   return (
     <div className="space-y-6">
       <div>

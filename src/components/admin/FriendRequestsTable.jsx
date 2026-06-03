@@ -1,4 +1,5 @@
-import Image from "next/image"
+import SafeImage from "../SafeImage"
+import { Avatar, AvatarFallback } from "../ui/avatar"
 
 export default function FriendRequestsTable({ requests }) {
   const statusStyles = {
@@ -9,15 +10,17 @@ export default function FriendRequestsTable({ requests }) {
 
   const UserCell = ({ user }) => (
     <div className="flex items-center gap-3">
-      {user?.avatar ? (
-        <Image src={user.avatar} alt={user.name} width={30} height={30} className="rounded-full object-cover" />
-      ) : (
-        <div className="w-8 h-8 rounded-full bg-blue-100 dark:bg-blue-900/40 flex items-center justify-center text-xs font-semibold text-blue-600 dark:text-blue-400 shrink-0">
-          {user?.name?.[0]?.toUpperCase() || "?"}
-        </div>
-      )}
+      <Avatar className="w-14 h-14 border md:border-0 border-white bg-neutral-300">
+        <SafeImage
+          src={user?.profileImageUrl !== "" ? user?.profileImageUrl : null}
+          fill
+          alt="User Profile Image"
+          className="object-contain"
+        />
+        <AvatarFallback className={'text-2xl font-bold'}>{user?.firstName?.[0]}</AvatarFallback>
+      </Avatar>
       <span className="font-medium text-gray-900 dark:text-white whitespace-nowrap">
-        {user?.name || "Deleted user"}
+        {user?.firstName + " " + user?.lastName || "Deleted user"}
       </span>
     </div>
   )

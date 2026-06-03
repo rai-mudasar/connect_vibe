@@ -18,14 +18,14 @@ export default function RecentUsersTable({ users }) {
             <tr key={user._id} className="hover:bg-gray-50 dark:hover:bg-gray-700/30 transition-colors">
               <td className="px-6 py-3">
                 <div className="flex items-center gap-3">
-                  <Avatar className="w-8 md:w-8 h-8 md:h-8 border-3 md:border-0 border-white bg-neutral-300">
+                  <Avatar className="w-14 h-14 border md:border-0 border-white bg-neutral-300">
                     <SafeImage
                       src={user?.profileImageUrl !== "" ? user?.profileImageUrl : null}
                       fill
                       alt="User Profile Image"
                       className="object-contain"
                     />
-                    <AvatarFallback className={'text-md font-bold'}>{user?.firstName?.[0]}</AvatarFallback>
+                    <AvatarFallback className={'text-2xl font-bold'}>{user?.firstName?.[0]}</AvatarFallback>
                   </Avatar>
                   <span className="font-medium text-gray-900 dark:text-white">{user.firstName + " " + user.lastName}</span>
                 </div>

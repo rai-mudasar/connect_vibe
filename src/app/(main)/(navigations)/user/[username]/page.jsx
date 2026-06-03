@@ -1,41 +1,37 @@
-import ProfileHeader from "@/components/profile/ProfileHeader";
-import UserDetail from "@/components/profile/UserDetail";
 import { Suspense } from "react";
-import { getLoggedInUserProfile } from "@/actions/userActions";
+import Loading from "@/components/Loading";
+import UserDetailWrapper from "@/components/profile/UserDetailWrapper";
+import ProfileHeaderWrapper from "@/components/profile/ProfileHeaderWrapper";
+import ProfileHeaderSkeleton from "@/components/profile/ProfileHeaderSkeleton";
 import ProfilePostFeedWrapper from "@/components/profile/ProfilePostFeedWrapper";
+import PeopleYouMayKnowWrapper from "@/components/profile/PeopleYouMayKnowWrapper";
+import PeopleYouMayKnowSkeleton from "@/components/profile/PeopleYouMayKnowSkeleton";
 
 export default async function ProfilePage({ params }) {
-  const { username } = await params;
-
-    const response = await getLoggedInUserProfile(username)
-  
-    const currentProfileUser = response.success ? response.data.loggedInUser : [];
-    const isOwnProfile = response.success ? response.data.isOwnProfile : null;
-
-  if (!currentProfileUser) return <div>User not found</div>;
-
   return (
-    <div>
-      <div className="w-full max-h-full flex flex-col justify-center items-center pt-13 pb-2 bg-white">
-        <ProfileHeader
-          currentProfileUser={currentProfileUser}
-          isOwnProfile={isOwnProfile}
-        />
+    <div className="w-full overflow-x-hidden bg-bg">
+      <div className="w-full flex flex-col justify-center items-center pt-13 pb-4 bg-whit">
+        <Suspense fallback={<ProfileHeaderSkeleton />}>
+          <ProfileHeaderWrapper params={params} />
+        </Suspense>
+
+        <div className="w-[90%] md:w-[70%] h-70 md:h-85 border border-border rounded-md pt-3 overflow-hidden relative">
+          <Suspense fallback={<PeopleYouMayKnowSkeleton />}>
+            <PeopleYouMayKnowWrapper />
+          </Suspense>
+        </div>
       </div>
 
-      <div className="w-full mah-h-full flex flex-col justify-center items-center bg-[#F2F4F7]">
+      <div className="w-full flex flex-col justify-center items-center">
         <div className="w-[90%] md:w-[70%] max-h-full flex flex-col md:flex-row gap-5 md:gap-2 mt-5">
           <div className="w-full md:w-[35%]">
-            <UserDetail
-              currentProfileUser={currentProfileUser}
-            />
+            <Suspense fallback={<Loading />}>
+              <UserDetailWrapper params={params} />
+            </Suspense>
           </div>
           <div className="w-full md:w-[65%]">
-            <Suspense fallback={<p></p>}>
-              <ProfilePostFeedWrapper
-                currentProfileUser={currentProfileUser}
-                isOwnProfile={isOwnProfile}
-              />
+            <Suspense fallback={<Loading />}>
+              <ProfilePostFeedWrapper params={params} />
             </Suspense>
           </div>
         </div>

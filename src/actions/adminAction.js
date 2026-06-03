@@ -33,7 +33,7 @@ export async function getDashboardData() {
                 postModel.countDocuments(),
                 userModel.countDocuments({ lastSeen: { $gte: startOfDay } }),
                 friendRequestModel.countDocuments({ status: "pending" }),
-                userModel.find({isVerified: true})
+                userModel.find({ isVerified: true })
                     .sort({ createdAt: -1 })
                     .limit(5)
                     .select("firstName lastName profileImageUrl email isBanned createdAt")
@@ -146,7 +146,7 @@ export async function getPosts() {
         await getAdminSessionUser()
         const posts = await postModel.find()
             .sort({ createdAt: -1 })
-            .populate("author", "firstNname lastName profileImageUrl")
+            .populate("author", "firstName lastName profileImageUrl")
             .lean()
         return JSON.parse(JSON.stringify(posts))
     } catch (error) {
@@ -205,11 +205,18 @@ export async function deleteUserById() {
     }
 }
 
-export async function updateUserStatus() {
+export async function updateUserBanStatus(userId, newStatus) {
     try {
         await getAdminSessionUser()
 
-        throw new Error('Updated it');
+        const updatedUser = await userModel.findByIdAndUpdate(userId, { isBanned: newStatus }, { new: true })
+
+        if (updatedUser) {
+            return {
+                success: true,
+                message: `Succeeded!`
+            }
+        }
 
     } catch (error) {
         console.error(`Error in updateUserStatus action : ${error.message || error}`)
