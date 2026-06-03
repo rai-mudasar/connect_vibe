@@ -49,10 +49,10 @@ const Login = () => {
 
       if (response.ok) {
         toast.success("Login Successfully")
-        router.replace("/home")
+        router.push("/home")
       }
     } catch (error) {
-      console.log("Error in SignIn page : ", error);
+      console.log("Error in LogIn page : ", error);
     } finally {
       setIsSubmitting(false);
     }
