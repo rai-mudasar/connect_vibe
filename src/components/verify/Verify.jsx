@@ -56,12 +56,12 @@ export default function Verify() {
   }
 
   return (
-    <div className="h-screen w-full bg-[#F0F2F5] px-4 md:px-0 pt-20 sm:pt-15 md:pt-10 flex flex-col items-center gap-9">
-      <div className="p-10 shadow-xl/30 shadow-neutral-400 rounded-4xl bg-white">
+    <div className="h-screen w-full bg-bg text-secondary px-4 md:px-0 pt-20 sm:pt-15 md:pt-10 flex flex-col items-center gap-9">
+      <div className="p-10  rounded-4xl bg-card border border-border">
         <h1 className="text-3xl font-bold text-center">Please Verify your Account</h1>
         <p className="mt-6 flex flex-col text-center">
           Enter the verification code sent to
-          <span className="text-[#0866FF] font-bold">{email}</span>
+          <span className="text-primary font-bold">{email}</span>
         </p>
 
         <div className="mt-6">
@@ -84,6 +84,7 @@ export default function Verify() {
                         placeholder="Enter OTP"
                         autoFocus
                         required
+                        className={'placeholder:text-label text-secondary border-border focus-visible:ring-[1px] md:focus-visible:ring-[2px]'}
                         {...field}
                       />
                     </FormControl>
@@ -94,7 +95,7 @@ export default function Verify() {
 
               <Button
                 type="submit"
-                className="bg-[#0866FF] text-[18px] md:text-[21px] text-white"
+                className="bg-primary hover:bg-bg text-[18px] md:text-[21px] text-secondary hover:text-primary cursor-pointer hover:border border-border"
               >
                 {isSubmitting ? (
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />

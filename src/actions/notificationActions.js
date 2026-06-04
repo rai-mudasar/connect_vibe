@@ -53,7 +53,8 @@ export async function getLoggedInUserNotifications() {
   await connection()
 
   try {
-    const sessionUser = await getSessionUser()
+    const sessionUser = await getSessionUser();
+    console.log('sess', sessionUser);
     const [notifications, loggedInUser] = await Promise.all([
       notificationModel
         .find({ recipientId: sessionUser.id })
@@ -69,7 +70,11 @@ export async function getLoggedInUserNotifications() {
     return {
       success: true,
       message: "Notification Fetched",
-      data: { notifications: JSON.parse(JSON.stringify(notifications)), loggedInUser: JSON.parse(JSON.stringify(loggedInUser)) },
+      data: {
+        notifications: JSON.parse(JSON.stringify(notifications)),
+        loggedInUser: JSON.parse(JSON.stringify(loggedInUser)),
+        isAdmin: sessionUser.role === 'admin'
+      }
     };
   } catch (error) {
     console.error(`Error in getLoggedInUserNotifications action : ${error.messsage || error}`);

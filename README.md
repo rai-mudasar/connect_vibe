@@ -17,11 +17,38 @@ ConnectVibe is a feature-rich Facebook clone engineered with modern web technolo
 
 ## Screenshots
 
+### 📱 Mobile Views
+
+<table>
+  <tr>
+    <td align="center" width="25%">
+      <img src="./public/screenshots/login-mbl.jpeg" alt="Login — Mobile" width="100%"/>
+      <br/><sub><b>Login</b></sub>
+    </td>
+    <td align="center" width="25%">
+      <img src="./public/screenshots/home-feed-mbl.jpeg" alt="Home Feed — Mobile" width="100%"/>
+      <br/><sub><b>Home Feed</b></sub>
+    </td>
+    <td align="center" width="25%">
+      <img src="./public/screenshots/friends-mbl.jpeg" alt="Nearby People — Mobile" width="100%"/>
+      <br/><sub><b>Nearby People</b></sub>
+    </td>
+    <td align="center" width="25%">
+      <img src="./public/screenshots/notifications-mbl.jpeg" alt="Notifications — Mobile" width="100%"/>
+      <br/><sub><b>Notifications</b></sub>
+    </td>
+  </tr>
+</table>
+
+---
+
+### 🖥️ Desktop Views
+
 ### Authentication
 
 > Clean signup flow with username, email, and password — validated via React Hook Form + Zod.
 
-![Signup Page](./public/screenshots/signup.png)
+![Signup Page](./public/screenshots/signup.jpeg)
 
 ---
 
@@ -29,7 +56,7 @@ ConnectVibe is a feature-rich Facebook clone engineered with modern web technolo
 
 > Personalised news feed with friend suggestions, post composer, and personal detail sidebar.
 
-![Home Feed](./public/screenshots/home-feed.png)
+![Home Feed](./public/screenshots/home_feed.png)
 
 ---
 
@@ -37,7 +64,7 @@ ConnectVibe is a feature-rich Facebook clone engineered with modern web technolo
 
 > Live chat powered by Pusher WebSockets — full conversation threads with recent chats and friends list.
 
-![Messages](./public/screenshots/messages.png)
+![Messages](./public/screenshots/chat.jpeg)
 
 ---
 
@@ -45,7 +72,7 @@ ConnectVibe is a feature-rich Facebook clone engineered with modern web technolo
 
 > Friend management with All Friends, Nearby People, Pending Approvals, and Sent Requests — plus a live notification panel showing likes and comments in real time.
 
-![Friends & Notifications](./public/screenshots/friends-notifications.png)
+![Friends & Notifications](./public/screenshots/friends.jpeg)
 
 ---
 

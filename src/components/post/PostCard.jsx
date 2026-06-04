@@ -15,6 +15,7 @@ import {
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import Link from "next/link";
+import { Avatar, AvatarFallback } from "../ui/avatar";
 
 export default function PostCard({ post, priority, loggedInUser }) {
   const [likedList, setLikedList] = useState(
@@ -67,7 +68,7 @@ export default function PostCard({ post, priority, loggedInUser }) {
 
       <div className="flex items-center justify-between p-4 pb-2 relative">
         <div className="flex items-center space-x-2">
-          <div className="w-10 h-10 bg-gray-300 rounded-full overflow-hidden relative">
+          <Avatar className="w-10 h-10 bg-bg border border-border rounded-full overflow-hidden relative">
             {post.author.profileImageUrl && (
               <SafeImage
                 src={post.author.profileImageUrl}
@@ -76,7 +77,8 @@ export default function PostCard({ post, priority, loggedInUser }) {
                 className={"object-contain"}
               />
             )}
-          </div>
+            <AvatarFallback className={'text-[22px] text-primary font-bold'}>{post?.author?.firstName?.[0]}</AvatarFallback>
+          </Avatar>
           <div>
             <Link className="font-semibold text-[15px] hover:underline cursor-pointer" href={`/user/${post.author.username}`}>
               {post.author.firstName} {post.author.lastName}

@@ -15,11 +15,11 @@ export default function ChatSidebarSkeleton({ isChatting }) {
                 {/* --- RECENT CHATS --- */}
                 <div className="px-2">
                     <p className="text-xs font-semibold text-label uppercase px-2 mb-2"> Recent </p>
-                    <div className="flex items-center gap-3 px-3 py-1 bg-gray-100 hover:bg-gray-300 text-gray-500 rounded-lg cursor-pointer transition mb-1.5">
-                        <div className="w-12 h-12 bg-label rounded-full flex items-center justify-center overflow-hidden relative">
+                    <div className="flex items-center gap-3 px-3 py-1 bg-bg text-gray-500 rounded-lg cursor-pointer transition mb-1.5">
+                        <div className="w-12 h-12 bg-card border border-border rounded-full flex items-center justify-center overflow-hidden relative">
                         </div>
                         <div className="flex-1 min-w-0">
-                            <p className="font-medium truncate">
+                            <p className="font-medium truncate text-primary">
                                 New User
                             </p>
                             <p className="text-sm text-label truncate">
@@ -30,19 +30,19 @@ export default function ChatSidebarSkeleton({ isChatting }) {
                 </div>
 
                 <div className="my-4 border-t relative">
-                    <span className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white px-2 text-xs font-bold text-label2 flex items-center gap-1">
+                    <span className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-label px-2 text-xs font-bold text-label2 flex items-center gap-1">
                         <MessageSquarePlus size={14} /> NEW CHAT
                     </span>
                 </div>
 
                 <div className="p-2">
-                    <p className="text-xs font-semibold text-gray-500 uppercase px-2 mb-2">
+                    <p className="text-xs font-semibold text-secondary uppercase px-2 mb-2">
                         Friends
                     </p>
-                    <div className="flex items-center gap-3 p-3 hover:bg-blue-50 rounded-lg cursor-pointer transition group">
-                        <div className="w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center relative overflow-hidden">
+                    <div className="flex items-center gap-3 p-3 rounded-lg cursor-pointer transition group">
+                        <div className="w-10 h-10 bg-card border border-border rounded-full flex items-center justify-center relative overflow-hidden">
                         </div>
-                        <p className="font-medium text-gray-700 group-hover:text-blue-600">New User</p>
+                        <p className="font-medium text-lbel">New User</p>
                     </div>
                 </div>
             </div>

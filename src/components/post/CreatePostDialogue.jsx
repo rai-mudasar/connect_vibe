@@ -78,14 +78,14 @@ export default function CreatePostDialog({ loggedInUser }) {
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
         <DialogTrigger asChild>
           <div className="flex items-center gap-2 p-4 bg-card border border-border rounded-lg shadow-sm cursor-pointer z-30">
-            <Avatar className="w-10 h-10 bg-neutral-300 z-50 border font-semibold">
+            <Avatar className="w-10 h-10 border border-border bg-bg z-50 font-semibold">
               <SafeImage
                 src={loggedInUser?.profileImageUrl}
                 fill
                 alt="LoggedIn User Image"
                 className="object-contain"
               />
-              <AvatarFallback>{loggedInUser?.firstName?.[0]}</AvatarFallback>
+              <AvatarFallback className={'text-[22px] text-primary'}>{loggedInUser?.firstName?.[0]}</AvatarFallback>
             </Avatar>
             <div className="bg-gray-100 rounded-full py-2 px-4 flex-1 text-gray-500 text-sm">
               What's on your mind, {loggedInUser?.firstName}{" "}

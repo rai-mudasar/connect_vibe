@@ -125,14 +125,14 @@ export default function ProfileHeader({ currentProfileUser, isOwnProfile }) {
       {/* Profile Section */}
       <section className="h-51 md:h-51 flex flex-row items-start md:items-center pl-3 md:px-17 -mt-5 md:mt-0 relative">
         <div className=" relative">
-          <Avatar className="w-26 md:w-40 h-26 md:h-40 border-3 md:border-0 border-border bg-neutral-300">
+          <Avatar className="w-26 md:w-40 h-26 md:h-40 border border-border bg-bg">
             <SafeImage
               src={currentProfileUser?.profileImageUrl !== "" ? currentProfileUser?.profileImageUrl : null}
               fill
               alt="User Profile Image"
               className="object-contain"
             />
-            <AvatarFallback className={'text-4xl font-bold'}>{currentProfileUser?.firstName?.[0]}</AvatarFallback>
+            <AvatarFallback className={'text-5xl lg:text-7xl text-primary font-bold'}>{currentProfileUser?.firstName?.[0]}</AvatarFallback>
           </Avatar>
           {isOwnProfile && (
             <div

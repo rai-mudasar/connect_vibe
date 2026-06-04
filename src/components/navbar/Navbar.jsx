@@ -13,7 +13,7 @@ import { FacebookSearchDialog } from "../FacebookSearchDialog";
 import NotificationDrawer from "../notification/NotificationDrawer";
 import AccountMenu from "./AccountMenu";
 
-export default function Navbar({ loggedInUser, notifications }) {
+export default function Navbar({ loggedInUser, notifications, isAdmin }) {
   const pathname = usePathname();
 
   const navLinks = [
@@ -65,7 +65,7 @@ export default function Navbar({ loggedInUser, notifications }) {
           initialNotifications={notifications}
           loggedInUserId={loggedInUser?._id}
         />
-        <AccountMenu loggedInUser={loggedInUser} />
+        <AccountMenu loggedInUser={loggedInUser} isAdmin={isAdmin} />
       </section>
     </nav>
   );

@@ -74,7 +74,7 @@ export default function NotificationDrawer({
       <SheetTrigger className="w-9 md:w-10 h-9 md:h-10 relative flex justify-center items-center rounded-full bg-bg hover:bg-primary text-primary hover:text-secondary border border-border transition cursor-pointer">
         <Bell className="w-5 md:w-6 h-5 md:h-6" />
         {unreadCount > 0 && (
-          <span className="absolute top-0 right-0 bg-red-500 text-white text-[10px] w-5 h-5 flex items-center justify-center rounded-full border-2 border-white animate-pulse">
+          <span className="absolute top-0 right-0 bg-red-500 text-white text-[10px] w-5 h-5 flex items-center justify-center rounded-full animate-pulse">
             {unreadCount}
           </span>
         )}
@@ -117,19 +117,19 @@ export default function NotificationDrawer({
                       >
                         {notification.type === "LIKE" && (
                           <div className="flex gap-1">
-                            <h1 className="text-primary">{`${notification.senderId.firstName} ${notification.senderId.lastName}`}</h1>
+                            <h1 className="text-primary">{`${notification?.senderId?.firstName} ${notification?.senderId?.lastName}`}</h1>
                             <span className="font-normal">likes your post.</span>
                           </div>
                         )}
                         {notification.type === "UNLIKE" && (
                           <div className="flex gap-1">
-                            <h1 className="text-primary">{`${notification.senderId.firstName} ${notification.senderId.lastName}`}</h1>
+                            <h1 className="text-primary">{`${notification?.senderId?.firstName} ${notification?.senderId?.lastName}`}</h1>
                             <span className="font-normal">unlikes your post.</span>
                           </div>
                         )}
                         {notification.type === "COMMENT" && (
                           <div className="flex gap-1">
-                            <h1 className="text-primary">{`${notification.senderId.firstName} ${notification.senderId.lastName}`}</h1>
+                            <h1 className="text-primary">{`${notification?.senderId?.firstName} ${notification?.senderId?.lastName}`}</h1>
                             <span className="font-normal">
                               commented on your post.
                             </span>
@@ -137,7 +137,7 @@ export default function NotificationDrawer({
                         )}
                         {notification.type === "FRIEND_REQUEST" && (
                           <div className="flex gap-1">
-                            <h1 className="text-primary">{`${notification.senderId.firstName} ${notification.senderId.lastName}`}</h1>
+                            <h1 className="text-primary">{`${notification?.senderId?.firstName} ${notification?.senderId?.lastName}`}</h1>
                             <span className="font-normal">
                               send you a friend request.
                             </span>
@@ -145,7 +145,7 @@ export default function NotificationDrawer({
                         )}
                       </div>
                       <p className="text-[11px] font-semibold text-label2 mt-1">
-                        {getSmartDateTime(notification.createdAt)}
+                        {getSmartDateTime(notification?.createdAt)}
                       </p>
                     </div>
                   </div>
