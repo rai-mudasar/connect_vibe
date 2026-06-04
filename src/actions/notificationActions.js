@@ -54,7 +54,6 @@ export async function getLoggedInUserNotifications() {
 
   try {
     const sessionUser = await getSessionUser();
-    console.log('sess', sessionUser);
     const [notifications, loggedInUser] = await Promise.all([
       notificationModel
         .find({ recipientId: sessionUser.id })
