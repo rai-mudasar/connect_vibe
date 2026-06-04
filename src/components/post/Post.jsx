@@ -42,7 +42,7 @@ export default function Post({ fetchedPost, currentUser, comments, likes, isLike
             : [...prev, userId]
         );
         router.refresh()
-        
+
         try {
             const response = await toggleLikes(post._id);
             if (!response.success) throw new Error();
@@ -73,12 +73,12 @@ export default function Post({ fetchedPost, currentUser, comments, likes, isLike
     if (!post) return <div className="p-10 pt-30 text-center">Post not found</div>;
 
     return (
-        <div className="w-[100vw-0] flex flex-col items-center pt-25 md:pt-20 relative overflow-hidden">
-            <div className="w-[90%] sm:w-[80%] lg:w-[60%] bg-white rounded-xl shadow-sm border border-gray-200 mb-2 md:mb-4 overflow-hidden relative">
+        <div className="w-[100vw-0] h-screen bg-bg flex flex-col items-center pt-25 md:pt-20 relative overflow-hidden border-2">
+            <div className="w-[90%] sm:w-[80%] lg:w-[60%] bg-card rounded-xl shadow-sm border border-border mb-2 md:mb-4 overflow-hidden relative">
                 {/* Header */}
                 <div className="flex items-center justify-between p-4 pb-2">
                     <div className="flex items-center space-x-2">
-                        <div className="w-10 h-10 bg-gray-300 rounded-full overflow-hidden relative">
+                        <div className="w-10 h-10 bg-label rounded-full overflow-hidden relative">
                             {post.author.profileImageUrl && (
                                 <SafeImage
                                     src={post.author.profileImageUrl}
@@ -89,45 +89,47 @@ export default function Post({ fetchedPost, currentUser, comments, likes, isLike
                             )}
                         </div>
                         <div>
-                            <Link className="font-semibold text-[15px] hover:underline" href={`/user/${post?.author?.username}`}>
+                            <Link className="font-semibold text-[15px] text-secondary hover:underline" href={`/user/${post?.author?.username}`}>
                                 {post.author.firstName} {post.author.lastName}
                             </Link>
-                            <p className="text-gray-500 text-[13px]">{getSmartDateTime(post.createdAt)}</p>
+                            <p className="text-label text-[13px]">{getSmartDateTime(post.createdAt)}</p>
                         </div>
                     </div>
 
                     <DropdownMenu>
                         <DropdownMenuTrigger asChild>
-                            <button className="p-2 hover:bg-gray-100 rounded-full text-gray-600">
-                                <MoreHorizontal size={20} />
+                            <button className="p-2 text-label">
+                                <MoreHorizontal className="h-8" />
                             </button>
                         </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end" className="bg-white">
+                        <DropdownMenuContent align="end" className="bg-label text-bg">
                             {loggedInUser?.id === post.author._id.toString() ? (
                                 <DropdownMenuItem onClick={() => handleDeletePost(post._id)}>
-                                    <span className="text-red-600 cursor-pointer">Delete Post</span>
+                                    <span className="cursor-pointer">Delete Post</span>
                                 </DropdownMenuItem>
                             ) : (
-                                <DropdownMenuItem>Report</DropdownMenuItem>
+                                <DropdownMenuItem>
+                                    <span className="cursor-pointer">Report</span>
+                                </DropdownMenuItem>
                             )}
                         </DropdownMenuContent>
                     </DropdownMenu>
                 </div>
 
                 <div className="px-4 pb-3">
-                    <p className="text-[15px]">{post.caption}</p>
+                    <p className="text-[15px] text-secondary">{post.caption}</p>
                 </div>
 
                 {post.media && (
-                    <div className="w-full bg-gray-100 h-96 relative">
+                    <div className="w-full bg-label h-96 relative">
                         <SafeImage src={post.media} fill alt="Post media" className="object-contain" />
                     </div>
                 )}
 
                 {/* Stats */}
-                <div className="px-4 py-2 flex justify-between text-gray-500 text-[14px] border-b border-gray-100">
+                <div className="px-4 py-2 flex justify-between text-label text-[14px] border-b border-border">
                     <div className="flex items-center space-x-1">
-                        <div className="bg-blue-500 rounded-full p-1">
+                        <div className="bg-primary rounded-full p-1">
                             <Heart size={10} className="text-white fill-white" />
                         </div>
                         <span>{likedList.length}</span>
@@ -136,9 +138,9 @@ export default function Post({ fetchedPost, currentUser, comments, likes, isLike
                 </div>
 
                 {/* Actions */}
-                <div className="flex px-2 py-1">
+                <div className="flex px-2 py-1 gap-3 md:gap-7 md:mx-7">
                     <button
-                        className="flex-1 flex items-center justify-center space-x-2 py-2 hover:bg-gray-100 rounded-lg text-gray-600 font-medium cursor-pointer"
+                        className="flex-1 flex items-center justify-center space-x-2 py-2 hover:bg-primary rounded-lg text-label hover:text-secondary border border-border font-medium cursor-pointer"
                         onClick={handleToggleLikes}
                     >
                         <Heart size={20} className={isLiked ? "fill-red-600 text-red-600" : ""} />
@@ -146,7 +148,7 @@ export default function Post({ fetchedPost, currentUser, comments, likes, isLike
                     </button>
                     <div className="flex-1">
                         <Button
-                            className="w-full flex items-center justify-center mt-0.5 p-2 hover:bg-gray-100 rounded-lg text-[16px] text-gray-600 font-medium cursor-pointer"
+                            className="w-full flex items-center justify-center mt-0.5 p-2 bg-card hover:bg-primary rounded-lg text-[16px] text-label hover:text-secondary border border-border font-medium cursor-pointer"
                         >
                             <MessageCircle size={22} strokeWidth="2.5px" />
                             <span>Comment</span>
@@ -155,32 +157,37 @@ export default function Post({ fetchedPost, currentUser, comments, likes, isLike
                 </div>
             </div>
 
-            <div ref={scrollRef} className="w-[80%] lg:w-[60%] h-2 border-b-2 border-gray-300 mt-1"></div>
+            <div ref={scrollRef} className="w-[80%] lg:w-[60%] h-2 border-b-2 border-border mt-1"></div>
 
             {/* Comments Section */}
             <div className="w-[95%] sm:w-[80%] lg:w-[60%] mt-2 ml-7">
-                <div className="">
-                    <h4 className="text-sm font-semibold text-gray-500">Comments</h4>
+                <div className="py-3">
+                    <h4 className="text-sm font-semibold text-label">Comments</h4>
                     <div className="ml-4 mt-4 space-y-4">
                         {loadedComments?.length > 0 ? (
                             loadedComments.map((comment) => (
                                 <div key={comment._id} className="flex gap-3">
-                                    <Avatar className="h-7 w-7">
-                                        <AvatarImage src={comment.author.profileImageUrl} />
+                                    <Avatar className="h-7 w-7 relative">
+                                        <SafeImage
+                                            src={comment.author.profileImageUrl !== "" ? comment.author.profileImageUrl : null}
+                                            fill
+                                            alt="User Profile Image"
+                                            className="object-contain"
+                                        />
                                         <AvatarFallback>
                                             {comment.author.firstName?.[0]}
                                         </AvatarFallback>
                                     </Avatar>
-                                    <div className="bg-gray-100 p-2 px-3 rounded-2xl max-w-[85%]">
-                                        <p className="text-xs font-bold">
+                                    <div className="bg-label2 p-2 px-3 rounded-tr-xl rounded-bl-xl max-w-[85%]">
+                                        <p className="text-xs font-bold text-card">
                                             {comment.author.firstName} {comment.author.lastName}
                                         </p>
-                                        <p className="text-sm">{comment.content}</p>
+                                        <p className="text-sm text-secondary">{comment.content}</p>
                                     </div>
                                 </div>
                             ))
                         ) : (
-                            <p className="text-sm text-center text-gray-400 py-4">
+                            <p className="text-sm text-center text-label py-4">
                                 No comments yet. Be the first!
                             </p>
                         )}

@@ -45,8 +45,8 @@ export default function ChatInterface({
           >
             <div
               className={`px-4 py-2 rounded-2xl max-w-[70%] ${msg.senderId === currentLoggedInUserId
-                ? "bg-blue-600 text-white"
-                : "bg-white/80 text-black"
+                ? "bg-card text-white border border-border"
+                : "bg-secondary text-black border border-border"
                 }`}
             >
               {msg.text}

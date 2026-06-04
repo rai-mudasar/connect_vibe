@@ -102,14 +102,6 @@ export default function Sidebar() {
       >
         {/* Logo */}
         <div className="flex items-center gap-3 px-4 py-[7.5px] border-b border-gray-200 dark:border-gray-700">
-          <div className="w-8 md:w-10 h-8 md:h-10 relative rounded-full bg-[#1877f2] flex items-center justify-center shrink-0">
-            <SafeImage
-              src="/svg/fb_icon.svg"
-              alt="ConnectVibe Icon"
-              fill
-              className={'w-8 md:w-10 h-8 md:h-10 object-cover'}
-            />
-          </div>
           {!collapsed && (
             <span className="text-sm font-semibold text-gray-900 dark:text-white whitespace-nowrap">
               Admin Panel

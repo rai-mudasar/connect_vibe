@@ -2,13 +2,13 @@
 
 import Link from 'next/link'
 import SafeImage from '../SafeImage'
-import { Avatar, AvatarFallback } from '../ui/avatar'
-import { ArrowLeft, MoreVertical } from 'lucide-react'
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '../ui/dropdown-menu'
-import { useQuery, useQueryClient } from '@tanstack/react-query'
-import { getConversationsById } from '@/actions/chatActions'
 import { useMemo } from 'react'
 import { useSession } from 'next-auth/react'
+import { Avatar, AvatarFallback } from '../ui/avatar'
+import { ArrowLeft, MoreVertical } from 'lucide-react'
+import { getConversationsById } from '@/actions/chatActions'
+import { useQuery, useQueryClient } from '@tanstack/react-query'
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '../ui/dropdown-menu'
 
 export default function ChatHeader({ conversationId }) {
     const queryClient = useQueryClient();
@@ -30,11 +30,11 @@ export default function ChatHeader({ conversationId }) {
     }, [conversation, session?.user?.id]);
 
     return (
-        <div className="w-full h-18 flex flex-row items-center px-3 bg-gray-100 shadow-sm/30">
+        <div className="w-full h-18 flex flex-row items-center px-3 bg-card border-b border-border shadow-sm/30">
             <div className="w-full h-full flex flex-row items-center gap-2">
                 <Link
                     href={'/chat'}
-                    className="font-semibold text-lg text-gray-600 cursor-pointer">
+                    className="font-semibold text-lg text-label cursor-pointer">
                     <div className="flex justify-center items-center md:mt-1">
                         <ArrowLeft className="w-5 md:w-6 h-5 md:h-6 ml-1 md:ml-0" />
                     </div>
@@ -52,10 +52,10 @@ export default function ChatHeader({ conversationId }) {
                     </AvatarFallback>
                 </Avatar>
                 <div>
-                    <p className="text-xl md:text-2xl font-semibold">
+                    <p className="text-xl text-primary md:text-2xl font-semibold ">
                         {chattingUser ? `${chattingUser.firstName} ${chattingUser.lastName}` : "Loading..."}
                     </p>
-                    <p className="text-[12px] ml-2 -mt-1 text-neutral-600">
+                    <p className="text-[12px] ml-2 -mt-1 text-label">
                         {chattingUser?.bio || "No bio available"}
                     </p>
                 </div>
@@ -64,12 +64,12 @@ export default function ChatHeader({ conversationId }) {
             <div className="cursor-pointer">
                 <DropdownMenu>
                     <DropdownMenuTrigger asChild>
-                        <div className="h-8.5 flex justify-center items-center md:pt-2 text-gray-600 cursor-pointer border-0">
+                        <div className="h-8.5 flex justify-center items-center md:pt-2 text-label cursor-pointer border-0">
                             <MoreVertical className="w-5 md:w-6 h-5 md:h-6" />
                         </div>
                     </DropdownMenuTrigger>
-                    <DropdownMenuContent className={'bg-white'}>
-                        <DropdownMenuItem className="cursor-pointer hover:bg-gray-100">
+                    <DropdownMenuContent className={'bg-label border-border'}>
+                        <DropdownMenuItem className="cursor-pointer hover:text-primary">
                             Delete Conversation
                         </DropdownMenuItem>
                     </DropdownMenuContent>

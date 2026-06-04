@@ -35,7 +35,6 @@ export async function sendNotification(senderId, receiverId, notificationType, r
     ])
 
     if (notification) {
-      // const newNotification = notificationModel.findById(notification._id).select('senderId').populate('senderId', 'username firstName lastName profileImageUrl').lean()
       await pusherServer.trigger(
         `user-${receiverId}`,
         "new-notification",

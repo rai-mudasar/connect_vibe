@@ -80,12 +80,12 @@ export default function NotificationDrawer({
         )}
       </SheetTrigger>
 
-      <SheetContent className="w-80 sm:w-96 bg-white">
+      <SheetContent className="w-80 sm:w-96 bg-bg border-border">
         <SheetHeader>
-          <div className="flex justify-between items-center border-b pb-4 relative">
-            <SheetTitle className="text-xl font-bold">Notifications</SheetTitle>
+          <div className="flex justify-between items-center border-b border-border pb-4 relative">
+            <SheetTitle className="text-xl text-primary font-bold">Notifications</SheetTitle>
             {unreadCount > 0 && (
-              <span className="text-[8px] text-white font-medium absolute -top-2 left-27 bg-red-700 px-1 py-0.5 rounded-2xl">
+              <span className="text-[8px] text-secondary font-medium absolute -top-2 left-27 bg-red-700 px-1 py-0.5 rounded-2xl">
                 New
               </span>
             )}
@@ -103,8 +103,8 @@ export default function NotificationDrawer({
               <Link href={`${notification.redirectUrl}`} key={notification._id}>
                 <div
                   className={`p-3 rounded-xl border transition-colors hover:text-white mt-4 ${notification.isRead
-                    ? "bg-white hover:bg-gray-300 border-gray-200 "
-                    : "bg-blue-100 hover:bg-blue-400 border-blue-200 shadow-sm"
+                    ? "bg-card hover:bg-bg border-border"
+                    : "bg-label hover:bg-bg border-border"
                     }`}
                 >
                   <div className="flex gap-3">
@@ -113,23 +113,23 @@ export default function NotificationDrawer({
                       onClick={() => handleReadNotification(notification._id)}
                     >
                       <div
-                        className={`text-sm ${notification.isRead ? "" : "text-gray-900 font-semibold"}`}
+                        className={`text-sm ${notification.isRead ? "text-secondary" : "text-secondary font-semibold"}`}
                       >
                         {notification.type === "LIKE" && (
                           <div className="flex gap-1">
-                            <h1>{`${notification.senderId.firstName} ${notification.senderId.lastName}`}</h1>
+                            <h1 className="text-primary">{`${notification.senderId.firstName} ${notification.senderId.lastName}`}</h1>
                             <span className="font-normal">likes your post.</span>
                           </div>
                         )}
                         {notification.type === "UNLIKE" && (
                           <div className="flex gap-1">
-                            <h1>{`${notification.senderId.firstName} ${notification.senderId.lastName}`}</h1>
+                            <h1 className="text-primary">{`${notification.senderId.firstName} ${notification.senderId.lastName}`}</h1>
                             <span className="font-normal">unlikes your post.</span>
                           </div>
                         )}
                         {notification.type === "COMMENT" && (
                           <div className="flex gap-1">
-                            <h1>{`${notification.senderId.firstName} ${notification.senderId.lastName}`}</h1>
+                            <h1 className="text-primary">{`${notification.senderId.firstName} ${notification.senderId.lastName}`}</h1>
                             <span className="font-normal">
                               commented on your post.
                             </span>
@@ -137,14 +137,14 @@ export default function NotificationDrawer({
                         )}
                         {notification.type === "FRIEND_REQUEST" && (
                           <div className="flex gap-1">
-                            <h1>{`${notification.senderId.firstName} ${notification.senderId.lastName}`}</h1>
+                            <h1 className="text-primary">{`${notification.senderId.firstName} ${notification.senderId.lastName}`}</h1>
                             <span className="font-normal">
                               send you a friend request.
                             </span>
                           </div>
                         )}
                       </div>
-                      <p className="text-[11px] font-semibold text-[#1877F2] mt-1">
+                      <p className="text-[11px] font-semibold text-label2 mt-1">
                         {getSmartDateTime(notification.createdAt)}
                       </p>
                     </div>

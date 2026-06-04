@@ -17,16 +17,16 @@ function ChatFooter({ conversationId }) {
     };
 
     return (
-        <div className="w-full p-4 flex gap-2 bg-gray-100 shadow-sm/30">
+        <div className="w-full p-4 flex gap-2 bg-card shadow-sm/30">
             <input
                 value={inputMessage}
                 onChange={(e) => setInputMessage(e.target.value)}
                 placeholder="Type a message..."
-                className="flex-1 p-2 bg-gray-200 rounded-full outline-none focus:border-blue-500 shadow-xl/20"
+                className="flex-1 p-2 bg-gray-200 text-primary rounded-full outline-none focus:border-blue-500 shadow-sm/10 shadow-secondary"
             />
             <button
                 onClick={handleSendMessage}
-                className="bg-blue-600 text-white px-4 py-2 rounded-full font-medium uppercase"
+                className="bg-primary text-secondary px-4 py-2 rounded-full font-medium uppercase"
             >
                 Send
             </button>

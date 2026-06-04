@@ -81,18 +81,18 @@ export default function PostCard({ post, priority, loggedInUser }) {
             <Link className="font-semibold text-[15px] hover:underline cursor-pointer" href={`/user/${post.author.username}`}>
               {post.author.firstName} {post.author.lastName}
             </Link>
-            <p className="text-gray-500 text-[13px]">
+            <p className="text-label text-[13px]">
               {getSmartDateTime(post.createdAt)}
             </p>
           </div>
         </div>
         <DropdownMenu>
           <DropdownMenuTrigger >
-            <div className="p-2 hover:bg-gray-100 rounded-full text-gray-600 cursor-pointer border-0">
-              <MoreHorizontal size={20} />
+            <div className="p-2 rounded-full cursor-pointer border-0">
+              <MoreHorizontal className="w-6 text-label hover:text-primary" />
             </div>
           </DropdownMenuTrigger>
-          <DropdownMenuContent className={'bg-white absolute -top-1 right-1'}>
+          <DropdownMenuContent className={'bg-bg text-secondary border-border absolute -top-1 right-1'}>
             {loggedInUser._id.toString() === post.author._id.toString() &&
               <DropdownMenuItem>
                 <div className="w-full cursor-pointer hover:underline" onClick={() => handleDeletePost(post._id.toString())}>
@@ -116,7 +116,7 @@ export default function PostCard({ post, priority, loggedInUser }) {
       </div>
 
       {post.media && (
-        <div className="w-full bg-gray-100 flex justify-center">
+        <div className="w-full bg-label flex justify-center">
           <div className="w-full h-120 relative">
             <SafeImage
               src={post.media}
@@ -129,7 +129,7 @@ export default function PostCard({ post, priority, loggedInUser }) {
         </div>
       )}
 
-      <div className="px-4 py-2 flex justify-between text-gray-500 text-[14px] border-b border-gray-100 mx-2">
+      <div className="px-4 py-2 flex justify-between text-label text-[14px] border-b border-border mx-2">
         <div className="flex items-center space-x-1">
           <div className="bg-primary rounded-full p-1">
             <Heart size={12} className="text-white" />
@@ -141,9 +141,9 @@ export default function PostCard({ post, priority, loggedInUser }) {
         </Link>
       </div>
 
-      <div className="flex px-2 py-1">
+      <div className="flex px-2 py-1 gap-2">
         <button
-          className="w-[50%] flex items-center justify-center space-x-2 py-2 hover:bg-gray-100 rounded-lg text-gray-600 font-medium cursor-pointer"
+          className="w-[50%] flex items-center justify-center space-x-2 py-2 hover:bg-primary border border-border rounded-lg text-label font-medium cursor-pointer"
           onClick={handleToggleLikes}
         >
           {isLiked ? (
