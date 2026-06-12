@@ -9,7 +9,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { toast } from "sonner";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Loader2 } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { Input } from "@/components/ui/input";
@@ -18,11 +18,14 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useParams, useRouter } from "next/navigation";
 import { otpVerificationSchema } from "@/schemas/otpVerificationSchema";
 import axios from "axios";
+import Loading from "../Loading";
 
 export default function Verify() {
   const params = useParams();
-  const email = decodeURIComponent(params.email);
 
+  const [error, setError] = useState('');
+  const [email, setEmail] = useState('');
+  const [isLoading, setIsLoading] = useState(true);
   const [isSubmitting, setIssubmittimg] = useState(false);
 
   const router = useRouter();
@@ -33,6 +36,30 @@ export default function Verify() {
       code: "",
     },
   });
+
+  useEffect(() => {
+    try {
+      if (!params?.email) {
+        setError("Email parameter is missing");
+        setIsLoading(false);
+        return;
+      }
+
+      const decodedEmail = decodeURIComponent(params.email);
+      if (!decodedEmail || !decodedEmail.includes('@')) {
+        setError('Invalid email parameter')
+        setIsLoading(false);
+        return;
+      }
+
+      setEmail(decodedEmail)
+      setError('');
+      setIsLoading(false)
+    } catch (error) {
+      setError('Failed to process verify :', error.message || error)
+      setIsLoading(false)
+    }
+  }, [params?.email])
 
   async function onSubmit(data) {
     setIssubmittimg(true);
@@ -49,10 +76,33 @@ export default function Verify() {
       }
     } catch (error) {
       console.log("Error in verification response", error.response.data.message);
-      toast.error( error.response?.data?.message || "Verification failed");
+      toast.error(error?.message || "Verification failed");
     } finally {
       setIssubmittimg(false);
     }
+  }
+
+  if (isLoading) {
+    return (
+      <Loading className={'w-screen h-screen'} />
+    );
+  }
+
+  // Show error state
+  if (error) {
+    return (
+      <div className="h-screen w-full bg-bg text-secondary flex items-center justify-center">
+        <div className="px-20 py-10 rounded-4xl bg-card border border-border flex flex-col items-center justify-center">
+          <p className="text-lg font-semibold text-red-500">{error}</p>
+          <button
+            onClick={() => router.push("/signup")}
+            className="mt-4 px-4 py-2 bg-primary text-secondary rounded-md"
+          >
+            Back to Signup
+          </button>
+        </div>
+      </div>
+    );
   }
 
   return (
@@ -92,7 +142,7 @@ export default function Verify() {
                   </FormItem>
                 )}
               />
-              
+
 
               <Button
                 type="submit"
