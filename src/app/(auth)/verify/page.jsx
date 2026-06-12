@@ -21,8 +21,9 @@ import { useParams, useRouter, useSearchParams } from "next/navigation";
 import { otpVerificationSchema } from "@/schemas/otpVerificationSchema";
 
 export default function verifyPage() {
-    const params = useParams()
-    // const searchParams = useSearchParams();
+    // const params = useParams()
+    const searchParams = useSearchParams();
+    const searchEmail = searchParams.get('email')
     const [error, setError] = useState('');
     const [email, setEmail] = useState('');
     const [isLoading, setIsLoading] = useState(true);
@@ -38,15 +39,14 @@ export default function verifyPage() {
     });
 
     useEffect(() => {
-        // const searchEmail = searchParams.get('email')
         try {
-            if (!params?.email) {
+            if (!searchEmail) {
                 setError("Email parameter is missing");
                 setIsLoading(false);
                 return;
             }
             
-            const decodedEmail = decodeURIComponent(params?.email);
+            const decodedEmail = decodeURIComponent(searchEmail);
             if (!decodedEmail || !decodedEmail.includes('@')) {
                 setError('Invalid email parameter')
                 setIsLoading(false);
@@ -58,9 +58,11 @@ export default function verifyPage() {
             setIsLoading(false)
         } catch (error) {
             setError('Failed to process verify :', error)
+            console.log("Error is following : ")
+            console.log(error)
             setIsLoading(false)
         }
-    }, [params.email])
+    }, [searchEmail])
 
     async function onSubmit(data) {
         setIsSubmittimg(true);
