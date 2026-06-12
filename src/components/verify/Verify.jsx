@@ -45,7 +45,7 @@ export default function Verify() {
         return;
       }
 
-      const decodedEmail = decodeURIComponent(params.email);
+      const decodedEmail = params.email;
       if (!decodedEmail || !decodedEmail.includes('@')) {
         setError('Invalid email parameter')
         setIsLoading(false);

@@ -79,7 +79,7 @@ const Signup = () => {
       if (response.data.success) {
         setIsSubmitting(false);
         toast.success("Account created Successfully");
-        const encodedEmail = encodeURIComponent(data.email);
+        const encodedEmail = data.email;
         router.push(`/verify/${encodedEmail}`);
       }
     } catch (error) {
