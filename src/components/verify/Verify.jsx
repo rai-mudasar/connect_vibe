@@ -26,7 +26,7 @@ export default function Verify() {
   const [error, setError] = useState('');
   const [email, setEmail] = useState('');
   const [isLoading, setIsLoading] = useState(true);
-  const [isSubmitting, setIssubmittimg] = useState(false);
+  const [isSubmitting, setIsSubmittimg] = useState(false);
 
   const router = useRouter();
 
@@ -56,13 +56,15 @@ export default function Verify() {
       setError('');
       setIsLoading(false)
     } catch (error) {
-      setError('Failed to process verify :', error.message || error)
+      setError('Failed to process verify :', error)
+      console.log("Error is following : ")
+      console.log(error)
       setIsLoading(false)
     }
   }, [params?.email])
 
   async function onSubmit(data) {
-    setIssubmittimg(true);
+    setIsSubmittimg(true);
 
     try {
       const response = await axios.post("/api/verify-code", {
@@ -78,7 +80,7 @@ export default function Verify() {
       console.log("Error in verification response", error.response.data.message);
       toast.error(error?.message || "Verification failed");
     } finally {
-      setIssubmittimg(false);
+      setIsSubmittimg(false);
     }
   }
 
