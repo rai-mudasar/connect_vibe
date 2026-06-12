@@ -1,6 +1,6 @@
 import React from "react";
 import PostCard from "@/components/post/PostCard";
-import CreatePostDialog from "./CreatePostDialogue";
+import CreatePostDialog from "./CreatePostDialog";
 
 export default function PostFeed({ loggedInUser, allPosts, isOwnProfile, className }) {
   
@@ -9,7 +9,7 @@ export default function PostFeed({ loggedInUser, allPosts, isOwnProfile, classNa
       {isOwnProfile && <CreatePostDialog loggedInUser = {loggedInUser} />}
 
       {allPosts.length === 0 && (
-        <div className="w-full h-80 flex justify-center items-center">
+        <div className="w-full h-187.5 flex justify-center items-center">
           <p className="text-3xl font-semibold text-neutral-700">
             No Post to Display
           </p>

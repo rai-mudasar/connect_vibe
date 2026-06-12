@@ -1,11 +1,11 @@
 import { Suspense } from 'react';
 import Loading from '@/components/Loading';
-import Verify from '@/components/verify/Verify';
+import ForgotPassword from '@/components/forgot-password/ForgotPassword';
 
-export default function verifyPage() {
+export default function forgotPage() {
     return (
         <Suspense fallback={<div className='w-screen h-screen'><Loading /></div>}>
-            <Verify />
+            <ForgotPassword />
         </Suspense>
     )
 }

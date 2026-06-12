@@ -21,7 +21,7 @@ export async function POST(request) {
         const codeNotExpired = new Date(user.verificationOtpExpiry) > new Date();
 
         if(validUser && codeNotExpired) {
-            console.log('Verified Successfully');
+            // console.log('Verified Successfully');
             user.isVerified = true;
             user.verificationOtp = undefined;
             user.verificationOtpExpiry = undefined;
@@ -36,14 +36,12 @@ export async function POST(request) {
                 message: "Invalid OTP"
             }, {status: 400})
         } else{
-            console.log('OTP is expired, please signup again');
             return NextResponse.json({
                 success: false,
                 message: "OTP is expired, please signup again"
             }, {status: 400})
         }
     } catch (error) {
-        console.log("Verifying user error!", error);
         return NextResponse.json({
                 success: false,
                 message: "Verifying user error!"

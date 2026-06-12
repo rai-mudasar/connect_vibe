@@ -2,9 +2,9 @@ import { sendEmail } from "@/lib/nodeMailer";
 import { render } from "@react-email/render";
 import emailTemplate from "../../emails/emailTemplate";
 
-export default async function sendEmailToUser({ username, email, otp, emailType }) {
+export default async function sendEmailToUser({ name, email, otp, emailType, resetLink }) {
 
-  const emailHtml = await render(emailTemplate({ username, otp, emailType }))
+  const emailHtml = await render(emailTemplate({ name, otp, emailType, resetLink }))
   try {
     const response = await sendEmail({
       to: email,
@@ -12,7 +12,6 @@ export default async function sendEmailToUser({ username, email, otp, emailType 
       html: emailHtml,
     });
 
-    console.log('email response: ', response.accepted.includes(email));
 
     if (response.accepted.includes(email)) {
       return {

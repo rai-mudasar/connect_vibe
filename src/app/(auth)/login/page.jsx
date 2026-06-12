@@ -133,6 +133,15 @@ const Login = () => {
                 )}
               />
 
+              <div className="w-full flex justify-end -my-2">
+                <Link
+                  href={'/forgot-password'}
+                  className="text-[10px] text-primary" 
+                >
+                  forgot password ?
+                </Link>
+              </div>
+
               <Button
                 type="submit"
                 disabled={isSubmitting}

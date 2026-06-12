@@ -64,7 +64,7 @@ export default function PostCard({ post, priority, loggedInUser }) {
   };
 
   return (
-    <div className="w-full bg-card rounded-xl shadow-sm border border-border mb-2 md:mb-4 overflow-hidden relative text-secondary">
+    <div className="w-full h-full bg-card rounded-xl shadow-sm border border-border mb-2 md:mb-4 overflow-hidden relative text-secondary">
 
       <div className="flex items-center justify-between p-4 pb-2 relative">
         <div className="flex items-center space-x-2">
@@ -119,7 +119,7 @@ export default function PostCard({ post, priority, loggedInUser }) {
 
       {post.media && (
         <div className="w-full bg-label flex justify-center">
-          <div className="w-full h-120 relative">
+          <div className="w-full aspect-4/5 relative">
             <SafeImage
               src={post.media}
               fill

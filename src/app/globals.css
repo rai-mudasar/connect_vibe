@@ -31,17 +31,17 @@
   }
 
   ::-webkit-scrollbar-track {
-    background: #f1f1f1;
+    background: #031a50;
     border-radius: 10px;
   }
 
   ::-webkit-scrollbar-thumb {
-    background: #a1cbfd;
+    background: #7a93c8;
     border-radius: 10px;
   }
 
   ::-webkit-scrollbar-thumb:hover {
-    background: #0469f7;
+    background: #D85A30;
   }
 
   /* For Firefox (Firefox uses different properties) */

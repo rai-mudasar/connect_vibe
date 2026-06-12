@@ -1,13 +1,7 @@
 "use client";
 
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import { useState, useEffect } from "react";
-import { useDebounce } from "@/hooks/useDebounced";
-import { useRouter } from "next/navigation";
-import { toast } from "sonner";
-import { signupSchema } from "@/schemas/signupSchema";
 import axios from "axios";
+import Link from "next/link";
 import {
   Form,
   FormControl,
@@ -16,10 +10,16 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import { toast } from "sonner";
+import { useForm } from "react-hook-form";
+import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { useDebounce } from "@/hooks/useDebounced";
 import { Eye, EyeOff, Loader2 } from "lucide-react";
-import Link from "next/link";
+import { signupSchema } from "@/schemas/signupSchema";
+import { zodResolver } from "@hookform/resolvers/zod";
 
 const Signup = () => {
   const [usernameMessage, setUsernameMessage] = useState("");

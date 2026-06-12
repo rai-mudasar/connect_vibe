@@ -1,12 +1,14 @@
 "use server";
 
+import bcryptjs from "bcryptjs";
 import connectToDb from "@/lib/dbConnect";
 import userModel from "@/models/userModel";
+import sendEmailToUser from "@/helpers/sendEmail";
+import { connection } from "next/server";
 import { revalidatePath } from "next/cache";
-import { deleteFromCloudinary, uploadToCloudinary } from "@/helpers/Cloudinary";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/authOptions";
-import { connection } from "next/server";
+import { deleteFromCloudinary, uploadToCloudinary } from "@/helpers/Cloudinary";
 
 export async function getSessionUser() {
   const [_, session] = await Promise.all([
@@ -15,6 +17,114 @@ export async function getSessionUser() {
   ])
   if (!session || !session.user) throw new Error("Unauthorized! You must logged In to perform such operation.");
   return session.user;
+}
+
+export async function createNewPassword(userId, newPassword) {
+
+  try {
+    await connectToDb();
+
+    const hashedPassword = await bcryptjs.hash(newPassword, 10);
+    const user = await userModel.findByIdAndUpdate(
+      userId,
+      {
+        password: hashedPassword,
+        verificationOtp: null,
+        verificationOtpExpiry: null
+      },
+      { new: true }
+    )
+      .lean()
+
+    return {
+      success: true,
+      message: "Password changed Successfully"
+    }
+
+  } catch (error) {
+    return {
+      success: false,
+      error: error.message || error || "Error in createNewPassword action."
+    }
+
+  }
+}
+
+export async function getResetPasswordLink(email) {
+  console.log('Enter log ', email);
+  try {
+    await connectToDb();
+
+    const user = await userModel.findOne({ email });
+
+    if (!user) {
+      return {
+        success: false,
+        message: 'This email is not linked with any account!'
+      }
+    }
+
+    const otp = Math.floor(100000 + Math.random() * 900000).toString();
+    const expiry = new Date();
+    expiry.setHours(expiry.getHours() + 1);
+    const name = user.firstName + " " + user.lastName;
+
+    user.verificationOtp = otp;
+    user.verificationOtpExpiry = expiry;
+
+    await user.save({ new: true });
+
+    const resetLink = `${process.env.NEXTAUTH_URL}/forgot-password/new/${otp}`
+
+    const emailResponse = await sendEmailToUser({
+      name,
+      email,
+      resetLink,
+      emailType: 'Reset Password'
+    });
+
+    if (emailResponse.success) {
+      return {
+        success: true,
+        message: emailResponse.message,
+        data: email
+      }
+    }
+
+  } catch (error) {
+    return {
+      success: false,
+      message: "Verifying user error!"
+    }
+  }
+}
+
+export async function validateResetPasswordOtp(otp) {
+  try {
+    await connectToDb();
+
+    const user = await userModel.findOne(
+      { verificationOtp: otp }
+    )
+      .select('_id verificationOtpExpiry')
+      .lean();
+
+    if (!user) throw new Error('Invalid reset password Url');
+
+    const codeNotExpired = new Date(user.verificationOtpExpiry) > new Date();
+    if (!codeNotExpired) throw new Error('Reset password url expired!')
+
+    return {
+      success: true,
+      message: 'Reset successfully',
+      data: JSON.parse(JSON.stringify(user._id))
+    }
+  } catch (error) {
+    return {
+      success: false,
+      message: error.message || error || 'Error in validateResetPasswordOtp'
+    }
+  }
 }
 
 export async function updateProfileImage(fileImage, username) {
@@ -214,7 +324,7 @@ export async function getLoggedInUserProfile(username) {
     return {
       success: true,
       message: "LoggedInUser profile found!",
-      data: JSON.parse(JSON.stringify({loggedInUser: loggedInUser , isOwnProfile: isOwnProfile})),
+      data: JSON.parse(JSON.stringify({ loggedInUser: loggedInUser, isOwnProfile: isOwnProfile })),
     };
   } catch (error) {
     console.error(`Error in getLoggedInUserProfile action : ${error.message || error}`);

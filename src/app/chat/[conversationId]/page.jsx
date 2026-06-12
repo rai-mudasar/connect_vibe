@@ -13,7 +13,7 @@ export default async function ConversationPage({ params }) {
       <ChatHeader conversationId={conversationId} />
 
       <div className="flex-1 overflow-y-auto bg-bg hide-scrollbar">
-        <Suspense fallback={<Loading className={'bg-gray-300'} />}>
+        <Suspense fallback={<Loading className={'bg-bg'} />}>
           <ChatInterfaceWrapper conversationId={conversationId} />
         </Suspense>
       </div>

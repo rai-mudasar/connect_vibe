@@ -5,13 +5,12 @@ import {
   Users2,
   MessageCircle,
   User2Icon,
-  LogOut,
 } from "lucide-react";
-import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { FacebookSearchDialog } from "../FacebookSearchDialog";
-import NotificationDrawer from "../notification/NotificationDrawer";
+import Link from "next/link";
 import AccountMenu from "./AccountMenu";
+import NotificationDrawer from "../notification/NotificationDrawer";
 
 export default function Navbar({ loggedInUser, notifications, isAdmin }) {
   const pathname = usePathname();
@@ -31,7 +30,9 @@ export default function Navbar({ loggedInUser, notifications, isAdmin }) {
 
       <section className="w-full md:w-[25%] flex flex-row gap-2 items-center cursor-pointer mt-2 md:mt-0">
         <p className="text-[22px] text-secondary font-semibold">Connect<span className="text-primary">Vibe.</span></p>
-        <FacebookSearchDialog />
+        <div className="hidden md:flex">
+          <FacebookSearchDialog />
+        </div>
       </section>
 
       <section className="w-full md:w-[60%] flex justify-around md:justify-evenly">
@@ -54,6 +55,8 @@ export default function Navbar({ loggedInUser, notifications, isAdmin }) {
       </section>
 
       <section className="w-[35%] md:w-[25%] absolute md:relative top-1 right-2 flex items-center justify-end gap-2 md:gap-4 mr-1">
+        <div className="md:hidden">
+        </div>
         <Link
           href={"/chat"}
           className="w-9 md:w-10 h-9 md:h-10  bg-bg  hover:bg-primary text-primary hover:text-secondary border border-border rounded-full cursor-pointer hidden md:inline-flex justify-center items-center"

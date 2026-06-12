@@ -1,7 +1,5 @@
 import Navbar from "./Navbar";
 import { getLoggedInUserNotifications } from "@/actions/notificationActions";
-import NavbarSkeleton from "./NavbarSkeleton";
-
 
 export default async function NavbarWrapper() {
     const response = await getLoggedInUserNotifications();

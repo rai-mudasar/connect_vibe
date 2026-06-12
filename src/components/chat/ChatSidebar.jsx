@@ -66,7 +66,7 @@ export default function ChatSidebar({
                 <div
                   key={chat._id}
                   onClick={() => router.push(`/chat/${chat._id}`)}
-                  className={`flex items-center gap-3 px-3 py-1 hover:shadow-sm/30 text-label rounded-lg cursor-pointer transition mb-1.5 border-bg  ${activeId === chat._id ? 'bg-card border border-border shadow-sm/30 shadow-card' : 'hover:bg-card hover:border border-border'}`}
+                  className={`flex items-center gap-3 px-3 py-1 text-label rounded-lg cursor-pointer transition mb-3 border border-bg ${activeId === chat._id ? 'bg-card border-border shadow-card' : 'hover:bg-card hover:border-border'}`}
                 >
                   <div className="w-12 h-12 bg-gray-200 rounded-full flex items-center justify-center overflow-hidden relative">
                     {otherUser?.profileImageUrl ? (
@@ -111,7 +111,7 @@ export default function ChatSidebar({
               <div
                 key={friend._id}
                 onClick={() => handleOpenOrStartChat(friend._id)}
-                className="flex items-center gap-3 p-3 hover:bg-card hover:border border-border rounded-lg cursor-pointer transition group"
+                className="flex items-center gap-3 p-3 hover:bg-card border border-bg hover:border-border rounded-lg cursor-pointer transition group"
               >
                 <div className="w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center relative overflow-hidden">
                   <SafeImage

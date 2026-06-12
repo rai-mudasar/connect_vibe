@@ -1,9 +1,5 @@
 "use client";
 
-import { useParams, useRouter } from "next/navigation";
-import React, { useState } from "react";
-import { useForm } from "react-hook-form";
-import { otpVerificationSchema } from "@/schemas/otpVerificationSchema";
 import {
   Form,
   FormControl,
@@ -12,12 +8,16 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import axios from "axios";
 import { toast } from "sonner";
+import { useState } from "react";
+import { Loader2 } from "lucide-react";
+import { useForm } from "react-hook-form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Loader2 } from "lucide-react";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useParams, useRouter } from "next/navigation";
+import { otpVerificationSchema } from "@/schemas/otpVerificationSchema";
+import axios from "axios";
 
 export default function Verify() {
   const params = useParams();
@@ -92,6 +92,7 @@ export default function Verify() {
                   </FormItem>
                 )}
               />
+              
 
               <Button
                 type="submit"
