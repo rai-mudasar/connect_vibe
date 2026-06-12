@@ -15,14 +15,13 @@ import { useForm } from "react-hook-form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useParams, useRouter } from "next/navigation";
+import { useParams, useRouter, useSearchParams } from "next/navigation";
 import { otpVerificationSchema } from "@/schemas/otpVerificationSchema";
 import axios from "axios";
 import Loading from "../Loading";
 
 export default function Verify() {
-  const params = useParams();
-
+  const searchParams = useSearchParams();
   const [error, setError] = useState('');
   const [email, setEmail] = useState('');
   const [isLoading, setIsLoading] = useState(true);
@@ -39,13 +38,14 @@ export default function Verify() {
 
   useEffect(() => {
     try {
-      if (!params?.email) {
+      const searchEmail = searchParams.get('email')
+      if (!searchEmail) {
         setError("Email parameter is missing");
         setIsLoading(false);
         return;
       }
 
-      const decodedEmail = decodeURIComponent(params.email);
+      const decodedEmail = decodeURIComponent(searchEmail);
       if (!decodedEmail || !decodedEmail.includes('@')) {
         setError('Invalid email parameter')
         setIsLoading(false);
@@ -61,7 +61,7 @@ export default function Verify() {
       console.log(error)
       setIsLoading(false)
     }
-  }, [params?.email])
+  }, [searchEmail])
 
   async function onSubmit(data) {
     setIsSubmittimg(true);
