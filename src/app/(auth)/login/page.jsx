@@ -1,10 +1,5 @@
 "use client";
 
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import { useState } from "react";
-import { useRouter } from "next/navigation";
-import { toast } from "sonner";
 import {
   Form,
   FormControl,
@@ -13,14 +8,19 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import { toast } from "sonner";
+import { useState } from "react";
 import { signIn } from "next-auth/react";
+import { useForm } from "react-hook-form";
+import { useRouter } from "next/navigation";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { loginSchema } from "@/schemas/loginSchema";
 import { Eye, EyeOff, Loader2 } from "lucide-react";
+import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
 
-const Login = () => {
+export default function Login() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
 
@@ -49,10 +49,10 @@ const Login = () => {
 
       if (response.ok) {
         toast.success("Login Successfully")
-        router.push("/home")
+        router.replace("/home")
       }
     } catch (error) {
-      console.log("Error in LogIn page : ", error);
+      toast.error(error.message || 'Error occured during login!')
     } finally {
       setIsSubmitting(false);
     }
@@ -168,4 +168,3 @@ const Login = () => {
     </div>
   );
 };
-export default Login;

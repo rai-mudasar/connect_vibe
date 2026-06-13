@@ -17,11 +17,10 @@ import { useForm } from "react-hook-form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useParams, useRouter, useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { otpVerificationSchema } from "@/schemas/otpVerificationSchema";
 
 export default function verifyPage() {
-    // const params = useParams()
     const searchParams = useSearchParams();
     const searchEmail = searchParams.get('email')
     const [error, setError] = useState('');
@@ -57,9 +56,7 @@ export default function verifyPage() {
             setError('');
             setIsLoading(false)
         } catch (error) {
-            setError('Failed to process verify :', error)
-            console.log("Error is following : ")
-            console.log(error)
+            setError('Failed to process verify :', error.message)
             setIsLoading(false)
         }
     }, [searchEmail])
@@ -72,14 +69,18 @@ export default function verifyPage() {
                 email,
                 code: data.code,
             });
-
-            if (response.data.success) {
+            if (response?.data?.success) {
                 toast.success("Account verfied Successfully");
                 router.replace("/login");
+                return;
+            }
+            if (!response?.data?.success) {
+                toast.error(response?.data?.message || "Verification failed");
+                return;
             }
         } catch (error) {
             console.log("Error in verification response", error.response.data.message);
-            toast.error(error?.message || "Verification failed");
+            toast.error(error?.response?.data?.message || "Verification failed");
         } finally {
             setIsSubmittimg(false);
         }
@@ -141,7 +142,7 @@ export default function verifyPage() {
                                                 {...field}
                                             />
                                         </FormControl>
-                                        <FormMessage />
+                                        <FormMessage className={'text-red-500'} />
                                     </FormItem>
                                 )}
                             />

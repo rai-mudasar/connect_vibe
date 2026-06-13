@@ -27,7 +27,7 @@ export async function getPostById(postId) {
       data: { "loggedInUser": loggedInUser, 'fetchedPost': JSON.parse(JSON.stringify(post)) }
     }
   } catch (error) {
-    console.error(`Error in get post by id action : ${error.message || error}`);
+    // console.error(`Error in get post by id action : ${error.message || error}`);
 
     return {
       success: false,

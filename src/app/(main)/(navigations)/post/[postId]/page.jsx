@@ -5,7 +5,7 @@ import Loading from "@/components/Loading";
 export default function PostPage({params}) {
     
     return (
-        <Suspense fallback={<p></p>} >
+        <Suspense fallback={<Loading className={'w-screen h-screen'} />} >
             <PostPageWrapper params={params} />
         </Suspense>
     )

@@ -19,13 +19,14 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import ImageCropper from "@/components/ImageCropper";
 
 export default function CreatePostDialog({ loggedInUser }) {
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [isMounted, setIsMounted] = useState(false);
   const [text, setText] = useState("");
   const [image, setImage] = useState(null); 
-  const [showCropper, setShowCropper] = useState(false);
-  const [rawImageSrc, setRawImageSrc] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [isMounted, setIsMounted] = useState(false);
+  const [rawImageSrc, setRawImageSrc] = useState(null);
+  const [showCropper, setShowCropper] = useState(false);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+
   const fileInputRef = useRef(null);
   const router = useRouter();
 
@@ -33,18 +34,15 @@ export default function CreatePostDialog({ loggedInUser }) {
     setIsMounted(true);
   }, []);
 
-  // ── File selected → open cropper ──────────────────────────────────────────
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     if (!file) return;
-    // revoke any previous raw src
     if (rawImageSrc) URL.revokeObjectURL(rawImageSrc);
     setRawImageSrc(URL.createObjectURL(file));
     setShowCropper(true);
     e.target.value = "";
   };
 
-  // ── Cropper hands back the blob ───────────────────────────────────────────
   const handleCropDone = (blob) => {
     setImage(blob);
     setShowCropper(false);
@@ -52,14 +50,12 @@ export default function CreatePostDialog({ loggedInUser }) {
     setRawImageSrc(null);
   };
 
-  // ── User cancels crop → discard everything ────────────────────────────────
   const handleCropCancel = () => {
     setShowCropper(false);
     if (rawImageSrc) URL.revokeObjectURL(rawImageSrc);
     setRawImageSrc(null);
   };
 
-  // ── Submit post ───────────────────────────────────────────────────────────
   const handlePost = async () => {
     if (!image && !text) return alert("Please add some content or an image");
 
@@ -84,7 +80,6 @@ export default function CreatePostDialog({ loggedInUser }) {
     }
   };
 
-  // ── Reset on dialog close ─────────────────────────────────────────────────
   const handleDialogChange = (open) => {
     setIsDialogOpen(open);
     if (!open) {
@@ -96,7 +91,6 @@ export default function CreatePostDialog({ loggedInUser }) {
     }
   };
 
-  // ── SSR placeholder ───────────────────────────────────────────────────────
   if (!isMounted) {
     return (
       <div className="flex items-center gap-2 p-4 bg-card rounded-lg shadow-sm cursor-pointer z-20">
@@ -118,11 +112,10 @@ export default function CreatePostDialog({ loggedInUser }) {
     );
   }
 
-  // ── Main render ───────────────────────────────────────────────────────────
   return (
     <Dialog open={isDialogOpen} onOpenChange={handleDialogChange}>
       <DialogTrigger asChild>
-        <div className="flex items-center gap-2 p-4 bg-card border border-border rounded-lg shadow-sm cursor-pointer z-30">
+        <div className="flex items-center gap-2 p-4 bg-card border border-border rounded-lg shadow-sm cursor-pointer mt-2 md:mt-0 z-30">
           <Avatar className="w-10 h-10 border border-border bg-bg z-50 font-semibold">
             <SafeImage
               src={loggedInUser?.profileImageUrl}

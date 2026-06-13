@@ -70,7 +70,7 @@ export default function Post({ fetchedPost, currentUser, comments, likes, isLike
 
 
     if (loading) return <Loading />;
-    if (!post) return <div className="p-10 pt-30 text-center">Post not found</div>;
+    if (!post) return <div className="w-full h-screen bg-bg pt-50 text-label text-center">Post not found</div>;
 
     return (
         <div className="w-[100vw-0] h-screen bg-bg flex flex-col items-center pt-25 md:pt-20 relative overflow-hidden border-2">

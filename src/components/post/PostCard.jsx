@@ -69,9 +69,9 @@ export default function PostCard({ post, priority, loggedInUser }) {
       <div className="flex items-center justify-between p-4 pb-2 relative">
         <div className="flex items-center space-x-2">
           <Avatar className="w-10 h-10 bg-bg border border-border rounded-full overflow-hidden relative">
-            {post.author.profileImageUrl && (
+            {post?.author?.profileImageUrl && (
               <SafeImage
-                src={post.author.profileImageUrl}
+                src={post?.author?.profileImageUrl}
                 fill
                 alt="User Profile Image"
                 className={"object-contain"}
@@ -80,11 +80,11 @@ export default function PostCard({ post, priority, loggedInUser }) {
             <AvatarFallback className={'text-[22px] text-primary font-bold'}>{post?.author?.firstName?.[0]}</AvatarFallback>
           </Avatar>
           <div>
-            <Link className="font-semibold text-[15px] hover:underline cursor-pointer" href={`/user/${post.author.username}`}>
-              {post.author.firstName} {post.author.lastName}
+            <Link className="font-semibold text-[15px] hover:underline cursor-pointer" href={`/user/${post?.author?.username}`}>
+              {post?.author?.firstName} {post?.author?.lastName}
             </Link>
             <p className="text-label text-[13px]">
-              {getSmartDateTime(post.createdAt)}
+              {getSmartDateTime(post?.createdAt)}
             </p>
           </div>
         </div>
@@ -95,14 +95,14 @@ export default function PostCard({ post, priority, loggedInUser }) {
             </div>
           </DropdownMenuTrigger>
           <DropdownMenuContent className={'bg-bg text-secondary border-border absolute -top-1 right-1'}>
-            {loggedInUser._id.toString() === post.author._id.toString() &&
+            {loggedInUser?._id.toString() === post?.author?._id.toString() &&
               <DropdownMenuItem>
-                <div className="w-full cursor-pointer hover:underline" onClick={() => handleDeletePost(post._id.toString())}>
+                <div className="w-full cursor-pointer hover:underline" onClick={() => handleDeletePost(post?._id.toString())}>
                   Delete Post
                 </div>
               </DropdownMenuItem>
             }
-            {loggedInUser._id !== post.author._id &&
+            {loggedInUser?._id !== post?.author?._id &&
               <DropdownMenuItem>
                 <div className="w-full cursor-pointer hover:underline">
                   Report
@@ -114,14 +114,14 @@ export default function PostCard({ post, priority, loggedInUser }) {
       </div>
 
       <div className="px-4 pb-3">
-        <p className="text-[15px]">{post.caption}</p>
+        <p className="text-[15px]">{post?.caption}</p>
       </div>
 
-      {post.media && (
+      {post?.media && (
         <div className="w-full bg-label flex justify-center">
           <div className="w-full aspect-4/5 relative">
             <SafeImage
-              src={post.media}
+              src={post?.media}
               fill
               alt="Post Image"
               priority={priority}
@@ -136,10 +136,10 @@ export default function PostCard({ post, priority, loggedInUser }) {
           <div className="bg-primary rounded-full p-1">
             <Heart size={12} className="text-white" />
           </div>
-          <span>{post.likes.length}</span>
+          <span>{post?.likes?.length}</span>
         </div>
         <Link href={`/post/${post._id}`} className="flex space-x-3">
-          <span>{post.comments.length} comments</span>
+          <span>{post?.comments?.length} comments</span>
         </Link>
       </div>
 
