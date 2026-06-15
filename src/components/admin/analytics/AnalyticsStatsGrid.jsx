@@ -49,14 +49,14 @@ export default function AnalyticsStatsGrid({ engagement }) {
   return (
     <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
       {cards.map((card) => (
-        <div key={card.label} className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-5">
+        <div key={card.label} className="bg-card rounded-xl border border-border p-5">
           <div className="flex items-center justify-between mb-3">
-            <p className="text-sm text-gray-500 dark:text-gray-400">{card.label}</p>
+            <p className="text-sm text-label">{card.label}</p>
             <div className={`w-9 h-9 rounded-lg ${card.bg} ${card.color} flex items-center justify-center`}>
               {card.icon}
             </div>
           </div>
-          <p className="text-2xl font-semibold text-gray-900 dark:text-white">{card.value}</p>
+          <p className="text-2xl font-semibold text-secondary">{card.value}</p>
         </div>
       ))}
     </div>

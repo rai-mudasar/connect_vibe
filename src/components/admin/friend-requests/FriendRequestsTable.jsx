@@ -1,5 +1,5 @@
-import SafeImage from "../SafeImage"
-import { Avatar, AvatarFallback } from "../ui/avatar"
+import SafeImage from "@/components/SafeImage"
+import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 
 export default function FriendRequestsTable({ requests }) {
   const statusStyles = {
@@ -10,7 +10,7 @@ export default function FriendRequestsTable({ requests }) {
 
   const UserCell = ({ user }) => (
     <div className="flex items-center gap-3">
-      <Avatar className="w-14 h-14 border md:border-0 border-white bg-neutral-300">
+      <Avatar className="w-14 h-14 border md:border-0 border-border bg-label2">
         <SafeImage
           src={user?.profileImageUrl !== "" ? user?.profileImageUrl : null}
           fill
@@ -19,7 +19,7 @@ export default function FriendRequestsTable({ requests }) {
         />
         <AvatarFallback className={'text-2xl font-bold'}>{user?.firstName?.[0]}</AvatarFallback>
       </Avatar>
-      <span className="font-medium text-gray-900 dark:text-white whitespace-nowrap">
+      <span className="font-medium text-secondary whitespace-nowrap">
         {user?.firstName + " " + user?.lastName || "Deleted user"}
       </span>
     </div>
@@ -29,21 +29,21 @@ export default function FriendRequestsTable({ requests }) {
     <div className="overflow-x-auto">
       <table className="w-full text-sm">
         <thead>
-          <tr className="bg-gray-50 dark:bg-gray-700/50">
-            <th className="text-left px-6 py-3 text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide">Sender</th>
-            <th className="text-left px-6 py-3 text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide">Receiver</th>
-            <th className="text-left px-6 py-3 text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide">Status</th>
-            <th className="text-left px-6 py-3 text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide hidden md:table-cell">Date</th>
+          <tr className="bg-label2">
+            <th className="text-left px-6 py-3 text-xs font-semibold text-secondary uppercase tracking-wide">Sender</th>
+            <th className="text-left px-6 py-3 text-xs font-semibold text-secondary uppercase tracking-wide">Receiver</th>
+            <th className="text-left px-6 py-3 text-xs font-semibold text-secondary uppercase tracking-wide">Status</th>
+            <th className="text-left px-6 py-3 text-xs font-semibold text-secondary uppercase tracking-wide hidden md:table-cell">Date</th>
           </tr>
         </thead>
-        <tbody className="divide-y divide-gray-100 dark:divide-gray-700">
+        <tbody className="divide-y divide-border">
           {requests.length === 0 ? (
             <tr>
-              <td colSpan={4} className="px-6 py-10 text-center text-gray-400 dark:text-gray-500">No friend requests found</td>
+              <td colSpan={4} className="px-6 py-10 text-center text-label">No friend requests found</td>
             </tr>
           ) : (
             requests.map((req) => (
-              <tr key={req._id} className="hover:bg-gray-50 dark:hover:bg-gray-700/30 transition-colors">
+              <tr key={req._id} className="hover:bg-card-hover transition-colors">
                 <td className="px-6 py-3"><UserCell user={req.sender} /></td>
                 <td className="px-6 py-3"><UserCell user={req.receiver} /></td>
                 <td className="px-6 py-3">

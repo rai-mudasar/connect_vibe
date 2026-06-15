@@ -1,6 +1,6 @@
-import { getAnalyticsData } from "@/actions/adminAction"
-import AnalyticsCharts from "@/components/admin/AnalyticsCharts"
-import AnalyticsStatsGrid from "@/components/admin/AnalyticsStatsGrid"
+import { getAnalyticsData } from "@/actions/adminActions"
+import AnalyticsCharts from "@/components/admin/analytics/AnalyticsCharts"
+import AnalyticsStatsGrid from "@/components/admin/analytics/AnalyticsStatsGrid"
 
 
 export default async function AnalyticsPage() {
@@ -9,8 +9,8 @@ export default async function AnalyticsPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-semibold text-gray-900 dark:text-white">Analytics</h1>
-        <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
+        <h1 className="text-2xl font-semibold text-primary">Analytics</h1>
+        <p className="text-sm text-label mt-1">
           Growth trends and engagement metrics.
         </p>
       </div>

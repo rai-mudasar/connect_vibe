@@ -5,6 +5,7 @@ import connectToDb from "@/lib/dbConnect";
 import userModel from "@/models/userModel";
 import sendEmailToUser from "@/helpers/sendEmail";
 import { connection } from "next/server";
+import { pusherServer } from "@/lib/pusher";
 import { revalidatePath } from "next/cache";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/authOptions";
@@ -17,6 +18,26 @@ export async function getSessionUser() {
   ])
   if (!session || !session.user) throw new Error("Unauthorized! You must logged In to perform such operation.");
   return session.user;
+}
+
+export async function serverHeartBeat(id) {
+  try {
+    await connectToDb();
+    await userModel.findByIdAndUpdate(
+      id, {
+      lastSeen: new Date(),
+      isOnline: true
+    });
+
+    // await pusherServer.trigger(`$user-${id}`, 'status', {
+    //   userId: id,
+    //   isOnline: true,
+    //   lastSeen: new Date(),
+    // });
+
+  } catch (error) {
+
+  }
 }
 
 export async function createNewPassword(userId, newPassword) {
@@ -281,7 +302,7 @@ export async function updateProfile(userId, data) {
 }
 
 export async function getLoggedInUser() {
-  await connection()
+  await connection();
 
   try {
     const sessionUser = await getSessionUser();

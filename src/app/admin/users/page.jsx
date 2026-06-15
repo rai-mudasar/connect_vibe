@@ -1,21 +1,38 @@
-import { getUsers } from "@/actions/adminAction"
-import UsersTable from "@/components/admin/UsersTable"
+import StatsCards from "@/components/admin/users/StatsCards";
+import UsersTable from "@/components/admin/users/UsersTable";
+import { getAdminStats, getUsersByFilter } from "@/actions/adminActions";
 
-export default async function UsersPage() {
-  const users = await getUsers()
+export default async function AdminUsersPage() {
+  const [statsRes, usersRes] = await Promise.all([
+    getAdminStats(),
+    getUsersByFilter(),
+  ]);
+
+  const stats = statsRes.data;
+  const users = usersRes.success ? usersRes.data.users : [];
 
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-semibold text-gray-900 dark:text-white">User Management</h1>
-        <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
-          View, search, ban, and delete users.
+        <h1 className="text-2xl font-bold text-primary">Users</h1>
+        <p className="text-sm text-label mt-0.5">
+          Manage members, moderation, verification, and access across Vibe Connect.
         </p>
       </div>
 
-      <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700">
-        <UsersTable initialUsers={users} />
+      <StatsCards stats={stats} />/
+
+      <div className="flex flex-col xl:flex-row gap-6">
+
+        <div className="flex-1 min-w-0">
+          <UsersTable initialUsers={users} />
+        </div>
+
+        {/* <div className="xl:w-72 shrink-0">
+          <ActivitySidebar feeds={feeds} />
+        </div> */}
+
       </div>
     </div>
-  )
+  );
 }

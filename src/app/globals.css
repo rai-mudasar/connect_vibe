@@ -2,13 +2,15 @@
 
 @theme {
   --color-primary: #D85A30;
-  --color-primary-hover: #c24f28;
+  --color-primary-hover: #E66B40;
   --color-secondary: #ffffff;
   --color-bg: #031a50 ;
+  --color-card: #082363;
+  --color-card-active: #132E6F;
+  --color-card-hover: #132E6F;
   --color-border: #0d2d7a;
   --color-label: #7a93c8;
   --color-label2: #2e4a80;
-  --color-card: #082363;
 }
 
 @utility hide-scrollbar {

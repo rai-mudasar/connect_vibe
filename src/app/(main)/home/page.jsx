@@ -6,7 +6,7 @@ import Loading from "@/components/Loading";
 
 export default function HomePage() {
   return (
-    <div className="w-[calc(100vw-14px) h-screen border-2 bg-bg dark:bg-[#333334] pt-23.5 md:pt-17 flex flex-row gap-2 lg:gap-22 relative">
+    <div className="w-[calc(100vw-14px) min-h-screen border-2 bg-bg dark:bg-[#333334] pt-23.5 md:pt-17 flex flex-row gap-2 lg:gap-22 relative">
       <div className="hidden md:block md:min-w-70 md:w-[23%]">
         <Suspense fallback={<LeftSidebarSkeleton />}>
           <LeftSidebarWrapper />

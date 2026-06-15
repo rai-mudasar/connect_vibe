@@ -9,7 +9,7 @@ const userSchema = new mongoose.Schema(
     password: { type: String, required: [true, "Please enter a password"] },
     profileImageUrl: { type: String },
     isVerified: { type: Boolean },
-    role: { type: String, enum: ["user", "admin"], default: "user" },
+    role: { type: String, enum: ["user", "admin", "moderator", "creator"], default: "user" },
 
     verificationOtp: { type: Number },
     verificationOtpExpiry: { type: Date },
@@ -25,18 +25,10 @@ const userSchema = new mongoose.Schema(
     },
 
     friends: [{ type: mongoose.Schema.Types.ObjectId, ref: "user" }],
-    friendRequestsSent: [{ type: mongoose.Schema.Types.ObjectId, ref: "user" }],
-    friendRequestsReceived: [
-      { type: mongoose.Schema.Types.ObjectId, ref: "user" },
-    ],
 
     posts: [{ type: mongoose.Schema.Types.ObjectId, ref: "post" }],
     postCount: { type: Number, default: 0 },
     savedPosts: [{ type: mongoose.Schema.Types.ObjectId, ref: "post" }],
-
-    notifications: [
-      { type: mongoose.Schema.Types.ObjectId, ref: "notification" },
-    ],
 
     privacy: {
       profileVisibility: {
@@ -46,9 +38,10 @@ const userSchema = new mongoose.Schema(
       },
       showEmail: { type: Boolean, default: false },
     },
-    
-    isBanned: { type: Boolean, default: false },
-    lastSeen: Date,
+
+    status: { type: String, enum: ['active', 'banned', 'suspended', 'pending'], default: 'pending' },
+    isOnline: { type: Boolean },
+    lastSeen: { type: Date },
   },
   { timestamps: true },
 );

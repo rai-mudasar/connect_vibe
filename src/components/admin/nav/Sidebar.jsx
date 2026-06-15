@@ -3,7 +3,6 @@
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { useState } from "react"
-import SafeImage from "../SafeImage"
 
 const navItems = [
   {
@@ -82,10 +81,10 @@ export default function Sidebar() {
 
       {/* Mobile toggle button */}
       <button
-        className={`fixed top-2.5 left-4 z-30 md:hidden bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-2 shadow ${mobileOpen ? "hidden" : ""}`}
+        className={`fixed top-2.5 left-4 z-30 md:hidden bg-card border border-border text-secondary rounded-lg p-2 shadow ${mobileOpen ? "hidden" : ""}`}
         onClick={() => setMobileOpen(!mobileOpen)}
       >
-        <svg className="w-5 h-5 text-gray-600 dark:text-gray-300" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+        <svg className="w-5 h-5 text-label dark:text-gray-300" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
           <line x1="3" y1="12" x2="21" y2="12" /><line x1="3" y1="6" x2="21" y2="6" /><line x1="3" y1="18" x2="21" y2="18" />
         </svg>
       </button>
@@ -95,15 +94,15 @@ export default function Sidebar() {
           fixed md:relative z-20 h-full
           ${mobileOpen ? "left-0" : "-left-full md:left-0"}
           ${collapsed ? "md:w-14" : "md:w-56"}
-          w-56 bg-white dark:bg-gray-800
-          border-r border-gray-200 dark:border-gray-700
+          w-56 bg-card dark:bg-gray-800
+          border-r border-border dark:border-gray-700
           flex flex-col transition-all duration-200
         `}
       >
         {/* Logo */}
-        <div className="flex items-center gap-3 px-4 py-[7.5px] border-b border-gray-200 dark:border-gray-700">
+        <div className="flex items-center gap-3 px-4 py-[13.5px] border-b border-border dark:border-gray-700">
           {!collapsed && (
-            <span className="text-sm font-semibold text-gray-900 dark:text-white whitespace-nowrap">
+            <span className="text-xl font-semibold text-primary dark:text-primary whitespace-nowrap">
               Admin Panel
             </span>
           )}
@@ -120,11 +119,11 @@ export default function Sidebar() {
                 href={item.href}
                 onClick={() => setMobileOpen(false)}
                 className={`
-                  flex items-center gap-3 px-4 py-2.5 mx-2 rounded-lg mb-0.5
+                  flex items-center gap-3 px-4 py-2.5 mx-2 my-2 rounded-lg mb-0.5
                   text-sm transition-colors
                   ${isActive
-                    ? "bg-blue-50 dark:bg-blue-900/30 text-[#1877f2] dark:text-blue-400 font-medium"
-                    : "text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700"
+                    ? "bg-card-active text-primary font-medium border-l-2 border-r-2 border-primary"
+                    : "text-label hover:text-primary hover:bg-card-active hover:border-l-2 hover:border-r-2 border-primary"
                   }
                 `}
               >
@@ -138,10 +137,10 @@ export default function Sidebar() {
         {/* Collapse toggle (desktop only) */}
         <button
           onClick={() => setCollapsed(!collapsed)}
-          className="hidden md:flex items-center justify-center p-3 border-t border-gray-200 dark:border-gray-700 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
+          className="hidden md:flex items-center justify-center p-3 border-t border-border dark:border-gray-700 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
         >
           <svg
-            className={`w-4 h-4 transition-transform ${collapsed ? "rotate-180" : ""}`}
+            className={`w-5 h-5 transition-transform text-label ${collapsed ? "rotate-180" : ""}`}
             fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24"
           >
             <polyline points="15 18 9 12 15 6" />

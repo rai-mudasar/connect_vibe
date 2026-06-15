@@ -8,8 +8,8 @@ export default function FriendStatsGrid({ stats }) {
   return (
     <div className="grid grid-cols-3 gap-4">
       {cards.map((card) => (
-        <div key={card.label} className={`rounded-xl border border-gray-200 dark:border-gray-700 p-5 bg-white dark:bg-gray-800`}>
-          <p className="text-sm text-gray-500 dark:text-gray-400">{card.label}</p>
+        <div key={card.label} className={`rounded-xl border border-border p-5 bg-card`}>
+          <p className="h-12 sm:h-8 text-sm text-label">{card.label}</p>
           <p className={`text-2xl font-semibold mt-1 ${card.color}`}>{card.value}</p>
         </div>
       ))}

@@ -1,5 +1,5 @@
-import Topbar from "@/components/admin/Topbar"
-import Sidebar from "@/components/admin/Sidebar"
+import Topbar from "@/components/admin/nav/Topbar"
+import Sidebar from "@/components/admin/nav/Sidebar"
 import { redirect } from "next/navigation"
 import { getServerSession } from "next-auth"
 import { authOptions } from "@/lib/authOptions"
@@ -20,7 +20,7 @@ export default async function AdminLayout({ children }) {
   const loggedInUser = response.success ? response.data : null
 
   return (
-    <div className="flex h-screen bg-gray-100 dark:bg-gray-900 overflow-hidden">
+    <div className="flex h-screen bg-bg dark:bg-gray-900 overflow-hidden">
       <Sidebar />
       <div className="flex flex-col flex-1 overflow-hidden min-w-0">
         <Topbar user={loggedInUser} />

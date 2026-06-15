@@ -1,8 +1,9 @@
 import "./globals.css";
 import AuthProvider from "@/context/AuthProvider";
+import QueryProvider from "@/context/QueryProvider";
+import PresenceTracker from "@/helpers/PresenceTracker";
 import { Toaster } from "@/components/ui/sonner";
 import { Geist, Geist_Mono } from "next/font/google";
-import QueryProvider from "@/context/QueryProvider";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -19,12 +20,10 @@ export const metadata = {
   title: "Connect Vibe",
   description: "Dost ki vibe sa connect kro!",
   icons: {
-    // 1. Desktop Tabs: Explicitly use the .ico file for standard browser tabs
     icon: "/favicon.ico",
 
-    // 2. High-Res / Mobile: Provide the PNG paths specifically for shortcut devices
     shortcut: "/icon.png",
-    apple: "/icon.png", // Keeps it crisp if viewed on an iPhone screen too
+    apple: "/icon.png",
   },
 };
 
@@ -52,6 +51,7 @@ export default function RootLayout({ children }) {
               },
             }}
           />
+          <PresenceTracker />
         </AuthProvider>
       </body>
     </html>

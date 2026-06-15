@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import { updateReportStatus } from "@/actions/adminAction"
+import { updateReportStatus } from "@/actions/adminActions"
 
 export default function ReportsTable({ initialReports }) {
   const [reports, setReports] = useState(initialReports)
@@ -41,15 +41,15 @@ export default function ReportsTable({ initialReports }) {
   return (
     <div>
       {/* Filter tabs */}
-      <div className="px-6 py-3 border-b border-gray-200 dark:border-gray-700 flex gap-2">
+      <div className="px-6 py-3 border-b border-border flex gap-2">
         {["all", "pending", "resolved", "dismissed"].map((f) => (
           <button
             key={f}
             onClick={() => setFilter(f)}
             className={`text-xs px-3 py-1.5 rounded-lg capitalize font-medium transition ${
               filter === f
-                ? "bg-[#1877f2] text-white"
-                : "bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-600"
+                ? "bg-label text-secondary"
+                : "border border-border text-label hover:text-secondary hover:bg-label"
             }`}
           >
             {f}
@@ -61,7 +61,7 @@ export default function ReportsTable({ initialReports }) {
       <div className="overflow-x-auto">
         <table className="w-full text-sm">
           <thead>
-            <tr className="bg-gray-50 dark:bg-gray-700/50">
+            <tr className="bg-card dark:bg-gray-700/50">
               <th className="text-left px-6 py-3 text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide">Reporter</th>
               <th className="text-left px-6 py-3 text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide">Type</th>
               <th className="text-left px-6 py-3 text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide hidden md:table-cell">Reason</th>
