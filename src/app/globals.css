@@ -11,6 +11,11 @@
   --color-border: #0d2d7a;
   --color-label: #7a93c8;
   --color-label2: #2e4a80;
+
+  
+  /* --color-bg: #060F24 ; */
+  /* --color-card: #0A1A3A; */
+  /* --color-border: #12224A; */
 }
 
 @utility hide-scrollbar {

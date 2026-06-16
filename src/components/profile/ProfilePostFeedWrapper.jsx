@@ -3,7 +3,7 @@ import { getAllPostByAuthorId } from "@/actions/postActions"
 import { getLoggedInUserProfile } from "@/actions/userActions";
 
 
-export default async function ProfilePostFeedWrapper({ params }) {
+export default async function ProfilePostFeedWrapper({ params, isPublicView }) {
     const { username } = await params;
 
     const response = await getLoggedInUserProfile(username)
@@ -18,7 +18,7 @@ export default async function ProfilePostFeedWrapper({ params }) {
         <PostFeed
             loggedInUser={currentProfileUser}
             allPosts={allPosts}
-            isOwnProfile={isOwnProfile}
+            isOwnProfile={isPublicView ? false : isOwnProfile}
         />
     )
 }

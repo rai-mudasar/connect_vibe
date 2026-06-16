@@ -1,7 +1,7 @@
 import ProfileHeader from './ProfileHeader'
 import { getLoggedInUserProfile } from '@/actions/userActions';
 
-export default async function ProfileHeaderWrapper({ params }) {
+export default async function ProfileHeaderWrapper({ params, isPublicView }) {
     const { username } = await params;
 
     const response = await getLoggedInUserProfile(username)
@@ -12,7 +12,7 @@ export default async function ProfileHeaderWrapper({ params }) {
     return (
         <ProfileHeader
             currentProfileUser={currentProfileUser}
-            isOwnProfile={isOwnProfile}
+            isOwnProfile={isPublicView ? false : isOwnProfile}
         />
     )
 }

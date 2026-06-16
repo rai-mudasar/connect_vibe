@@ -123,50 +123,45 @@ export default function ProfileHeader({ currentProfileUser, isOwnProfile }) {
       </section>
 
       {/* Profile Section */}
-      <section className="h-51 md:h-51 flex flex-row items-start md:items-center pl-3 md:px-17 -mt-5 md:mt-0 relative">
-        <div className=" relative">
-          <Avatar className="w-26 md:w-40 h-26 md:h-40 border border-border bg-bg">
-            <SafeImage
-              src={currentProfileUser?.profileImageUrl !== "" ? currentProfileUser?.profileImageUrl : null}
-              fill
-              alt="User Profile Image"
-              className="object-contain"
-            />
-            <AvatarFallback className={'text-5xl lg:text-7xl text-primary font-bold'}>{currentProfileUser?.firstName?.[0]}</AvatarFallback>
-          </Avatar>
-          {isOwnProfile && (
-            <div
-              className="w-7 md:w-9 h-7 md:h-9 bg-primary rounded-full absolute bottom-4 right-0 flex justify-center items-center cursor-pointer"
-              onClick={handleProfileInputRef}
-            >
-              <Camera
-                className="text-primary w-6 md:w-7 h-6 md:h-7"
-                fill=""
-                strokeWidth="1px"
+      <section className="flex flex-col md:flex-row items-center md:items-start pl-3 md:px-17 -mt-5 md:my-6 relative">
+        <div className="w-full flex items-center">
+          <div className="relative">
+            <Avatar className="w-26 md:w-40 h-26 md:h-40 border border-border bg-bg">
+              <SafeImage
+                src={currentProfileUser?.profileImageUrl !== "" ? currentProfileUser?.profileImageUrl : null}
+                fill
+                alt="User Profile Image"
+                className="object-contain"
               />
+              <AvatarFallback className={'text-5xl lg:text-7xl text-primary font-bold'}>{currentProfileUser?.firstName?.[0]}</AvatarFallback>
+            </Avatar>
+            {isOwnProfile && (
+              <div
+                className="w-7 md:w-9 h-7 md:h-9 bg-primary rounded-full absolute bottom-4 right-0 flex justify-center items-center cursor-pointer"
+                onClick={handleProfileInputRef}
+              >
+                <Camera
+                  className="text-primary w-6 md:w-7 h-6 md:h-7"
+                  fill=""
+                  strokeWidth="1px"
+                />
+              </div>
+            )}
+          </div>
+
+          <div className="flex flex-col ml-3 md:ml-5 mt-9 md:mt-0 md:gap-1">
+            <div>
+              <h2 className="text-xl md:text-2xl font-bold text-primary">
+                {currentProfileUser?.firstName} {currentProfileUser?.lastName}
+              </h2>
             </div>
-          )}
-        </div>
-
-        <div className="flex flex-col ml-3 md:ml-5 mt-9 md:mt-0 md:gap-1">
-          <div>
-            <h2 className="text-xl md:text-2xl font-bold text-primary">
-              {currentProfileUser?.firstName} {currentProfileUser?.lastName}
-            </h2>
-          </div>
-          <div className="text-[12px] md:text-lg font-semibold ml-1 md:ml-0 text-label">
-            <p>{currentProfileUser?.bio}</p>
+            <div className="text-[12px] md:text-lg font-semibold italic ml-1 md:ml-0 text-label">
+              <p>"{currentProfileUser?.bio}"</p>
+            </div>
           </div>
         </div>
 
-        <div className="absolute top-30 md:top-7 right-32 md:right-12 flex gap-4 md:gap-6">
-          {/* <Link
-            href={""}
-            className="w-39 flex gap-2 md:gap-1 bg-[#0861F2] text-[15px] font-semibold text-white px-5 py-2.5 rounded-[10px] "
-          >
-            <Plus className="w-6 h-6" />
-            <p>Add to post</p>
-          </Link> */}
+        <div className="">
           {isOwnProfile && <EditProfileDialog currentProfileUser={currentProfileUser} />}
         </div>
       </section>

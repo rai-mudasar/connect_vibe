@@ -117,7 +117,7 @@ export async function getAnalyticsData() {
     }
 }
 
-export async function getFriendData() {
+export async function getFriendsStatsData() {
     try {
         await getAdminSessionUser()
 
@@ -141,10 +141,10 @@ export async function getFriendData() {
             requests: JSON.parse(JSON.stringify(requests)),
         }
     } catch (error) {
-        console.error(`Error in getFriendData action : ${error.message || error}`)
+        // console.error(`Error in getFriendsStatsData action : ${error.message || error}`)
         return {
             success: false,
-            message: `Error in getFriendData action : ${error.message || error}`
+            message: `Error in getFriendsStatsData action : ${error.message || error}`
         }
     }
 }

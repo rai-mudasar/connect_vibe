@@ -15,23 +15,23 @@ export default function ChatInterface({
     scrollRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
-  // useEffect(() => {
-  //   if (!conversationId) return;
-  //   const channel = pusherClient.subscribe(conversationId);
+  useEffect(() => {
+    if (!conversationId) return;
+    const channel = pusherClient.subscribe(conversationId);
 
-  //   channel.bind("new-message", (newMessage) => {
-  //     // Avoid duplicating the message if I am the sender
-  //     setMessages((prev) => {
-  //       if (prev.find((mes) => mes._id === newMessage._id)) return prev;
-  //       return [...prev, newMessage];
-  //     });
-  //   });
+    channel.bind("new-message", (newMessage) => {
+      // Avoid duplicating the message if I am the sender
+      setMessages((prev) => {
+        if (prev.find((mes) => mes._id === newMessage._id)) return prev;
+        return [...prev, newMessage];
+      });
+    });
 
-  //   return () => {
-  //     channel.unbind_all();
-  //     pusherClient.unsubscribe(conversationId);
-  //   };
-  // }, [conversationId]);
+    return () => {
+      channel.unbind_all();
+      pusherClient.unsubscribe(conversationId);
+    };
+  }, [conversationId]);
 
 
 

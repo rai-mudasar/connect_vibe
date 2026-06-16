@@ -1,10 +1,9 @@
-import { getAnalyticsData } from "@/actions/adminActions"
-import AnalyticsCharts from "@/components/admin/analytics/AnalyticsCharts"
-import AnalyticsStatsGrid from "@/components/admin/analytics/AnalyticsStatsGrid"
+import { Suspense } from "react"
+import Loading from "@/components/Loading"
+import AnalyticsWrapper from "@/components/admin/analytics/AnalyticsWrapper"
 
 
-export default async function AnalyticsPage() {
-  const { engagement, monthlyUsers, monthLabels } = await getAnalyticsData()
+export default function AnalyticsPage() {
 
   return (
     <div className="space-y-6">
@@ -13,11 +12,11 @@ export default async function AnalyticsPage() {
         <p className="text-sm text-label mt-1">
           Growth trends and engagement metrics.
         </p>
+
+        <Suspense fallback={<Loading />}>
+          <AnalyticsWrapper />
+        </Suspense>
       </div>
-
-      <AnalyticsStatsGrid engagement={engagement} />
-
-      <AnalyticsCharts monthlyUsers={monthlyUsers} monthLabels={monthLabels} engagement={engagement} />
     </div>
   )
 }

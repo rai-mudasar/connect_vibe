@@ -1,10 +1,10 @@
 
-import { getFriendData } from "@/actions/adminActions"
+import { getFriendsStatsData } from "@/actions/adminActions"
 import FriendRequestsTable from "@/components/admin/friend-requests/FriendRequestsTable"
 import FriendStatsGrid from "@/components/admin/friend-requests/FriendStatsGrid"
 
 export default async function FriendRequestsPage() {
-  const { stats, requests } = await getFriendData()
+  const { stats, requests } = await getFriendsStatsData()
 
   return (
     <div className="space-y-6">
