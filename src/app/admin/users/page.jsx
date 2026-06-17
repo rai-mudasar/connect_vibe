@@ -20,7 +20,7 @@ export default async function AdminUsersPage() {
         </p>
       </div>
 
-      <StatsCards stats={stats} />/
+      <StatsCards stats={stats} />
 
       <div className="flex flex-col xl:flex-row gap-6">
 

@@ -10,7 +10,9 @@ export default async function ConversationPage({ params }) {
   return (
     <div className="w-screen sm:w-[calc(100vw-320px)] h-dvh flex flex-col overflow-hidden">
 
-      <ChatHeader conversationId={conversationId} />
+      <div className="shrink-0">
+        <ChatHeader conversationId={conversationId} />
+      </div>
 
       <div className="flex-1 overflow-y-auto bg-bg hide-scrollbar">
         <Suspense fallback={<Loading className={'bg-bg'} />}>
@@ -18,7 +20,9 @@ export default async function ConversationPage({ params }) {
         </Suspense>
       </div>
 
-      <ChatFooter conversationId={conversationId} />
+      {/* <div className="shrink-0">
+        <ChatFooter conversationId={conversationId} />
+      </div> */}
     </div>
   );
 }
