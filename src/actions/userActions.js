@@ -20,23 +20,18 @@ export async function getSessionUser() {
   return session.user;
 }
 
-export async function serverHeartBeat(id) {
+export async function updateLastSeenAction(userId) {
   try {
-    await connectToDb();
-    await userModel.findByIdAndUpdate(
-      id, {
-      lastSeen: new Date(),
-      isOnline: true
+    if (!userId) return { success: false };
+
+    await userModel.findByIdAndUpdate(userId, {
+      lastSeen: new Date()
     });
 
-    // await pusherServer.trigger(`$user-${id}`, 'status', {
-    //   userId: id,
-    //   isOnline: true,
-    //   lastSeen: new Date(),
-    // });
-
+    return { success: true };
   } catch (error) {
-
+    console.error("Error updating last seen timestamp:", error);
+    return { success: false };
   }
 }
 

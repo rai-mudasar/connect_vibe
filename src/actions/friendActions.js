@@ -100,7 +100,6 @@ export async function getPendingRequests() {
 }
 
 export async function getSentRequests() {
-  console.log("enetred-------------------------------------------------")
   try {
     console.log('f');
     const sessionUser = await getSessionUser();
@@ -110,7 +109,6 @@ export async function getSentRequests() {
     .populate("receiver", "firstName lastName username profileImageUrl occupation")
     .lean();
     
-    console.log("enetred3-------------------------------------------------")
     const formattedData = outgoingRequests.map(req => req.receiver);
 
     return {

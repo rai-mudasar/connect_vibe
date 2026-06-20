@@ -15,6 +15,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import SafeImage from "@/components/SafeImage";
+import { usePresence } from "@/context/PresenceContext";
 
 const STATUS_STYLES = {
   active: "bg-emerald-950/60 text-emerald-400 border-emerald-900",
@@ -37,7 +38,7 @@ const STATUS_DOT = {
   pending: "bg-zinc-500",
 };
 
-function UserCard({ user, selected, onToggle, onBan, onSuspend, onActivate, isPending }) {
+function UserCard({ user, selected, onToggle, onBan, onSuspend, onActivate, isPending, isOnline }) {
   return (
     <div
       className={`
@@ -135,8 +136,8 @@ function UserCard({ user, selected, onToggle, onBan, onSuspend, onActivate, isPe
       {/* Row 3 — stats grid */}
       <div className="grid grid-cols-3 divide-x divide-border border border-border rounded-xl overflow-hidden">
         {[
-          { label: "POSTS", value: user?.posts?.length, red: false},
-          { label: "LASTSEEN", value: getPresenceStatus(user?.lastSeen), red: getPresenceStatus(user?.lastSeen) === 'Online'},
+          { label: "POSTS", value: user?.posts?.length, red: false },
+          { label: "LASTSEEN", value: isOnline ? 'Online' : getPresenceStatus(user?.lastSeen), red: isOnline || getPresenceStatus(user?.lastSeen) === 'Online' },
           { label: "REPORTS", value: user?.reports, red: user?.reports > 0 },
         ].map(({ label, value, red }) => (
           <div key={label} className="flex flex-col items-center py-2.5 gap-0.5 bg-bg">
@@ -162,6 +163,7 @@ export default function UsersTable({ initialUsers }) {
   const [statusFilter, setStatus] = useState("all");
   const [roleFilter, setRoleFilter] = useState("all");
   const [isPending, startTransition] = useTransition();
+  const { onlineUsers } = usePresence();
 
   const router = useRouter();
 
@@ -318,6 +320,7 @@ export default function UsersTable({ initialUsers }) {
               onSuspend={handleSuspend}
               onActivate={handleActivate}
               isPending={isPending}
+              isOnline={onlineUsers?.includes(user?._id)}
             />
           ))
         )}
@@ -354,112 +357,129 @@ export default function UsersTable({ initialUsers }) {
                   No users match the current filters.
                 </TableCell>
               </TableRow>
-            ) : filtered.map((user) => (
-              <TableRow
-                key={user?._id}
-                className={`border-border hover:bg-card-hover transition-colors ${selected.includes(user?._id) ? "bg-violet-950/20" : ""}`}
-              >
-                <TableCell className="pl-4">
-                  <Checkbox
-                    checked={selected.includes(user?._id)}
-                    onCheckedChange={() => toggleOne(user?._id)}
-                    className="border-border data-[state=checked]:bg-secondary data-[state=checked]:border-secondary cursor-pointer"
-                  />
-                </TableCell>
+            ) : filtered.map((user) => {
+              const isUserOnline = Array.isArray(onlineUsers) && onlineUsers.includes(user?._id);
+              return (
+                <TableRow
+                  key={user?._id}
+                  className={`border-border hover:bg-card-hover transition-colors ${selected.includes(user?._id) ? "bg-violet-950/20" : ""}`}
+                >
+                  <TableCell className="pl-4">
+                    <Checkbox
+                      checked={selected.includes(user?._id)}
+                      onCheckedChange={() => toggleOne(user?._id)}
+                      className="border-border data-[state=checked]:bg-secondary data-[state=checked]:border-secondary cursor-pointer"
+                    />
+                  </TableCell>
 
-                <TableCell>
-                  <div className="flex items-center gap-2.5">
-                    <Avatar className="w-17 h-17 border border-border bg-bg">
-                      <SafeImage
-                        src={user?.profileImageUrl !== "" ? user?.profileImageUrl : null}
-                        fill
-                        alt="User Profile Image"
-                        className="object-contain"
-                      />
-                      <AvatarFallback className={'text-[24px] text-primary font-bold'}>{user?.firstName?.[0] + user?.lastName?.[0]}</AvatarFallback>
-                    </Avatar>
-                    <div className="min-w-0">
-                      <div className="flex items-center gap-1.5">
-                        <span className="text-[16px] font-medium text-zinc-200 truncate">
-                          {user?.firstName} {user?.lastName}
-                        </span>
-                        {user?.isVerified && (
-                          <BadgeCheck className="w-4 h-4 text-primary shrink-0" />
+                  <TableCell>
+                    <div className="flex items-center gap-2.5">
+                      <div className="relative">
+                        <Avatar className="w-17 h-17 border border-border bg-bg">
+                          <SafeImage
+                            src={user?.profileImageUrl !== "" ? user?.profileImageUrl : null}
+                            fill
+                            alt="User Profile Image"
+                            className="object-contain"
+                          />
+                          <AvatarFallback className={'text-[24px] text-primary font-bold'}>{user?.firstName?.[0] + user?.lastName?.[0]}</AvatarFallback>
+                        </Avatar>
+                        {(isUserOnline || (getPresenceStatus(user?.lastSeen) === 'Online')) && (
+                          <span className="absolute bottom-1 right-1 w-4 h-4 bg-green-500 border-2 border-card rounded-full" />
                         )}
                       </div>
-                      <span className="text-xs text-zinc-500">@{user.username}</span>
+                      <div className="min-w-0">
+                        <div className="flex items-center gap-1.5">
+                          <span className="text-[16px] font-medium text-zinc-200 truncate">
+                            {user?.firstName} {user?.lastName}
+                          </span>
+                          {user?.isVerified && (
+                            <BadgeCheck className="w-4 h-4 text-primary shrink-0" />
+                          )}
+                        </div>
+                        <span className="text-xs text-zinc-500">@{user.username}</span>
+                      </div>
                     </div>
-                  </div>
-                </TableCell>
+                  </TableCell>
 
-                <TableCell className="hidden md:table-cell">
-                  <Badge variant="outline" className={`text-[11px] ${ROLE_STYLES[user.role]}`}>
-                    {user?.role}
-                  </Badge>
-                </TableCell>
+                  <TableCell className="hidden md:table-cell">
+                    <Badge variant="outline" className={`text-[11px] ${ROLE_STYLES[user.role]}`}>
+                      {user?.role}
+                    </Badge>
+                  </TableCell>
 
-                <TableCell className="hidden lg:table-cell text-xs text-zinc-400">{user.email}</TableCell>
+                  <TableCell className="hidden lg:table-cell text-xs text-zinc-400">{user.email}</TableCell>
 
-                <TableCell className="hidden sm:table-cell text-right text-sm text-zinc-300 tabular-nums">
-                  {user?.posts?.length}
-                </TableCell>
+                  <TableCell className="hidden sm:table-cell text-right text-sm text-zinc-300 tabular-nums">
+                    {user?.posts?.length}
+                  </TableCell>
 
-                <TableCell className="hidden xl:table-cell text-right tabular-nums pr-6">
-                  {user?.reports > 0
-                    ? <span className="text-sm font-semibold text-red-400">{user.reports}</span>
-                    : <span className="text-sm text-zinc-600">0</span>}
-                </TableCell>
+                  <TableCell className="hidden xl:table-cell text-right tabular-nums pr-6">
+                    {user?.reports > 0
+                      ? <span className="text-sm font-semibold text-red-400">{user.reports}</span>
+                      : <span className="text-sm text-zinc-600">0</span>}
+                  </TableCell>
 
-                <TableCell className="hidden xl:table-cell text-xs text-zinc-500 pl-8 ">
-                  {new Date(user.createdAt).toLocaleDateString("en-US", {
-                    month: "short", day: "numeric", year: "numeric",
-                  })}
-                </TableCell>
+                  <TableCell className="hidden xl:table-cell text-xs text-zinc-500 pl-8 ">
+                    {new Date(user.createdAt).toLocaleDateString("en-US", {
+                      month: "short", day: "numeric", year: "numeric",
+                    })}
+                  </TableCell>
 
-                <TableCell className={`hidden lg:table-cell text-xs ${getPresenceStatus(user.lastSeen) === 'Online' ? 'text-green-400' : 'text-zinc-500'}`}>{getPresenceStatus(user.lastSeen)}</TableCell>
+                  <TableCell className={`hidden lg:table-cell text-xs font-medium ${(isUserOnline || (getPresenceStatus(user?.lastSeen) === 'Online')) ? 'text-red-500' : 'text-zinc-500'}`}>
+                    {(isUserOnline || (getPresenceStatus(user?.lastSeen) === 'Online')) ? (
+                      <span className="flex items-center gap-1.5">
+                        <span className="w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse" />
+                        Online
+                      </span>
+                    ) : (
+                      getPresenceStatus(user?.lastSeen)
+                    )}
+                  </TableCell>
 
-                <TableCell>
-                  <Badge variant="outline" className={`text-[11px] ${STATUS_STYLES[user.status]}`}>
-                    {user.status}
-                  </Badge>
-                </TableCell>
+                  <TableCell>
+                    <Badge variant="outline" className={`text-[11px] ${STATUS_STYLES[user.status]}`}>
+                      {user.status}
+                    </Badge>
+                  </TableCell>
 
-                <TableCell>
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <Button
-                        variant="ghost" size="icon"
-                        className="h-7 w-7 text-zinc-500 hover:text-zinc-200 hover:bg-zinc-800"
-                        disabled={isPending}
-                      >
-                        <MoreHorizontal className="w-4 h-4" />
-                      </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end" className="bg-zinc-900 border-zinc-700 w-44">
-                      <DropdownMenuItem
-                        onClick={() => handleActivate(user._id)}
-                        className="text-emerald-400 focus:bg-zinc-800 focus:text-emerald-300 cursor-pointer"
-                      >
-                        <UserCheck className="w-4 h-4 mr-2" /> Activate
-                      </DropdownMenuItem>
-                      <DropdownMenuItem
-                        onClick={() => handleSuspend(user._id)}
-                        className="text-yellow-400 focus:bg-zinc-800 focus:text-yellow-300 cursor-pointer"
-                      >
-                        <UserX className="w-4 h-4 mr-2" /> Suspend
-                      </DropdownMenuItem>
-                      <DropdownMenuSeparator className="bg-zinc-800" />
-                      <DropdownMenuItem
-                        onClick={() => handleBan(user._id)}
-                        className="text-red-400 focus:bg-zinc-800 focus:text-red-300 cursor-pointer"
-                      >
-                        <Ban className="w-4 h-4 mr-2" /> Ban user
-                      </DropdownMenuItem>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
-                </TableCell>
-              </TableRow>
-            ))}
+                  <TableCell>
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <Button
+                          variant="ghost" size="icon"
+                          className="h-7 w-7 text-zinc-500 hover:text-zinc-200 hover:bg-zinc-800"
+                          disabled={isPending}
+                        >
+                          <MoreHorizontal className="w-4 h-4" />
+                        </Button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent align="end" className="bg-zinc-900 border-zinc-700 w-44">
+                        <DropdownMenuItem
+                          onClick={() => handleActivate(user._id)}
+                          className="text-emerald-400 focus:bg-zinc-800 focus:text-emerald-300 cursor-pointer"
+                        >
+                          <UserCheck className="w-4 h-4 mr-2" /> Activate
+                        </DropdownMenuItem>
+                        <DropdownMenuItem
+                          onClick={() => handleSuspend(user._id)}
+                          className="text-yellow-400 focus:bg-zinc-800 focus:text-yellow-300 cursor-pointer"
+                        >
+                          <UserX className="w-4 h-4 mr-2" /> Suspend
+                        </DropdownMenuItem>
+                        <DropdownMenuSeparator className="bg-zinc-800" />
+                        <DropdownMenuItem
+                          onClick={() => handleBan(user._id)}
+                          className="text-red-400 focus:bg-zinc-800 focus:text-red-300 cursor-pointer"
+                        >
+                          <Ban className="w-4 h-4 mr-2" /> Ban user
+                        </DropdownMenuItem>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                  </TableCell>
+                </TableRow>
+              )
+            })}
           </TableBody>
         </Table>
       </div>

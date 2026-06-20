@@ -11,9 +11,8 @@ export const pusherServer = new PusherServer({
 });
 
 // 2. Initialize Pusher on the Client (for your Chat UI)
-export const pusherClient = new PusherClient(
-  process.env.NEXT_PUBLIC_PUSHER_APP_KEY,
-  {
-    cluster: process.env.NEXT_PUBLIC_PUSHER_CLUSTER,
-  }
+export const pusherClient = new PusherClient(process.env.NEXT_PUBLIC_PUSHER_APP_KEY, {
+  cluster: process.env.NEXT_PUBLIC_PUSHER_CLUSTER,
+  authEndpoint: "/api/pusher/auth",
+}
 );

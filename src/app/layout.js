@@ -1,9 +1,8 @@
 import "./globals.css";
 import AuthProvider from "@/context/AuthProvider";
-import QueryProvider from "@/context/QueryProvider";
-import PresenceTracker from "@/helpers/PresenceTracker";
 import { Toaster } from "@/components/ui/sonner";
 import { Geist, Geist_Mono } from "next/font/google";
+import { PresenceProvider } from "@/context/PresenceContext";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -38,9 +37,9 @@ export default function RootLayout({ children }) {
         className={`${geistSans.variable} ${geistMono.variable} antialiased  hide-scrollbar`}
       >
         <AuthProvider>
-          <QueryProvider>
+          <PresenceProvider>
             {children}
-          </QueryProvider>
+          </PresenceProvider>
           <Toaster
             position="top-center"
             toastOptions={{
@@ -51,7 +50,6 @@ export default function RootLayout({ children }) {
               },
             }}
           />
-          <PresenceTracker />
         </AuthProvider>
       </body>
     </html>

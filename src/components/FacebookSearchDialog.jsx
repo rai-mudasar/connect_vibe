@@ -119,8 +119,8 @@ export function FacebookSearchDialog() {
   return (
     <>
       {/* ── DESKTOP: inline search box (md and above) ────────────────────── */}
-      <div ref={dropdownRef} className="relative hidden md:block">
-        <div className="w-52 lg:w-64 h-10 bg-bg rounded-2xl flex items-center pl-3 gap-1.5 border border-border">
+      <div ref={dropdownRef} className="relative hidden lg:block">
+        <div className="w-52 h-10 bg-bg rounded-2xl flex items-center pl-3 gap-1.5 border border-border">
           <Search className="w-4 h-4 text-label shrink-0 stroke-[2px]" />
           <Input
             value={inputData}
@@ -145,7 +145,7 @@ export function FacebookSearchDialog() {
       {/* ── MOBILE: round icon trigger ────────────────────────── */}
       <button
         onClick={() => setMobileOpen(true)}
-        className="md:hidden w-9 h-9 rounded-full bg-bg border border-border flex items-center justify-center text-label hover:text-primary transition-colors"
+        className="lg:hidden w-9 h-9 rounded-full bg-bg border border-border flex items-center justify-center text-label hover:text-primary transition-colors cursor-pointer"
         aria-label="Open search"
       >
         <Search className="w-5 md:w-6 h-5 md:h-6 stroke-[2px] text-primary" />

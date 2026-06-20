@@ -2,61 +2,69 @@
 
 import Link from 'next/link'
 import SafeImage from '../SafeImage'
-import { useMemo } from 'react'
-import { useSession } from 'next-auth/react'
+import { toast } from 'sonner'
+import { useMemo, useState } from 'react'
+import { useRouter } from 'next/navigation'
 import { Avatar, AvatarFallback } from '../ui/avatar'
 import { ArrowLeft, MoreVertical } from 'lucide-react'
-import { getConversationsById } from '@/actions/chatActions'
-import { useQuery, useQueryClient } from '@tanstack/react-query'
+import { deleteChatForUser } from '@/actions/chatActions'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '../ui/dropdown-menu'
 
-export default function ChatHeader({ conversationId }) {
-    const queryClient = useQueryClient();
-    const { data: session } = useSession();
-
-    const { data: conversation } = useQuery({
-        queryKey: ['conversation', conversationId],
-        queryFn: () => getConversationsById(conversationId),
-        initialData: () => {
-            const conversations = queryClient.getQueryData(['conversations']);
-            return conversations?.find((c) => c._id === conversationId);
-        },
-        staleTime: 1000 * 60,
-    });
+export default function ChatHeader({ conversationId, initialChatMetadata, currentLoggedInUserId }) {
+    const router = useRouter();
+    const [conversation, setConversation] = useState(initialChatMetadata);
 
     const chattingUser = useMemo(() => {
-        if (!conversation || !session?.user?.id) return null;
-        return conversation?.participants?.find(p => p._id !== session.user.id);
-    }, [conversation, session?.user?.id]);
+        if (!conversation || !currentLoggedInUserId) return null;
+        return conversation?.participants?.find(p => p._id !== currentLoggedInUserId);
+    }, [conversation, currentLoggedInUserId]);
+
+    const handleChatDelete = async (chatId) => {
+        try {
+            // OPTIMISTIC UPDATE: Dispatch custom event to notify Sidebar instantly
+            const deleteEvent = new CustomEvent('chatDeleted', { detail: { chatId } });
+            window.dispatchEvent(deleteEvent);
+            
+            const response = await deleteChatForUser(chatId);
+            if (response.success) {
+                router.refresh();
+                toast.success('Chat deleted');
+                router.replace('/chat');
+            } else {
+                toast.error(`Error: ${response.message || 'Failed to delete'}`);
+                router.refresh();
+            }
+        } catch (error) {
+            toast.error(`Error: ${error.message || error}`);
+        }
+    }
 
     return (
         <div className="w-full h-18 flex flex-row items-center px-3 bg-card border-b border-border shadow-sm/30">
             <div className="w-full h-full flex flex-row items-center gap-2">
-                <Link
-                    href={'/chat'}
-                    className="font-semibold text-lg text-label cursor-pointer">
+                <Link href={'/chat'} className="font-semibold text-lg text-label cursor-pointer">
                     <div className="flex justify-center items-center md:mt-1">
                         <ArrowLeft className="w-5 md:w-6 h-5 md:h-6 ml-1 md:ml-0" />
                     </div>
                 </Link>
 
-                <Avatar className="w-10 h-10 bg-neutral-300 ml-1 md:ml-4">
+                <Avatar className="w-10 h-10 bg-bg border-border ml-1 md:ml-4">
                     <SafeImage
                         src={chattingUser?.profileImageUrl || null}
                         fill
                         alt="User Profile Image"
                         className="object-contain"
                     />
-                    <AvatarFallback className={'text-md font-bold'}>
-                        {chattingUser?.firstName?.[0] || "?"}
+                    <AvatarFallback className={'text-md font-bold text-primary'}>
+                        {chattingUser?.firstName?.[0] + chattingUser?.lastName?.[0] || "?"}
                     </AvatarFallback>
                 </Avatar>
                 <div>
                     <p className="text-xl text-primary md:text-2xl font-semibold ">
                         {chattingUser ? `${chattingUser.firstName} ${chattingUser.lastName}` : "Loading..."}
                     </p>
-                    <p className="text-[12px] ml-2 -mt-1 text-label">
-                        {chattingUser?.bio || "No bio available"}
+                    <p className="text-[12px] ml-2 -mt-1 text-label italic">
+                        "{chattingUser?.bio || "No bio available"}"
                     </p>
                 </div>
             </div>
@@ -70,7 +78,9 @@ export default function ChatHeader({ conversationId }) {
                     </DropdownMenuTrigger>
                     <DropdownMenuContent className={'bg-label border-border'}>
                         <DropdownMenuItem className="cursor-pointer hover:text-primary">
-                            Delete Conversation
+                            <button onClick={() => handleChatDelete(conversationId)}>
+                                Delete Conversation
+                            </button>
                         </DropdownMenuItem>
                     </DropdownMenuContent>
                 </DropdownMenu>

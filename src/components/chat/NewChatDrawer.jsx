@@ -1,14 +1,15 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { Search, X, MessageSquarePlus } from "lucide-react";
-import { Input } from "@/components/ui/input";
-import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
+import { toast } from "sonner";
 import { useRouter } from "next/navigation";
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "../ui/sheet";
-import SafeImage from "../SafeImage";
-import Loading from "../Loading";
+import { useEffect, useState } from "react";
+import { Input } from "@/components/ui/input";
+import { Search, X, MessageSquarePlus } from "lucide-react";
 import { getOrCreateConversation } from "@/actions/chatActions";
+import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "../ui/sheet";
+import Loading from "../Loading";
+import SafeImage from "../SafeImage";
 
 
 export default function NewChatDrawer({ loggedInUserId, friends, triggerClassName }) {
@@ -23,7 +24,7 @@ export default function NewChatDrawer({ loggedInUserId, friends, triggerClassNam
         friend.firstName.toLowerCase().includes(searchQuery.toLowerCase())
     );
 
-    useEffect( ()=> {
+    useEffect(() => {
         setOpen(false)
     }, [])
 
@@ -32,16 +33,36 @@ export default function NewChatDrawer({ loggedInUserId, friends, triggerClassNam
         setSearchQuery("");
         setLoading(true);
         try {
-            const chat = await getOrCreateConversation(loggedInUserId, targetUserId);
-            router.push(`/chat/${chat._id}`);
+            const response = await getOrCreateConversation(loggedInUserId, targetUserId);
+
+            if (response?.success && response?.data?._id) {
+                const chatRoom = response.data;
+
+                const chatPlaceholder = {
+                    _id: chatRoom._id,
+                    participants: chatRoom.participants || [],
+                    unreadCount: 0,
+                    lastMessage: chatRoom.lastMessage || { text: "Started a conversation" },
+                    updatedAt: new Date().toISOString()
+                };
+
+                const createEvent = new CustomEvent('chatCreated', { detail: { chatRoom: chatPlaceholder } });
+                window.dispatchEvent(createEvent);
+
+                router.replace(`/chat/${chatRoom._id}`);
+                router.refresh();
+            } else {
+                toast.error(response?.message || "Could not resolve chat room structure.");
+            }
         } catch (error) {
-            console.error("Failed to start chat:", error);
+            console.error(error);
+            toast.error("Failed to start chat");
         } finally {
             setLoading(false);
         }
     };
 
-    if(loading) return (
+    if (loading) return (
         <div className="fixed inset-0 bg-black/30">
             <Loading />
         </div>
@@ -85,7 +106,7 @@ export default function NewChatDrawer({ loggedInUserId, friends, triggerClassNam
                                 <X className="w-4 h-4" />
                             </button>
                         )}
-                    </div>   
+                    </div>
 
                     {/* Friends List */}
                     <div className="flex-1 overflow-y-auto">
@@ -105,7 +126,7 @@ export default function NewChatDrawer({ loggedInUserId, friends, triggerClassNam
                                                     alt="User Profile Image"
                                                     className="object-contain"
                                                 />
-                                                <AvatarFallback className={'text-[22px] text-primary font-bold'}>{friend?.firstName?.[0]}</AvatarFallback>
+                                                <AvatarFallback className={'text-[22px] text-primary font-bold'}>{friend?.firstName?.[0] + friend?.lastName?.[0]}</AvatarFallback>
                                             </Avatar>
                                             {friend.status === "online" && (
                                                 <div className="absolute bottom-0 right-0 w-2.5 h-2.5 bg-green-500 rounded-full border-2 border-card dark:border-gray-900" />

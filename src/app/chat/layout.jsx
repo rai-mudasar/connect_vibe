@@ -1,14 +1,14 @@
 import { Suspense } from "react";
-import ChatSdebarWrapper from "@/components/chat/ChatSdebarWrapper";
 import ChatSidebarSkeleton from "@/components/chat/ChatSidebarSkeleton";
+import ChatSidebarWrapper from "@/components/chat/ChatSidebarWrapper";
 
 export default function ChatLayout({ children }) {
   return (
     <div className="flex w-screen h-screen overflow-hidden bg-white">
       <Suspense fallback={<ChatSidebarSkeleton />}>
-        <ChatSdebarWrapper />
+        <ChatSidebarWrapper />
       </Suspense>
-      <main>{children}</main>
+      <main className="flex-1">{children}</main>
     </div>
   );
 }
