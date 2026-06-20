@@ -168,7 +168,6 @@ export default function ChatSidebar({ friends, loggedInUserId, initialConversati
 
   const handleChatClick = (chat) => {
     if (chat?.unreadCount > 0) {
-      // console.log("Sidebar chat unread count sent to event : ", chat?.unreadCount)
       const syncEvent = new CustomEvent("syncGlobalUnread", {
         detail: { reduceBy: chat.unreadCount }
       });
