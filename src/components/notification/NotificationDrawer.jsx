@@ -53,15 +53,17 @@ export default function NotificationDrawer({
   }, []);
 
   useEffect(() => {
-    const channel = pusherClient.subscribe(`user-${loggedInUserId}`);
+
+    const channel = pusherClient.subscribe(`user-${loggedInUserId.toString()}`);
 
     channel.bind("new-notification", (newNotification) => {
+      // console.log('new : ', newNotification)
       setNotifications((prev) => [newNotification, ...prev]);
       router.refresh();
     });
 
     return () => {
-      channel.unbind_all();
+      channel.unbind();
       pusherClient.unsubscribe(`user-${loggedInUserId}`);
     };
   }, [loggedInUserId]);

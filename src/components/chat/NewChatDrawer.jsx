@@ -28,7 +28,8 @@ export default function NewChatDrawer({ loggedInUserId, friends, triggerClassNam
 
     const handleOpenOrStartChat = async (targetUserId) => {
         setSearchQuery("");
-        // setLoading(true);
+        setOpen(false);
+        setLoading(true);
         try {
             const response = await getOrCreateConversation(loggedInUserId, targetUserId);
 
@@ -45,7 +46,6 @@ export default function NewChatDrawer({ loggedInUserId, friends, triggerClassNam
 
                 const createEvent = new CustomEvent('chatCreated', { detail: { chatRoom: chatPlaceholder } });
                 window.dispatchEvent(createEvent);
-                setOpen(false);
                 router.replace(`/chat/${chatRoom._id}`);
                 setLoading(false);
             } else {

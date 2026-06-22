@@ -24,6 +24,7 @@ export default function verifyPage() {
     const searchParams = useSearchParams();
     const searchEmail = searchParams.get('email')
     const [error, setError] = useState('');
+    const [apiError, setApiError] = useState('');
     const [email, setEmail] = useState('');
     const [isLoading, setIsLoading] = useState(true);
     const [isSubmitting, setIsSubmittimg] = useState(false);
@@ -44,7 +45,7 @@ export default function verifyPage() {
                 setIsLoading(false);
                 return;
             }
-            
+
             const decodedEmail = decodeURIComponent(searchEmail);
             if (!decodedEmail || !decodedEmail.includes('@')) {
                 setError('Invalid email parameter')
@@ -79,7 +80,8 @@ export default function verifyPage() {
                 return;
             }
         } catch (error) {
-            console.log("Error in verification response", error.response.data.message);
+            setApiError("*" + error?.response?.data?.message || 'Try again')
+            // console.log("Error in verification response", error.response.data.message);
             toast.error(error?.response?.data?.message || "Verification failed");
         } finally {
             setIsSubmittimg(false);
@@ -138,10 +140,13 @@ export default function verifyPage() {
                                                 placeholder="Enter OTP"
                                                 autoFocus
                                                 required
-                                                className={'placeholder:text-label text-secondary border-border focus-visible:ring-[1px] md:focus-visible:ring-[2px]'}
+                                                className={`placeholder:text-label text-secondary ${apiError !== '' ? 'border-red-500' : 'border-secondary'} focus-visible:ring-0`}
                                                 {...field}
                                             />
                                         </FormControl>
+                                        <p className={`text-sm text-red-500`} >
+                                            {apiError }
+                                        </p>
                                         <FormMessage className={'text-red-500'} />
                                     </FormItem>
                                 )}

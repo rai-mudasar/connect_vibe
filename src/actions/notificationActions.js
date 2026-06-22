@@ -9,18 +9,16 @@ import userModel from "@/models/userModel";
 
 export async function sendNotification(senderId, receiverId, notificationType, redirectUrl) {
   if (!senderId || !receiverId || !notificationType || !redirectUrl) {
-    throw new Error("Invalid notification parameters")
-
+    throw new Error("Invalid notification parameters");
   } else if (senderId === receiverId) {
-    return
-
+    return;
   } else if (
     notificationType !== "LIKE" &&
     notificationType !== "UNLIKE" &&
     notificationType !== "FRIEND_REQUEST" &&
     notificationType !== "COMMENT"
   ) {
-    throw new Error("Invalid notification type")
+    throw new Error("Invalid notification type");
   }
 
   try {
@@ -32,20 +30,29 @@ export async function sendNotification(senderId, receiverId, notificationType, r
         type: notificationType,
         redirectUrl: redirectUrl,
       }),
-    ])
+    ]);
 
-    if (notification) {
+    const newNotification = await notificationModel
+      .findById(notification._id)
+      .populate("senderId", "firstName lastName profileImageUrl");
+
+    // console.log('Before sending notification: ', newNotification);
+
+    if (newNotification) {
+
+      const pusherPayload = newNotification.toObject();
+
       await pusherServer.trigger(
         `user-${receiverId}`,
         "new-notification",
-        notification,
+        pusherPayload
       );
 
       revalidatePath("/home");
     }
   } catch (error) {
-    console.error(`Error in sending notification ${error.message || error}`);
-    throw new Error(`Error in sending notification ${error.message || error}`)
+    // console.error(`Error in sending notification ${error.message || error}`);
+    throw new Error(`Error in sending notification ${error.message || error}`);
   }
 }
 
@@ -58,6 +65,7 @@ export async function getLoggedInUserNotifications() {
       notificationModel
         .find({ recipientId: sessionUser.id })
         .populate("senderId", "username firstName lastName profileImageUrl")
+        .sort({ createdAt: -1 })
         .lean(),
 
       userModel

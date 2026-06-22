@@ -210,9 +210,6 @@ export async function addNewComment(postId, comment) {
 
     if (!updatedPost) throw new Error("Post not found");
 
-    await session.commitTransaction()
-    session.endSession()
-    revalidatePath(`/home`);
 
     const receiverId = JSON.parse(JSON.stringify(updatedPost?.author));
     if (sessionUser.id !== receiverId) {
@@ -223,6 +220,10 @@ export async function addNewComment(postId, comment) {
         `/post/${updatedPost._id}`
       );
     }
+    
+    await session.commitTransaction()
+    session.endSession()
+    revalidatePath(`/home`);
     const updatedComment = await commentModel.findById(newComment.id).populate("author", "firstName lastName profileImageUrl")
     return {
       success: true,

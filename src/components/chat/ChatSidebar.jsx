@@ -6,7 +6,7 @@ import NewChatDrawer from "./NewChatDrawer";
 import { Input } from "../ui/input";
 import { pusherClient } from "@/lib/pusher";
 import { useEffect, useState } from "react";
-import { User, Search, X } from "lucide-react";
+import { Search, X, ChevronLeft } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
 import { Avatar, AvatarFallback } from "../ui/avatar";
 import { usePresence } from "@/context/PresenceContext";
@@ -179,7 +179,12 @@ export default function ChatSidebar({ friends, loggedInUserId, initialConversati
   return (
     <div className={`${isChatting ? "hidden sm:flex" : "flex"} w-screen sm:w-80 h-screen bg-bg flex-col border-r border-border relative`}>
       <div className="w-full h-18 flex flex-row items-center justify-between pl-4 pr-7 shrink-0">
-        <h2 className="text-2xl md:text-3xl font-bold text-secondary">Messages</h2>
+        <div className="flex items-center justify-center">
+          <div onClick={() => {router.back()}} className="text-secondary cursor-pointer">
+            <ChevronLeft className="h-9" />
+          </div>
+          <h2 className="text-2xl md:text-3xl font-bold text-secondary">Messages</h2>
+        </div>
         <Link href={'/home'} className="relative cursor-pointer sm:hidden">
           <p className="text-[22px] text-secondary font-semibold">Connect<span className="text-primary">Vibe.</span></p>
         </Link>

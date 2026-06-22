@@ -73,13 +73,13 @@ const Signup = () => {
 
   const onSubmit = async (data) => {
     setIsSubmitting(true);
-
+    const validData = { ...data, email: data?.email?.toLowerCase() };
     try {
-      const response = await axios.post("/api/signup", data);
+      const response = await axios.post("/api/signup", validData);
       if (response.data.success) {
         setIsSubmitting(false);
         toast.success("Account created Successfully");
-        const encodedEmail = encodeURIComponent(data.email);
+        const encodedEmail = encodeURIComponent(validData.email);
         router.push(`/verify?email=${encodedEmail}`);
       }
     } catch (error) {
@@ -90,7 +90,7 @@ const Signup = () => {
     }
   };
 
-  return (
+  return ( 
     <div className="h-screen w-full bg-bg px-4 md:px-0 pt-20 sm:pt-15 md:pt-10 flex flex-col items-center gap-9">
       <div className="text-primary text-3xl md:text-5xl font-bold">
         <span className="text-secondary">Connect</span>Vibe.

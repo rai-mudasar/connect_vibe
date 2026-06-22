@@ -58,6 +58,7 @@ export default function ViewPostDialog({ post }) {
         toast.success(response.message);
       } else {
         toast.error(response.message);
+        // console.log("Error : ", response.message);
       }
     } catch (error) {
       console.log("Error : ", error);

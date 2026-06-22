@@ -11,6 +11,7 @@ export async function POST(request) {
     const { email, username, password } = await request.json();
     const otp = Math.floor(100000 + Math.random() * 900000).toString();
 
+    console.log('email : ', email);
     const existingVerifiedUser = await userModel.findOne({
       $or: [{ email: email }, { username: username }],
       isVerified: true,
