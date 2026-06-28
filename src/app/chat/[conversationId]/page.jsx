@@ -11,7 +11,6 @@ export default async function ConversationPage({ params }) {
   if (!conversationId) redirect('/chat')
   const response = await getInitialChatData(conversationId);
 
-  // In case of deleted chat found
   if (!response || !response.success || !response.data?.conversationMetadata) {
     redirect('/chat');
   }
@@ -29,7 +28,7 @@ export default async function ConversationPage({ params }) {
         />
       </div>
 
-      <div className="flex-1 overflow-y-auto bg-bg hide-scrollbar">
+      <div className="flex-1 overflow-y-auto hide-scrollbar">
         <Suspense fallback={<Loading />}>
           <ChatInterfaceWrapper
             conversationId={conversationId}

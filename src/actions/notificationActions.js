@@ -70,7 +70,7 @@ export async function getLoggedInUserNotifications() {
 
       userModel
         .findById(sessionUser.id)
-        .select('username firstName lastName profileImageUrl email')
+        .select('username firstName lastName profileImageUrl email bio location occupation relationshipStatus')
         .lean()
     ])
 

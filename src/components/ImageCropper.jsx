@@ -116,7 +116,7 @@ export default function ImageCropper({ onCrop, onCancel }) {
 
       {/* ── Image loaded: crop UI ── */}
       {imageSrc && (
-        <>
+        <div className="">
           {/* File name */}
           {fileName && (
             <p className="text-xs text-muted-foreground truncate text-primary font-bold">{fileName}</p>
@@ -158,23 +158,23 @@ export default function ImageCropper({ onCrop, onCancel }) {
           {error && <p className="text-sm text-red-500">{error}</p>}
 
           {/* Action buttons — matches your existing dialog button style */}
-          <div className="flex gap-3">
+          <div className="flex gap-3 mt-3 pt-3 border-t border-border">
             <button
               onClick={handleCancel}
               disabled={processing}
-              className="flex-1 py-2.5 rounded-lg text-sm font-medium text-label bg-bg hover:bg-card hover:border border-border disabled:opacity-40 transition-colors cursor-pointer"
+              className="flex-1 py-2.5 rounded-lg text-sm font-medium text-text2 hover:text-text1 bg-bg-gray2/80 hover:bg-bg-gray2 border border-white hover:border-border disabled:opacity-40 transition-colors cursor-pointer"
             >
               Cancel
             </button>
             <button
               onClick={handleSave}
               disabled={processing || !croppedAreaPixels}
-              className="flex-1 py-2.5 rounded-lg text-sm font-bold text-secondary hover:text-primary bg-primary hover:bg-card hover:border border-border disabled:opacity-40 disabled:cursor-not-allowed transition-colors cursor-pointer"
+              className="flex-1 py-2.5 rounded-lg text-sm font-bold text-white sm:text-white/80 hover:text-white bg-primary/80 hover:bg-primary border border-white hover:border-primary disabled:opacity-40 disabled:cursor-not-allowed transition-colors cursor-pointer"
             >
               {processing ? "Cropping…" : "Apply crop"}
             </button>
           </div>
-        </>
+        </div>
       )}
     </div>
   );

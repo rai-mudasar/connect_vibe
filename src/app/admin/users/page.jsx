@@ -15,7 +15,7 @@ export default async function AdminUsersPage() {
     <div className="space-y-6">
       <div>
         <h1 className="text-2xl font-bold text-primary">Users</h1>
-        <p className="text-sm text-label mt-0.5">
+        <p className="text-sm text-text2 mt-0.5">
           Manage members, moderation, verification, and access across Vibe Connect.
         </p>
       </div>
@@ -27,11 +27,6 @@ export default async function AdminUsersPage() {
         <div className="flex-1 min-w-0">
           <UsersTable initialUsers={users} />
         </div>
-
-        {/* <div className="xl:w-72 shrink-0">
-          <ActivitySidebar feeds={feeds} />
-        </div> */}
-
       </div>
     </div>
   );

@@ -112,8 +112,8 @@ export default function verifyPage() {
     }
 
     return (
-        <div className="h-screen w-full bg-bg text-secondary px-4 md:px-0 pt-20 sm:pt-15 md:pt-10 flex flex-col items-center gap-9">
-            <div className="p-10  rounded-4xl bg-card border border-border">
+        <div className="h-screen w-full bg-bg-gray1 text-text1 px-4 md:px-0 pt-20 sm:pt-15 md:pt-10 flex flex-col items-center gap-9">
+            <div className="p-10  rounded-4xl bg-bg-white1 border border-border">
                 <h1 className="text-3xl font-bold text-center">Please Verify your Account</h1>
                 <p className="mt-6 flex flex-col text-center">
                     Enter the verification code sent to
@@ -140,7 +140,7 @@ export default function verifyPage() {
                                                 placeholder="Enter OTP"
                                                 autoFocus
                                                 required
-                                                className={`placeholder:text-label text-secondary ${apiError !== '' ? 'border-red-500' : 'border-secondary'} focus-visible:ring-0`}
+                                                className={`placeholder:text-text2 text-text1 ${apiError !== '' ? 'border-red-500' : 'border-white'} focus-visible:ring-0`}
                                                 {...field}
                                             />
                                         </FormControl>
@@ -155,7 +155,7 @@ export default function verifyPage() {
 
                             <Button
                                 type="submit"
-                                className="bg-primary hover:bg-bg text-[18px] md:text-[21px] text-secondary hover:text-primary cursor-pointer hover:border border-border"
+                                className="bg-primary/90 hover:bg-primary text-[18px] md:text-[21px] text-white cursor-pointer"
                             >
                                 {isSubmitting ? (
                                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />

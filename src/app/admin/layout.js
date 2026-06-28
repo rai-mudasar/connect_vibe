@@ -20,7 +20,7 @@ export default async function AdminLayout({ children }) {
   const loggedInUser = response.success ? response.data : null
 
   return (
-    <div className="flex h-screen bg-bg dark:bg-gray-900 overflow-hidden">
+    <div className="flex h-screen bg-bg-gray1 dark:bg-gray-900 overflow-hidden">
       <Sidebar />
       <div className="flex flex-col flex-1 overflow-hidden min-w-0">
         <Topbar user={loggedInUser} />

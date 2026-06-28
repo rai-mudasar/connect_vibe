@@ -3,7 +3,7 @@ import SafeImage from "../SafeImage";
 import { Avatar, AvatarFallback } from "../ui/avatar";
 import Link from "next/link";
 
-export default function UserCard({ user, type, onAction }) {
+export default function UserCard({ user, type, onAction, className }) {
   const currentButton = [
     { id: "friends", label: "Remove Friend", icon: <UserMinus className="w-4 md:w-5" /> },
     { id: "nearby", label: "Add Friend", icon: <UserPlus className="w-4 md:w-5" /> },
@@ -14,33 +14,35 @@ export default function UserCard({ user, type, onAction }) {
   if (!currentButton) return null;
 
   return (
-    <div className="w-34 md:w-40 h-49 md:h-65 shrink-0 ">
+    <div className={`aspect-4/6 shrink-0 ${className}`}>
       <div className="w-full h-full shadow-xl rounded-lg overflow-hidden border border-border">
-        <div className="w-full h-[60%] relative border-b border-border text-primary">
+        <div className="w-full h-[65%] relative border-b border-border text-text1">
           <Avatar className="w-full h-full bg-bg rounded-none">
             <SafeImage
               src={user.profileImageUrl !== "" ? user.profileImageUrl : null}
               fill={true}
               alt={`${user.firstName}'s profile`}
-              className="object-cover"
+              className="object-cover rounded-full"
             />
-            <AvatarFallback className={'text-6xl md:text-8xl font-semibold'}>{user?.firstName?.[0]}</AvatarFallback>
+            <div className="w-full h-full rounded-full bg-bg-gray2">
+              <AvatarFallback className={'text-6xl md:text-8xl font-semibold text-primary'}>{user?.firstName?.[0] + user?.lastName?.[0]}</AvatarFallback>
+            </div>
           </Avatar>
         </div>
 
-        <div className="w-full h-[40%] bg-secondary p-2 flex flex-col justify-between">
+        <div className="w-full h-[35%] bg-bg-white1 p-2 flex flex-col justify-between">
           <Link href={`/user/${user.username}`}>
-            <h1 className="text-[15px] md:text-[17px] text-primary font-bold truncate hover:underline">
+            <h1 className="text-[17px] md:text-[20px] text-text1 font-bold truncate hover:underline">
               {`${user.firstName} ${user.lastName}`}
             </h1>
           </Link>
 
           <button
             onClick={() => onAction(user._id, type)}
-            className="w-full h-8 md:h-10 bg-label hover:bg-card transition-colors rounded-lg flex justify-center items-center gap-1 md:gap-2 group"
+            className="w-full h-8 md:h-10 bg-primary/80 hover:bg-primary text-white transition-colors rounded-lg flex justify-center items-center gap-1 md:gap-2 group"
           >
-            <span className="text-secondary">{currentButton.icon}</span>
-            <p className="text-[12px] md:text-sm text-secondary font-semibold cursor-pointer">
+            {/* <span className="">{currentButton.icon}</span> */}
+            <p className="text-[15px] md:text-sm font-semibold cursor-pointer uppercase">
               {currentButton.label}
             </p>
           </button>

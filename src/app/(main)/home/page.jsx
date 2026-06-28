@@ -1,22 +1,14 @@
 import { Suspense } from "react";
-import HomePostFeedWrapper from "@/components/post/HomePostFeedWrapper";
-import LeftSidebarWrapper from "@/components/leftSidebar/LeftSidebarWrapper";
-import LeftSidebarSkeleton from "@/components/leftSidebar/LeftSidebarSkeleton";
 import Loading from "@/components/Loading";
+import HomePostFeedWrapper from "@/components/post/HomePostFeedWrapper";
 
 export default function HomePage() {
   return (
-    <div className="w-[calc(100vw-14px) min-h-screen border-2 bg-bg dark:bg-[#333334] pt-23.5 md:pt-17 flex flex-row gap-2 lg:gap-22 relative">
-      <div className="hidden md:block md:min-w-70 md:w-[23%]">
-        <Suspense fallback={<LeftSidebarSkeleton />}>
-          <LeftSidebarWrapper />
-        </Suspense>
-      </div>
-      <div className="w-screen md:w-150 h-full mx-4 z-20">
+    <div className="w-[calc(100vw-14px) min-h-screen bg-bg-gray1 -mt-12 sm:pt-10 md:pt-2 flex relative">
+      <div className="w-screen md:w-150 h-full sm:pt-12 z-20">
         <Suspense fallback={<Loading className={"h-screen md:pl-70"} />}>
           <HomePostFeedWrapper />
         </Suspense>
-        <div className="flex md:hidden w-full h-3"></div>
       </div>
     </div>
   );

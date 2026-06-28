@@ -1,17 +1,17 @@
 'use client'
 
 import Link from "next/link";
+import Loading from "../Loading";
 import SafeImage from "../SafeImage";
 import { toast } from "sonner";
 import { Button } from "../ui/button";
-import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
+import { useEffect, useRef, useState } from "react";
+import { getExactDateAndTime } from "@/helpers/getSmartDate";
+import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { Heart, MessageCircle, MoreHorizontal } from "lucide-react";
 import { deletePostById, toggleLikes } from "@/actions/postActions";
-import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "../ui/dropdown-menu";
-import getSmartDateTime from "@/helpers/getSmartDate";
-import Loading from "../Loading";
 
 export default function Post({ fetchedPost, currentUser, comments, likes, isLike }) {
     const [post, setPost] = useState(fetchedPost);
@@ -70,15 +70,15 @@ export default function Post({ fetchedPost, currentUser, comments, likes, isLike
 
 
     if (loading) return <Loading />;
-    if (!post) return <div className="w-full h-screen bg-bg pt-50 text-label text-center">Post not found</div>;
+    if (!post) return <div className="w-full h-screen bg-bg-white1 pt-50 text-2xl text-text2 text-center font-semibold">Post not found!</div>;
 
     return (
-        <div className="w-[100vw-0] h-screen bg-bg flex flex-col items-center pt-25 md:pt-20 relative overflow-hidden border-2">
-            <div className="w-[90%] sm:w-[80%] lg:w-[60%] bg-card rounded-xl shadow-sm border border-border mb-2 md:mb-4 overflow-hidden relative">
+        <div className="w-full min-h-screen flex flex-col items-center pt-25 md:pt-20 relative overflow-y-scroll hide-scrollbar">
+            <div className="w-[90%] sm:w-[50%] lg:w-[40%] rounded-xl shadow-sm border border-border mb-2 md:mb-4 overflow-hidden relative">
                 {/* Header */}
                 <div className="flex items-center justify-between p-4 pb-2">
                     <div className="flex items-center space-x-2">
-                        <div className="w-10 h-10 bg-label rounded-full overflow-hidden relative">
+                        <div className="w-10 h-10 bg-bg-gray2 rounded-full overflow-hidden relative">
                             {post.author.profileImageUrl && (
                                 <SafeImage
                                     src={post.author.profileImageUrl}
@@ -89,27 +89,33 @@ export default function Post({ fetchedPost, currentUser, comments, likes, isLike
                             )}
                         </div>
                         <div>
-                            <Link className="font-semibold text-[15px] text-secondary hover:underline" href={`/user/${post?.author?.username}`}>
+                            <Link className="font-semibold text-[15px] text-text1 hover:underline" href={`/user/${post?.author?.username}`}>
                                 {post.author.firstName} {post.author.lastName}
                             </Link>
-                            <p className="text-label text-[13px]">{getSmartDateTime(post.createdAt)}</p>
+                            <p className="text-text2 text-[13px]">{getExactDateAndTime(post.createdAt)}</p>
                         </div>
                     </div>
 
                     <DropdownMenu>
                         <DropdownMenuTrigger asChild>
-                            <button className="p-2 text-label">
+                            <button className="p-2 text-text2">
                                 <MoreHorizontal className="h-8" />
                             </button>
                         </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end" className="bg-label text-bg">
+                        <DropdownMenuContent align="end" className="w-50 md:w-70 bg-bg-white1 text-text1 border-border">
                             {loggedInUser?.id === post.author._id.toString() ? (
                                 <DropdownMenuItem onClick={() => handleDeletePost(post._id)}>
-                                    <span className="cursor-pointer">Delete Post</span>
+                                    <div className="w-full hover:bg-bg-gray-hover px-2 py-1 rounded-lg cursor-pointer">
+                                        <p className="font-bold">Delete Post</p>
+                                        <p className="text-text2">This will deleted permanently</p>
+                                    </div>
                                 </DropdownMenuItem>
                             ) : (
                                 <DropdownMenuItem>
-                                    <span className="cursor-pointer">Report</span>
+                                    <div className="w-full hover:bg-bg-gray-hover px-2 py-1 rounded-lg cursor-pointer">
+                                        <p className="font-bold">Report Post</p>
+                                        <p className="text-text2">Hide such post?</p>
+                                    </div>
                                 </DropdownMenuItem>
                             )}
                         </DropdownMenuContent>
@@ -121,8 +127,15 @@ export default function Post({ fetchedPost, currentUser, comments, likes, isLike
                 </div>
 
                 {post.media && (
-                    <div className="w-full bg-label h-96 relative">
-                        <SafeImage src={post.media} fill alt="Post media" className="object-contain" />
+                    <div className="w- flex justify-center">
+                        <div className="w-full aspect-4/5 relative">
+                            <SafeImage
+                                src={post?.media}
+                                fill
+                                alt="Post Image"
+                                className="object-cover"
+                            />
+                        </div>
                     </div>
                 )}
 
@@ -140,7 +153,7 @@ export default function Post({ fetchedPost, currentUser, comments, likes, isLike
                 {/* Actions */}
                 <div className="flex px-2 py-1 gap-3 md:gap-7 md:mx-7">
                     <button
-                        className="flex-1 flex items-center justify-center space-x-2 py-2 hover:bg-primary rounded-lg text-label hover:text-secondary border border-border font-medium cursor-pointer"
+                        className="flex-1 flex items-center justify-center space-x-2 py-2 hover:bg-bg-gray-hover rounded-lg text-text1 border border-border font-medium cursor-pointer"
                         onClick={handleToggleLikes}
                     >
                         <Heart size={20} className={isLiked ? "fill-red-600 text-red-600" : ""} />
@@ -148,7 +161,7 @@ export default function Post({ fetchedPost, currentUser, comments, likes, isLike
                     </button>
                     <div className="flex-1">
                         <Button
-                            className="w-full flex items-center justify-center mt-0.5 p-2 bg-card hover:bg-primary rounded-lg text-[16px] text-label hover:text-secondary border border-border font-medium cursor-pointer"
+                            className="w-full flex items-center justify-center mt-0.5 p-2 bg-card hover:bg-bg-gray-hover rounded-lg text-[16px] text-text1 border border-border font-medium cursor-pointer"
                         >
                             <MessageCircle size={22} strokeWidth="2.5px" />
                             <span>Comment</span>
@@ -178,11 +191,11 @@ export default function Post({ fetchedPost, currentUser, comments, likes, isLike
                                             {comment.author.firstName?.[0]}
                                         </AvatarFallback>
                                     </Avatar>
-                                    <div className="bg-label2 p-2 px-3 rounded-tr-xl rounded-bl-xl max-w-[85%]">
-                                        <p className="text-xs font-bold text-card">
+                                    <div className="bg-bg-gray1 p-2 px-3 rounded-tr-xl rounded-bl-xl max-w-[85%]">
+                                        <p className="text-xs font-bold text-text2">
                                             {comment.author.firstName} {comment.author.lastName}
                                         </p>
-                                        <p className="text-sm text-secondary">{comment.content}</p>
+                                        <p className="text-sm text-text1">{comment.content}</p>
                                     </div>
                                 </div>
                             ))

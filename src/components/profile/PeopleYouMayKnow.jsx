@@ -31,17 +31,17 @@ export default function PeopleYouMayKnow({ knowUsers }) {
   return (
     <div>
       {users.length !== 0 && (
-        <div>
-          <div className="flex justify-between mx-5 font-semibold text-secondary text-md md:text-lg">
+        <div className=''>
+          <div className="flex justify-between mx-5 font-semibold text-text1 text-md md:text-lg">
             <p>People You May Know</p>
-            <Link href={"/friends"} className="text-label">
+            <Link href={"/friends"} className="text-text2">
               See more
             </Link>
           </div>
 
           <div className="w-[88vw] md:w-[69vw] flex flex-row gap-5 mt-3 px-3 pb-8 overflow-x-scroll hide-scrollbar">
             {users.map((user) => (
-              <UserCard key={user._id} user={user} type={"nearby"} onAction={handleOnAction} />
+              <UserCard key={user._id} user={user} type={"nearby"} onAction={handleOnAction} className={'w-36 md:w-45'} />
             ))}
           </div>
         </div>

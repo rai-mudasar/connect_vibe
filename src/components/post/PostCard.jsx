@@ -1,30 +1,37 @@
 "use client";
 
-import { Heart, MoreHorizontal } from "lucide-react";
-import { deletePostById, toggleLikes } from "@/actions/postActions";
-import { useState } from "react";
-import ViewPostDialog from "./ViewPostDialog";
-import SafeImage from "../SafeImage";
-import getSmartDateTime from "@/helpers/getSmartDate";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "../ui/dropdown-menu";
-import { useRouter } from "next/navigation";
-import { toast } from "sonner";
 import Link from "next/link";
+import SafeImage from "../SafeImage";
+import ViewPostDialog from "./ViewPostDialog";
+import { toast } from "sonner";
+import { useEffect, useRef, useState } from "react";
+import { useRouter } from "next/navigation";
+import { Heart, MoreHorizontal } from "lucide-react";
 import { Avatar, AvatarFallback } from "../ui/avatar";
+import { getExactDateAndTime } from "@/helpers/getSmartDate";
+import { deletePostById, toggleLikes } from "@/actions/postActions";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "../ui/dropdown-menu";
 
 export default function PostCard({ post, priority, loggedInUser }) {
-  const [likedList, setLikedList] = useState(
-    post.likes.map((id) => id.toString()),
-  );
   const userId = loggedInUser?._id?.toString();
+
+  const [likedList, setLikedList] = useState(post.likes.map((id) => id.toString()));
   const [isLiked, setIsLiked] = useState(likedList.includes(userId));
+  const [isExpanded, setIsExpanded] = useState(false);
+  const [isClamped, setIsClamped] = useState(false);
 
   const router = useRouter();
+  const textRef = useRef(null)
+
+  useEffect(() => {
+    const el = textRef.current;
+    if (el) {
+      const lineHeight = parseFloat(getComputedStyle(el).lineHeight);
+      const maxLineHeight = lineHeight * 4;
+
+      setIsClamped(el.scrollHeight > maxLineHeight)
+    }
+  }, [post?.caption])
 
   const handleToggleLikes = async () => {
     const userId = loggedInUser?._id;
@@ -64,7 +71,7 @@ export default function PostCard({ post, priority, loggedInUser }) {
   };
 
   return (
-    <div className="w-full h-full bg-card rounded-xl shadow-sm border border-border mb-2 md:mb-4 overflow-hidden relative text-secondary">
+    <div className="w-full h-full bg-bg-white1 text-text1 rounded-xl shadow-sm border border-border mb-2 md:mb-4 overflow-hidden relative">
 
       <div className="flex items-center justify-between p-4 pb-2 relative">
         <div className="flex items-center space-x-2">
@@ -77,35 +84,37 @@ export default function PostCard({ post, priority, loggedInUser }) {
                 className={"object-contain"}
               />
             )}
-            <AvatarFallback className={'text-[22px] text-primary font-bold'}>{post?.author?.firstName?.[0]}</AvatarFallback>
+            <AvatarFallback className={'text-[22px] text-text1 font-bold'}>{post?.author?.firstName?.[0]}</AvatarFallback>
           </Avatar>
           <div>
             <Link className="font-semibold text-[15px] hover:underline cursor-pointer" href={`/user/${post?.author?.username}`}>
               {post?.author?.firstName} {post?.author?.lastName}
             </Link>
             <p className="text-label text-[13px]">
-              {getSmartDateTime(post?.createdAt)}
+              {getExactDateAndTime(post?.createdAt)}
             </p>
           </div>
         </div>
         <DropdownMenu>
           <DropdownMenuTrigger >
             <div className="p-2 rounded-full cursor-pointer border-0">
-              <MoreHorizontal className="w-6 text-label hover:text-primary" />
+              <MoreHorizontal className="w-6 text-text2" />
             </div>
           </DropdownMenuTrigger>
-          <DropdownMenuContent className={'bg-bg text-secondary border-border absolute -top-1 right-1'}>
+          <DropdownMenuContent className={'w-70 bg-bg-white1 text-text1 border-border absolute -top-1 right-1'}>
             {loggedInUser?._id.toString() === post?.author?._id.toString() &&
               <DropdownMenuItem>
-                <div className="w-full cursor-pointer hover:underline" onClick={() => handleDeletePost(post?._id.toString())}>
-                  Delete Post
+                <div className="w-full p-2 cursor-pointer hover:bg-bg-gray-hover rounded-md" onClick={() => handleDeletePost(post?._id.toString())}>
+                  <p className="font-bold">Delete Post</p>
+                  <p className="text-text2">This will be deleted permanently.</p>
                 </div>
               </DropdownMenuItem>
             }
             {loggedInUser?._id !== post?.author?._id &&
               <DropdownMenuItem>
-                <div className="w-full cursor-pointer hover:underline">
-                  Report
+                <div className="w-full p-2 cursor-pointer hover:bg-bg-gray-hover rounded-md" onClick={() => handleDeletePost(post?._id.toString())}>
+                  <p className="font-bold">Report Post</p>
+                  <p className="text-text2">Having issue with the post.</p>
                 </div>
               </DropdownMenuItem>
             }
@@ -113,12 +122,21 @@ export default function PostCard({ post, priority, loggedInUser }) {
         </DropdownMenu>
       </div>
 
-      <div className="px-4 pb-3">
-        <p className="text-[15px]">{post?.caption}</p>
+      <div className={`px-4 pb-3`}>
+        <p ref={textRef} className={`text-[15px] ${isExpanded ? '' : 'line-clamp-2'}`}>{post?.caption}</p>
+        {isClamped && (
+          <button 
+          onClick={() => setIsExpanded(!isExpanded)}
+          className="text-sm font-semibold cursor-pointer"
+          >
+            {isExpanded ? 'See less...' : '...See More'}
+          </button>
+        )}
       </div>
 
+
       {post?.media && (
-        <div className="w-full bg-label flex justify-center">
+        <div className="w-full flex justify-center">
           <div className="w-full aspect-4/5 relative">
             <SafeImage
               src={post?.media}
@@ -145,7 +163,7 @@ export default function PostCard({ post, priority, loggedInUser }) {
 
       <div className="flex px-2 py-1 gap-2">
         <button
-          className="w-[50%] flex items-center justify-center space-x-2 py-2 hover:bg-primary border border-border rounded-lg text-label font-medium cursor-pointer"
+          className="w-[50%] flex items-center justify-center space-x-2 py-2 hover:bg-bg-gray-hover border border-border rounded-lg text-label font-medium cursor-pointer"
           onClick={handleToggleLikes}
         >
           {isLiked ? (

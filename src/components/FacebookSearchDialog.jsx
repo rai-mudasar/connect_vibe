@@ -1,13 +1,13 @@
 "use client";
 
-import { Input } from "@/components/ui/input";
-import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
-import { useDebounce } from "@/hooks/useDebounced";
 import { Search, X } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { useDebounce } from "@/hooks/useDebounced";
 import { useEffect, useRef, useState } from "react";
-import { getUserByFirstName } from "@/actions/userActions";
-import SafeImage from "./SafeImage";
+import { getUserBySearchedName } from "@/actions/userActions";
+import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import Link from "next/link";
+import SafeImage from "./SafeImage";
 
 export function FacebookSearchDialog() {
   const [inputData, setInputData]       = useState("");
@@ -30,7 +30,7 @@ export function FacebookSearchDialog() {
     const run = async () => {
       setIsLoading(true);
       try {
-        const response = await getUserByFirstName(debouncedSearchValue.trim());
+        const response = await getUserBySearchedName(debouncedSearchValue.trim());
         if (!cancelled && response.success) setSearchedData(response.data);
       } catch (_) {}
       finally { if (!cancelled) setIsLoading(false); }
@@ -76,19 +76,19 @@ export function FacebookSearchDialog() {
     );
 
     if (searchedData.length === 0) return (
-      <p className="text-sm text-label text-center py-6">
-        No results for "{inputData}"
+      <p className="text-lg text-text2 text-center py-6">
+        No results for <span className='font-bold text-text1'>"{inputData}"</span>
       </p>
     );
 
     return (
-      <>
+      <div className="max-h-50 overflow-y-scroll hide-scrollbar px-2">
         {searchedData.map((user) => (
           <Link
             key={user._id}
             href={`/user/${user.username}`}
             onClick={handleSelect}
-            className="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-card border border-transparent hover:border-border transition-colors"
+            className="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-bg-gray-hover border border-bg-white1 hover:border-border transition-colors"
           >
             <div className="w-10 h-10 rounded-full relative overflow-hidden shrink-0 bg-bg border border-border">
               <SafeImage
@@ -112,7 +112,7 @@ export function FacebookSearchDialog() {
             </div>
           </Link>
         ))}
-      </>
+      </div>
     );
   };
 
@@ -120,23 +120,23 @@ export function FacebookSearchDialog() {
     <>
       {/* ── DESKTOP: inline search box (md and above) ────────────────────── */}
       <div ref={dropdownRef} className="relative hidden lg:block">
-        <div className="w-52 h-10 bg-bg rounded-2xl flex items-center pl-3 gap-1.5 border border-border">
-          <Search className="w-4 h-4 text-label shrink-0 stroke-[2px]" />
+        <div className="w-52 h-10 bg-bg-gray1 rounded-2xl flex items-center pl-3 gap-1.5">
+          <Search className="w-4 h-4 text-text2 shrink-0 stroke-[2px]" />
           <Input
             value={inputData}
             onChange={(e) => setInputData(e.target.value)}
             placeholder="Search ConnectVibe"
-            className="bg-transparent border-0 placeholder:text-label text-secondary w-full h-full text-sm rounded-2xl shadow-none focus-visible:ring-0 p-0"
+            className="bg-transparent border-0 placeholder:text-text2 text-text1 w-full h-full text-sm rounded-2xl shadow-none focus-visible:ring-0 p-0"
           />
           {inputData && (
-            <button onClick={reset} className="pr-2 text-label hover:text-primary transition-colors">
+            <button onClick={reset} className="pr-2 text-text2 transition-colors">
               <X className="w-4 h-4" />
             </button>
           )}
         </div>
 
         {inputData !== "" && (
-          <div className="absolute top-full left-0 mt-2 w-80 max-h-96 bg-label2 rounded-2xl border border-border shadow-lg overflow-y-auto hide-scrollbar z-50 py-2">
+          <div className="absolute top-full -left-20 mt-2 w-80 max-h-96 bg-bg-white1 rounded-2xl border border-border shadow-2xl overflow-y-auto hide-scrollbar z-50 py-2">
             <Results />
           </div>
         )}
@@ -145,37 +145,37 @@ export function FacebookSearchDialog() {
       {/* ── MOBILE: round icon trigger ────────────────────────── */}
       <button
         onClick={() => setMobileOpen(true)}
-        className="lg:hidden w-9 h-9 rounded-full bg-bg border border-border flex items-center justify-center text-label hover:text-primary transition-colors cursor-pointer"
+        className="lg:hidden w-9 h-9 rounded-full bg-bg-gray2 border border-border flex items-center justify-center transition-colors cursor-pointer"
         aria-label="Open search"
       >
-        <Search className="w-5 md:w-6 h-5 md:h-6 stroke-[2px] text-primary" />
+        <Search className="w-5 md:w-6 h-5 md:h-6 stroke-[3px] text-text1" />
       </button>
 
       {/* ── MOBILE: shadcn Dialog ────────────────────────────────────────── */}
       <Dialog open={mobileOpen} onOpenChange={setMobileOpen}>
-        <DialogContent showCloseButton={false} className="md:hidden top-4 translate-y-0 rounded-2xl p-0 gap-0 w-[calc(100vw-2rem)] max-w-md border border-border bg-label2 shadow-xl">
+        <DialogContent showCloseButton={false} className="md:hidden top-4 translate-y-0 rounded-2xl p-0 gap-0 w-[calc(100vw-2rem)] max-w-md border border-border bg-bg-white1 shadow-xl">
 
           <DialogTitle className="sr-only">Search ConnectVibe</DialogTitle>
 
           <div className="flex items-center gap-2 px-3 pt-3 pb-2">
-            <div className="flex-1 h-10 bg-bg rounded-2xl flex items-center pl-3 gap-1.5 border border-border">
-              <Search className="w-4 h-4 text-label shrink-0 stroke-[2px]" />
+            <div className="flex-1 h-10 bg-bg-gray1 rounded-2xl flex items-center pl-3 gap-1.5 border border-border">
+              <Search className="w-4 h-4 text-text2 shrink-0 stroke-[2px]" />
               <Input
                 ref={mobileInputRef}
                 value={inputData}
                 onChange={(e) => setInputData(e.target.value)}
                 placeholder="Search ConnectVibe"
-                className="bg-transparent border-0 placeholder:text-label text-secondary w-full h-full text-sm rounded-2xl shadow-none focus-visible:ring-0 p-0"
+                className="bg-transparent border-0 placeholder:text-label text-text2 w-full h-full text-sm rounded-2xl shadow-none focus-visible:ring-0 p-0"
               />
               {inputData && (
-                <button onClick={reset} className="pr-2 text-label hover:text-primary transition-colors">
+                <button onClick={reset} className="pr-2 text-text2 transition-colors">
                   <X className="w-4 h-4" />
                 </button>
               )}
             </div>
             <button
               onClick={() => setMobileOpen(false)}
-              className="text-sm font-medium text-primary shrink-0 px-1"
+              className="text-sm font-medium text-text2 shrink-0 px-1"
             >
               Cancel
             </button>

@@ -9,17 +9,17 @@ export default async function FriendRequestsPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-semibold text-primary">Friend Requests</h1>
-        <p className="text-sm text-secondary mt-1">
+        <h1 className="text-2xl font-bold text-primary">Friend Requests</h1>
+        <p className="text-sm text-text2 mt-1">
           Overview of all friend request activity.
         </p>
       </div>
 
       <FriendStatsGrid stats={stats} />
 
-      <div className="bg-card rounded-xl border border-border">
+      <div className="bg-bg-white1 rounded-xl border border-border">
         <div className="px-6 py-4 border-b border-border">
-          <h2 className="text-base font-semibold text-secondary">All Requests</h2>
+          <h2 className="text-base font-semibold text-text1">All Requests</h2>
         </div>
         <FriendRequestsTable requests={requests} />
       </div>

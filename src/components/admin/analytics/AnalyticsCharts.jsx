@@ -88,15 +88,15 @@ export default function AnalyticsCharts({ monthlyUsers, monthLabels, engagement 
   }, [monthlyUsers, monthLabels, engagement])
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-      <div className="bg-card rounded-xl border border-border p-5">
-        <h3 className="text-sm font-semibold text-secondary mb-4">User growth — monthly</h3>
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-7">
+      <div className="bg-bg-white1 rounded-xl border border-border p-5">
+        <h3 className="text-sm font-semibold text-text2 mb-4">User growth — monthly</h3>
         <div className="relative h-56">
           <canvas ref={growthRef} />
         </div>
       </div>
-      <div className="bg-card rounded-xl border border-border p-5">
-        <h3 className="text-sm font-semibold text-secondary mb-4">Content breakdown</h3>
+      <div className="bg-bg-white1 rounded-xl border border-border p-5 mt-3">
+        <h3 className="text-sm font-semibold text-text2 mb-4">Content breakdown</h3>
         <div className="relative h-56">
           <canvas ref={donutRef} />
         </div>

@@ -9,8 +9,8 @@ export default async function AdminDashboard() {
   return (
     <div className="space-y-6 bg-bg">
       <div>
-        <h1 className="text-2xl font-semibold text-primary">Dashboard</h1>
-        <p className="text-sm text-label mt-1">
+        <h1 className="text-2xl font-bold text-primary">Dashboard</h1>
+        <p className="text-sm text-text2 mt-1">
           Welcome back. Here's what's happening today.
         </p>
       </div>
@@ -19,9 +19,9 @@ export default async function AdminDashboard() {
 
       <WeeklyCharts weeklyUsers={weeklyUsers} weeklyPosts={weeklyPosts} />
 
-      <div className="bg-card rounded-xl border border-border overflow-hidden">
+      <div className="bg-bg-white1 rounded-xl border border-border overflow-hidden">
         <div className="px-6 py-4 border-b border-border">
-          <h2 className="text-base font-semibold text-secondary">
+          <h2 className="text-base font-semibold text-text1">
             Recently Joined Users
           </h2>
         </div>

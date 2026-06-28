@@ -9,8 +9,8 @@ export default async function PostsPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-semibold text-primary">Post Management</h1>
-        <p className="text-sm text-label mt-1">
+        <h1 className="text-2xl font-bold text-primary">Post Management</h1>
+        <p className="text-sm text-text2 mt-1">
           Browse and delete posts from your platform.
         </p>
       </div>

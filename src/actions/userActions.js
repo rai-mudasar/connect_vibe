@@ -66,6 +66,37 @@ export async function createNewPassword(userId, newPassword) {
   }
 }
 
+export async function changeUserPassword(currentPassword, newPassword) {
+  if (!currentPassword || !newPassword) {
+    return { success: false, message: "All fields are required" };
+  }
+
+  try {
+    const sessionUser = await getSessionUser();
+    // 2. Fetch user from DB with password field included
+    const user = await userModel.findById(sessionUser.id);
+    if (!user) {
+      return { success: false, message: "User not found." };
+    }
+
+    // 3. Verify current password
+    const isMatch = await bcryptjs.compare(currentPassword, user.password);
+    if (!isMatch) {
+      return { success: false, message: "Current password is incorrect." };
+    }
+
+    // 4. Hash and save new password
+    const hashedPassword = await bcryptjs.hash(newPassword, 10);
+    user.password = hashedPassword;
+    await user.save();
+
+    return { success: true, message: "Password updated successfully!" };
+  } catch (error) {
+    console.error("Change password error:", error);
+    return { success: false, message: "Internal server error." };
+  }
+}
+
 export async function getResetPasswordLink(email) {
   console.log('Enter log ', email);
   try {
@@ -329,7 +360,7 @@ export async function getLoggedInUserProfile(username) {
       getSessionUser(),
       userModel
         .findOne({ username })
-        .select("username firstName lastName profileImageUrl coverImageUrl bio location occupation relationshipStatus")
+        .select("username firstName lastName profileImageUrl coverImageUrl bio location occupation relationshipStatus createdAt")
         .lean()
     ])
 
@@ -351,7 +382,7 @@ export async function getLoggedInUserProfile(username) {
   }
 }
 
-export async function getUserByFirstName(searchName) {
+export async function getUserBySearchedName(searchName) {
   if (!searchName) {
     return {
       success: false,
@@ -359,21 +390,39 @@ export async function getUserByFirstName(searchName) {
     };
   }
 
-  await connectToDb()
+  try {
+    await getSessionUser();
 
-  const users = await userModel
-    .find({
-      $or: [
-        { firstName: { $regex: searchName, $options: "i" } },
-        { lastName: { $regex: searchName, $options: "i" } }
-      ]
-    })
-    .select("username firstName lastName profileImageUrl location occupation")
-    .lean();
+    const cleanSearchName = searchName.trim();
 
-  return {
-    success: true,
-    message: "Data Found",
-    data: JSON.parse(JSON.stringify(users)),
-  };
+    const users = await userModel
+      .find({
+        $or: [
+          { firstName: { $regex: cleanSearchName, $options: "i" } },
+          { lastName: { $regex: cleanSearchName, $options: "i" } },
+          {
+            $expr: {
+              $regexMatch: {
+                input: { $concat: ["$firstName", " ", "$lastName"] },
+                regex: cleanSearchName,
+                options: "i",
+              },
+            },
+          },
+        ],
+      })
+      .select("username firstName lastName profileImageUrl location occupation")
+      .lean();
+
+    return {
+      success: true,
+      message: "Data Found",
+      data: JSON.parse(JSON.stringify(users)),
+    };
+  } catch (error) {
+    return {
+      success: false,
+      message: `Error in getUserBySearchedName : ${error.message || error}`,
+    };
+  }
 }

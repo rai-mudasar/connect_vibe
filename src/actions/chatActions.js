@@ -5,33 +5,35 @@ import { revalidatePath } from "next/cache";
 import { pusherServer } from "@/lib/pusher";
 import { getSessionUser } from "./userActions";
 import mongoose from "mongoose";
-import connectToDb from "@/lib/dbConnect";
 import userModel from "@/models/userModel";
 import messageModel from "@/models/messageModel";
 import conversationModel from "@/models/conversationModel";
 
-export async function getFriends() {
+export async function getLoggedInUserWithFriends() {
   await connection();
 
   try {
-    const sessionUser = await getSessionUser()
-    const user = await userModel
+    const sessionUser = await getSessionUser();
+    const userWithFriends = await userModel
       .findById(sessionUser.id)
+      .select('username firstName lastName profileImageUrl friends')
       .populate("friends", "firstName lastName profileImageUrl")
       .lean();
 
-    if (!user) throw new Error("User not found!");
+    if (!userWithFriends) throw new Error("User not found!");
+
+    const { friends, ...user } = userWithFriends;
 
     return {
       success: true,
       message: 'Fetched Successfully',
-      data: { 'loggedInUserId': sessionUser.id, 'friends': JSON.parse(JSON.stringify(user.friends)) }
+      data: { 'loggedInUser': JSON.parse(JSON.stringify(user)), 'friends': JSON.parse(JSON.stringify(friends)) }
     };
   } catch (error) {
-    console.error(`Error in getFriends action : ${error.message || error}`)
+    console.error(`Error in getLoggedInUserWithFriends action : ${error.message || error}`)
     return {
       success: false,
-      message: `Error in getFriends action : ${error.message || error}`,
+      message: `Error in getLoggedInUserWithFriends action : ${error.message || error}`,
     }
   }
 }
@@ -205,8 +207,11 @@ export async function sendMessage(conversationId, senderId, text) {
       data: JSON.parse(JSON.stringify(newMessage))
     };
   } catch (error) {
-    console.error("Error sending message:", error);
-    return { success: false, error: error.message };
+    console.error(`Error in sendMessage action: ${error?.message || error}`);
+    return {
+      success: false,
+      message: `Error in sendMessage action: ${error?.message || error}`
+    };
   }
 }
 
@@ -235,8 +240,11 @@ export async function markMessagesAsRead(conversationId, userId) {
 
     return { success: true };
   } catch (error) {
-    console.error("Error marking messages as read:", error);
-    return { success: false, error: error.message };
+    console.error(`Error in markMessagesAsRead action: ${error?.message || error}`);
+    return { 
+      success: false, 
+      message: `Error in markMessagesAsRead action: ${error?.message || error}`
+    };
   }
 }
 
@@ -377,10 +385,49 @@ export async function getInitialChatData(conversationId) {
     };
 
   } catch (error) {
-    console.error(`Error in getInitialChatData action : ${error.message || error}`)
+    // console.error(`Error in getInitialChatData action : ${error.message || error}`)
     return {
       success: false,
       message: `Error in getInitialChatData action : ${error.message || error}`,
+    };
+  }
+}
+
+export async function getMessagesByFriendId(friendId) {
+  if (!friendId) {
+    return {
+      success: false,
+      message: "No friendId received!"
+    }
+  }
+
+  try {
+    const sessionUser = await getSessionUser();
+    const conversation = await conversationModel.findOne({
+      $and: [
+        { participants: sessionUser.id },
+        { participants: friendId }
+      ]
+    })
+      .lean();
+
+    const messages = await messageModel.find({
+      conversationId: conversation._id,
+      deletedFor: { $ne: sessionUser.id }
+    })
+      .sort({ createdAt: -1 })
+      .limit(21)
+      .lean();
+
+    return {
+      success: true,
+      data: { messages: JSON.parse(JSON.stringify(messages)), conversationId: JSON.parse(JSON.stringify(conversation?._id)) }
+    }
+  } catch (error) {
+    console.error(`Error in getMessagesByFriendId action : ${error.message || error}`)
+    return {
+      success: false,
+      message: `Error in getMessagesByFriendId action : ${error.message || error}`,
     };
   }
 }

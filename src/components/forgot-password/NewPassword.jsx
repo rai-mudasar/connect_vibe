@@ -46,8 +46,8 @@ export default function NewPassword({userId}) {
     }
   }
   return (
-    <div className="w-full h-screen bg-bg text-secondary px-4 md:px-0 pt-30 sm:pt-15 md:pt-10 flex flex-col items-center gap-9">
-      <div className="w-[35%] p-10 rounded-4xl bg-card border border-border">
+    <div className="w-full h-screen bg-bg-gray1 text-text1 px-4 md:px-0 pt-30 sm:pt-15 md:pt-10 flex flex-col items-center gap-9">
+      <div className="w-[35%] p-10 rounded-4xl bg-bg-white1 border border-border">
         <h1 className="text-3xl font-bold text-center">Create new Password</h1>
         <p className="mt-6 flex flex-col text-center">
           Choose strong password for your account
@@ -72,7 +72,7 @@ export default function NewPassword({userId}) {
                         id="newPassword"
                         autoFocus
                         required
-                        className={'placeholder:text-label text-secondary border-border focus-visible:ring-[1px] md:focus-visible:ring-[2px]'}
+                        className={'placeholder:text-text2 text-text1 border-border focus-visible:ring-[1px] md:focus-visible:ring-2px'}
                         {...field}
                       />
                     </FormControl>
@@ -92,7 +92,7 @@ export default function NewPassword({userId}) {
                       <Input
                         id="confirmPassword"
                         required
-                        className={'placeholder:text-label text-secondary border-border focus-visible:ring-[1px] md:focus-visible:ring-[2px]'}
+                        className={'placeholder:text-text2 text-text1 border-border focus-visible:ring-[1px] md:focus-visible:ring-2px'}
                         {...field}
                       />
                     </FormControl>
@@ -103,7 +103,7 @@ export default function NewPassword({userId}) {
 
               <Button
                 type="submit"
-                className="bg-primary hover:bg-bg text-[18px] md:text-[21px] text-secondary hover:text-primary cursor-pointer hover:border border-border"
+                className="bg-primary/90 hover:bg-primary text-[18px] md:text-[21px] text-white cursor-pointer"
               >
                 {isSubmitting ? (
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />

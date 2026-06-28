@@ -71,16 +71,16 @@ export default function ViewPostDialog({ post }) {
     <Dialog onOpenChange={handleDialogState}>
       <DialogTrigger asChild>
         <Button
-          className="w-full flex items-center justify-center mt-0.5 p-2 bg-card hover:bg-primary border border-border rounded-lg text-[16px] text-label font-medium cursor-pointer"
+          className="w-full flex items-center justify-center mt-0.5 p-2 bg-card hover:bg-bg-gray-hover border border-border rounded-lg text-[16px] text-label font-medium cursor-pointer"
         >
           <MessageCircle size={22} strokeWidth="2.5px" />
           <span>Comment</span>
         </Button>
       </DialogTrigger>
 
-      <DialogContent className="sm:max-w-150 max-h-[calc(100vh-200px)] md:max-h-[calc(100vh-70px)] flex flex-col p-0 gap-0 bg-bg border-border text-secondary overflow-hidden">
+      <DialogContent className="sm:max-w-150 max-h-[calc(100vh-20px)] flex flex-col p-0 gap-0 bg-bg-white1 border-border text-text1 overflow-hidden">
         <DialogHeader className="p-4 bg-card border-b border-border">
-          <DialogTitle>Post by <span className="text-primary">{`${post.author.firstName} ${post.author.lastName}`}</span> </DialogTitle>
+          <DialogTitle>Post by <span className="text-primary font-semibold">{`${post.author.firstName} ${post.author.lastName}`}</span> </DialogTitle>
           <DialogDescription className="sr-only">
             This dialog shows the full content of the post and its comments.
           </DialogDescription>
@@ -93,23 +93,23 @@ export default function ViewPostDialog({ post }) {
               <div className="flex items-center gap-3 mb-2 relative">
                 <Avatar className="h-10 w-10">
                   <SafeImage
-                    src={post.author.profileImageUrl !== "" ? post.author.profileImageUrl : null}
+                    src={post?.author?.profileImageUrl !== "" ? post?.author?.profileImageUrl : null}
                     fill
                     alt="User Profile Image"
                     className="object-contain"
                   />
-                  <AvatarFallback>{post.author.firstName[0]}</AvatarFallback>
+                  <AvatarFallback>{post?.author?.firstName[0]}</AvatarFallback>
                 </Avatar>
                 <span className="font-semibold text-sm">
-                  {post.author.firstName} {post.author.lastName}
+                  {post?.author?.firstName} {post?.author?.lastName}
                 </span>
               </div>
-              <p className="text-sm text-secondary mb-3">{post.caption}</p>
-              <div className="w-full bg-label flex justify-center">
-                <div className="w-full h-120 relative border-t">
-                  {post.media && (
+              <p className="text-sm text-text1 mb-3">{post?.caption}</p>
+              <div className="w-full bg-bg-gray1 flex justify-center">
+                <div className="w-full aspect-4/5 relative border-t">
+                  {post?.media && (
                     <SafeImage
-                      src={post.media}
+                      src={post?.media}
                       fill
                       alt="Post"
                       className="object-contain"
@@ -121,7 +121,7 @@ export default function ViewPostDialog({ post }) {
 
             {/* 2. THE COMMENTS LIST */}
             <div className="space-y-4">
-              <h4 className="text-sm font-semibold text-label">Comments</h4>
+              <h4 className="text-sm font-semibold text-text2">Comments</h4>
               {loadedComments?.length > 0 ? (
                 loadedComments.map((comment) => (
                   <div key={comment._id} className="flex gap-3">
@@ -131,8 +131,8 @@ export default function ViewPostDialog({ post }) {
                         {comment.author.firstName?.[0]}
                       </AvatarFallback>
                     </Avatar>
-                    <div className="bg-label p-2 px-3 rounded-tr-xl rounded-bl-xl max-w-[85%]">
-                      <p className="text-sm font-bold text-card">
+                    <div className="bg-bg-gray1 p-2 px-3 rounded-tr-xl rounded-bl-xl max-w-[85%]">
+                      <p className="text-sm font-bold">
                         {comment.author.firstName} {comment.author.lastName}
                       </p>
                       <p className="text-sm">{comment.content}</p>
@@ -140,7 +140,7 @@ export default function ViewPostDialog({ post }) {
                   </div>
                 ))
               ) : (
-                <p className="text-sm text-center text-label py-4">
+                <p className="text-sm text-center text-text2 py-4">
                   No comments yet. Be the first!
                 </p>
               )}
@@ -150,8 +150,8 @@ export default function ViewPostDialog({ post }) {
         </div>
 
         {/* 3. INPUT AREA AT BOTTOM */}
-        <div className="p-4 border-t border-border bg-card">
-          <div className="flex gap-2 items-end">
+        <div className="p-4 border-t border-border bg-bg-gray1 z-30">
+          <div className="flex gap-2 items-end z-30">
             <Textarea
               placeholder="Write a comment..."
               value={newComment}
@@ -162,9 +162,9 @@ export default function ViewPostDialog({ post }) {
               size="icon"
               onClick={handlePostComment}
               disabled={!newComment.trim() || loading}
-              className={'h-10 bg-card hover:bg-card cursor-pointer'}
+              className={'h-10 bg-card hover:bg-card cursor-pointer z-50'}
             >
-              <Send className="w-10 text-primary" />
+              <Send className="w-10 stroke-[3px] text-text2 cursor-pointer z-50" />
             </Button>
           </div>
         </div>

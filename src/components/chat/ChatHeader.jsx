@@ -48,7 +48,7 @@ export default function ChatHeader({ conversationId, initialChatMetadata, curren
                     </div>
                 </Link>
 
-                <Avatar className="w-10 h-10 bg-bg border-border ml-1 md:ml-4">
+                <Avatar className="w-10 h-10 bg-bg-gray2 border-border ml-1 md:ml-4">
                     <SafeImage
                         src={chattingUser?.profileImageUrl || null}
                         fill
@@ -63,7 +63,7 @@ export default function ChatHeader({ conversationId, initialChatMetadata, curren
                     <p className="text-xl text-primary md:text-2xl font-semibold ">
                         {chattingUser ? `${chattingUser.firstName} ${chattingUser.lastName}` : "Loading..."}
                     </p>
-                    <p className="text-[12px] ml-2 -mt-1 text-label italic">
+                    <p className="text-[12px] ml-2 -mt-1 text-text2 italic">
                         "{chattingUser?.bio || "No bio available"}"
                     </p>
                 </div>
@@ -72,12 +72,12 @@ export default function ChatHeader({ conversationId, initialChatMetadata, curren
             <div className="cursor-pointer">
                 <DropdownMenu>
                     <DropdownMenuTrigger asChild>
-                        <div className="h-8.5 flex justify-center items-center md:pt-2 text-label cursor-pointer border-0">
+                        <div className="h-8.5 flex justify-center items-center md:pt-2 text-text2 cursor-pointer border-0">
                             <MoreVertical className="w-5 md:w-6 h-5 md:h-6" />
                         </div>
                     </DropdownMenuTrigger>
-                    <DropdownMenuContent className={'bg-label border-border'}>
-                        <DropdownMenuItem className="cursor-pointer hover:text-primary">
+                    <DropdownMenuContent className={'bg-bg-white1 border-border'}>
+                        <DropdownMenuItem className="cursor-pointer text-text2 hover:text-text1">
                             <button onClick={() => handleChatDelete(conversationId)}>
                                 Delete Conversation
                             </button>

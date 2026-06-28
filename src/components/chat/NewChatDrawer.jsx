@@ -54,7 +54,6 @@ export default function NewChatDrawer({ loggedInUserId, friends, triggerClassNam
             }
         } catch (error) {
             console.error(error);
-            // setLoading(false);
             toast.error("Failed to start chat");
         }
     };
@@ -75,13 +74,13 @@ export default function NewChatDrawer({ loggedInUserId, friends, triggerClassNam
                             "w-full h-full flex justify-center items-center z-40 cursor-pointer"
                         }
                     >
-                        <MessageSquarePlus className="w-6 h-6 text-black" />
+                        <MessageSquarePlus className="w-6 h-6 text-white" />
                     </button>
                 </SheetTrigger>
 
-                <SheetContent side="left" className="w-full max-w-sm sm:max-w-xs h-screen sm:h-auto bg-bg text-xl text-secondary border-border">
+                <SheetContent side="left" className="w-full max-w-sm sm:max-w-xs h-screen sm:h-auto bg-bg-gray1 text-xl text-tex1 border-border">
                     <SheetHeader className="border-b border-border">
-                        <SheetTitle className="text-xl font-bold text-secondary">
+                        <SheetTitle className="text-xl font-bold text-text1">
                             New Chat
                         </SheetTitle>
                     </SheetHeader>
@@ -94,12 +93,12 @@ export default function NewChatDrawer({ loggedInUserId, friends, triggerClassNam
                                 placeholder="Search friends..."
                                 value={searchQuery}
                                 onChange={(e) => setSearchQuery(e.target.value)}
-                                className="pl-10 pr-10 bg-card border border-border text-secondary placeholder-label focus-visible:ring-[1px]"
+                                className="pl-10 pr-10 bg-bg-white1 border border-border text-text1 placeholder:text-text2 focus-visible:ring-[1px]"
                             />
                             {searchQuery && (
                                 <button
                                     onClick={() => setSearchQuery("")}
-                                    className="absolute right-3 top-1/2 -translate-y-1/2 text-label hover:text-secondary transition-colors"
+                                    className="absolute right-3 top-1/2 -translate-y-1/2 text-text2 hover:text-text1 transition-colors"
                                 >
                                     <X className="w-4 h-4" />
                                 </button>
@@ -114,7 +113,7 @@ export default function NewChatDrawer({ loggedInUserId, friends, triggerClassNam
                                         <button
                                             key={friend._id}
                                             onClick={() => handleOpenOrStartChat(friend._id)}
-                                            className="w-full flex items-center gap-3 px-3 py-2 rounded-lg bg-card border border-border hover:bg-card/80 hover:border-border transition-colors text-left cursor-pointer"
+                                            className="w-full flex items-center gap-3 px-3 py-2 rounded-lg bg-bg-white1 border border-border hover:bg-bg-gray-hover hover:border-border transition-colors text-left cursor-pointer"
                                         >
                                             <div className="relative shrink-0">
                                                 <Avatar className="w-10 h-10 border border-border bg-bg">
@@ -132,7 +131,7 @@ export default function NewChatDrawer({ loggedInUserId, friends, triggerClassNam
                                             </div>
 
                                             <div className="flex-1 min-w-0">
-                                                <p className="font-medium text-sm text-secondary truncate">
+                                                <p className="font-medium text-sm text-text1 truncate">
                                                     {friend.firstName + " " + friend.lastName}
                                                 </p>
                                                 {friend.status && (
@@ -146,14 +145,14 @@ export default function NewChatDrawer({ loggedInUserId, friends, triggerClassNam
                                 </div>
                             ) : (
                                 <div className="flex flex-col items-center justify-center py-12 text-center">
-                                    <div className="w-12 h-12 rounded-full bg-card border border-border flex items-center justify-center mb-3">
-                                        <Search className="w-6 h-6 text-label" />
+                                    <div className="w-12 h-12 rounded-full bg-bg-gray2 border border-border flex items-center justify-center mb-3">
+                                        <Search className="w-6 h-6 text-text2" />
                                     </div>
-                                    <p className="text-sm font-medium text-secondary mb-1">
+                                    <p className="text-sm font-medium text-text2 mb-1">
                                         {searchQuery ? "No friends found" : "No friends available"}
                                     </p>
                                     {searchQuery && (
-                                        <p className="text-xs text-label">
+                                        <p className="text-xs text-text2">
                                             Try searching with a different name
                                         </p>
                                     )}

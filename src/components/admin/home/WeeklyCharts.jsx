@@ -83,16 +83,16 @@ export default function WeeklyCharts({ weeklyUsers, weeklyPosts }) {
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-      <div className="bg-card  rounded-xl border border-border dark:border-gray-700 p-5">
-        <h3 className="text-sm font-semibold text-secondary mb-4">
+      <div className="bg-bg-white1 rounded-xl border border-border dark:border-gray-700 p-5">
+        <h3 className="text-sm font-semibold text-text1 mb-4">
           New users — last 7 days
         </h3>
         <div className="relative h-48">
           <canvas ref={usersRef} />
         </div>
       </div>
-      <div className="bg-card rounded-xl border border-border p-5">
-        <h3 className="text-sm font-semibold text-secondary mb-4">
+      <div className="bg-bg-white1 rounded-xl border border-border p-5">
+        <h3 className="text-sm font-semibold text-text1 mb-4">
           Posts per day — last 7 days
         </h3>
         <div className="relative h-48">

@@ -1,3 +1,5 @@
+"use client";
+
 import React from "react";
 import { 
   MapPin, 
@@ -7,14 +9,20 @@ import {
   Info 
 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
-import getSmartDateTime from "@/helpers/getSmartDate";
+import { format, isValid } from "date-fns";
 
 export default function UserDetail({ currentProfileUser }) {
-  const joinedDate = currentProfileUser?.createdAt 
-    ? getSmartDateTime(currentProfileUser.createdAt)
-    : "Recently";
 
-  // Define the details to map through for cleaner code
+  
+  const getJoinedDateDisplay = (dateValue) => {
+    if (!dateValue) return "Recently";
+    const date = new Date(dateValue);
+    if (!isValid(date)) return "Recently";
+    return format(date, "MMMM yyyy");
+  };
+  
+  const joinedDate = getJoinedDateDisplay(currentProfileUser?.createdAt);
+
   const details = [
     {
       icon: <Briefcase className="h-5 w-5 text-primary" />,
@@ -43,9 +51,9 @@ export default function UserDetail({ currentProfileUser }) {
   ];
 
   return (
-    <Card className="w-full shadow-sm border-none bg-card">
+    <Card className="w-full shadow-sm border-none bg-bg-white1">
       <CardHeader className="pb-2">
-        <CardTitle className="text-xl font-bold text-secondary">Personal Detail</CardTitle>
+        <CardTitle className="text-xl font-bold text-text1">Personal Detail</CardTitle>
       </CardHeader>
       <CardContent className="flex flex-col gap-4">
         {currentProfileUser?.bio && (
@@ -61,8 +69,8 @@ export default function UserDetail({ currentProfileUser }) {
               <div key={index} className="flex items-center gap-3 text-[15px]">
                 {detail.icon}
                 <p>
-                  <span className="text-label">{detail.prefix}</span>
-                  <span className="font-semibold text-secondary">{detail.value}</span>
+                  <span className="text-text2">{detail.prefix}</span>
+                  <span className="font-semibold text-text1">{detail.value}</span>
                 </p>
               </div>
             ) : null

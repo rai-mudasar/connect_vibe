@@ -4,11 +4,12 @@ import { useEffect, useState } from "react";
 import { MessageCircle } from "lucide-react";
 import { pusherClient } from "@/lib/pusher";
 import { usePathname } from "next/navigation";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "../ui/tooltip";
 import Link from "next/link";
 
 export default function ChatNavbarBadge({ initialCount, loggedInUserId }) {
   const [globalUnreadCount, setGlobalUnreadCount] = useState(initialCount);
-  const pathname = usePathname();
+  // const pathname = usePathname();
 
   // Sync state with server side props initialization
   useEffect(() => {
@@ -73,14 +74,24 @@ export default function ChatNavbarBadge({ initialCount, loggedInUserId }) {
   }, []);
 
   return (
-    <Link href="/chat" className="relative p-2 text-label hover:text-primary border-b-2 lg:border-0 border-card hover:border-primary lg:text-primary lg:hover:text-secondary transition-colors flex items-center justify-center">
-      <MessageCircle className="w-6 h-6" />
+    <TooltipProvider delayDuration={300}>
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <Link href="/chat" className="relative p-2 transition-colors flex items-center justify-center border-b-2 border-bg-white1 hover:border-primary group">
+            <MessageCircle className="w-6 h-6 text-text2 group-hover:text-primary" />
 
-      {globalUnreadCount > 0 && (
-        <span className="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] font-bold min-w-4.5 h-4.5 rounded-full flex items-center justify-center px-1 animate-pulse border-2 border-bg">
-          {globalUnreadCount > 99 ? "99+" : globalUnreadCount}
-        </span>
-      )}
-    </Link>
+            {globalUnreadCount > 0 && (
+              <span className="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] font-bold min-w-4.5 h-4.5 rounded-full flex items-center justify-center px-1 animate-pulse border-2 border-bg">
+                {globalUnreadCount > 99 ? "99+" : globalUnreadCount}
+              </span>
+            )}
+          </Link>
+        </TooltipTrigger>
+
+        <TooltipContent side="bottom" className="bg-black text-white text-xs font-medium px-2 py-1 rounded-md shadow-md border-none">
+          <p>Chats</p>
+        </TooltipContent>
+      </Tooltip>
+    </TooltipProvider>
   );
 }

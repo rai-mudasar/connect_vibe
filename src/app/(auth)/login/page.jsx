@@ -58,12 +58,12 @@ export default function Login() {
     }
   };
   return (
-    <div className="h-screen w-full bg-bg pt-20 sm:pt-15 md:pt-10 flex flex-col items-center gap-9">
+    <div className="h-screen w-full bg-bg-gray1 pt-20 sm:pt-15 md:pt-10 flex flex-col items-center gap-9">
       <div className="text-primary text-3xl md:text-5xl font-bold">
-        <span className="text-secondary">Connect</span>Vibe.
+        <span className="text-text1">Connect</span>Vibe.
       </div>
-      <div className="p-10 shadow-xl/10 shadow-[#032062] rounded-4xl bg-card border border-border">
-        <div className="w-68 md:w-80 text-secondary">
+      <div className="p-10 shadow-xl/10 shadow-[#032062] rounded-4xl bg-bg-white1 border border-border">
+        <div className="w-68 md:w-80 text-text1">
           <Form {...form}>
             <form
               onSubmit={form.handleSubmit(onSubmit)}
@@ -84,7 +84,7 @@ export default function Login() {
                         autoComplete="email"
                         autoFocus
                         required
-                        className={'border-border focus-visible:ring-[1px] md:focus-visible:ring-[2px]'}
+                        className={'border-border focus-visible:ring-[1px] md:focus-visible:ring-2px'}
                         {...field}
                       />
                     </FormControl>
@@ -109,7 +109,7 @@ export default function Login() {
                           type={showPassword ? "text" : "password"}
                           required
                           autoComplete="current-password"
-                          className={'border-border focus-visible:ring-[1px] md:focus-visible:ring-[2px]'}
+                          className={'border-border focus-visible:ring-[1px] md:focus-visible:ring-2px'}
                           {...field}
                         />
                         <button
@@ -121,9 +121,9 @@ export default function Login() {
                           }
                         >
                           {showPassword ? (
-                            <EyeOff className="h-5 w-5 text-label" />
-                          ) : (
                             <Eye className="h-5 w-5 text-label" />
+                          ) : (
+                            <EyeOff className="h-5 w-5 text-label" />
                           )}
                         </button>
                       </div>
@@ -145,7 +145,7 @@ export default function Login() {
               <Button
                 type="submit"
                 disabled={isSubmitting}
-                className="bg-bg hover:bg-primary border border-border text-primary hover:text-secondary font-semibold text-[18px] md:text-[21px]"
+                className="bg-primary/90 hover:bg-primary border border-border rounded-3xl text-white font-semibold text-[18px] md:text-[21px] cursor-pointer"
               >
                 {isSubmitting ? (
                   <>
@@ -160,10 +160,9 @@ export default function Login() {
           </Form>
         </div>
 
-        <div className="text-sm mt-6 font-semibold flex gap-3 text-primary hover:text-primary-hover cursor-pointer">
-          <p className="text-label cursor-default">Don't have an account ?</p>
-          <Link href={"/signup"}> Signup </Link>
-        </div>
+        <Link href={"/signup"} className="w-full bg-bg-white1 hover:bg-bg-gray-hover border border-primary rounded-3xl text-primary font-semibold text-[18px] md:text-[21px] cursor-pointer flex justify-center items-center mt-4 py-0.75">
+          <p className="text-label">Create new account</p>
+        </Link>
       </div>
     </div>
   );

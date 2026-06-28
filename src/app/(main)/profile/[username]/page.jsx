@@ -9,13 +9,13 @@ import PeopleYouMayKnowSkeleton from "@/components/profile/PeopleYouMayKnowSkele
 
 export default async function ProfilePage({ params }) {
   return (
-    <div className="w-full overflow-x-hidden bg-bg">
-      <div className="w-full flex flex-col justify-center items-center pt-13 pb-4 bg-whit">
+    <div className="w-full overflow-x-hidden bg-bg-gray1 sm:pt-13">
+      <div className="w-full flex flex-col justify-center items-center pb-4">
         <Suspense fallback={<ProfileHeaderSkeleton />}>
           <ProfileHeaderWrapper params={params} />
         </Suspense>
 
-        <div className="w-[90%] md:w-[70%] h-70 md:h-85 bg-card border border-border rounded-md pt-3 overflow-hidden relative">
+        <div className="w-[90%] md:w-[70%] h-70 md:h-85 bg-bg-white1 border border-border rounded-md pt-3 overflow-hidden relative">
           <Suspense fallback={<PeopleYouMayKnowSkeleton />}>
             <PeopleYouMayKnowWrapper />
           </Suspense>

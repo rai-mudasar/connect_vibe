@@ -7,6 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { useState, useTransition } from "react";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
+import { usePresence } from "@/context/PresenceContext";
 import { Avatar, AvatarFallback } from "../../ui/avatar";
 import { getPresenceStatus } from "@/helpers/PresenceTracker";
 import { activateUser, banUser, suspendUser, bulkAction } from "@/actions/adminActions";
@@ -15,36 +16,35 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import SafeImage from "@/components/SafeImage";
-import { usePresence } from "@/context/PresenceContext";
 
 const STATUS_STYLES = {
-  active: "bg-emerald-950/60 text-emerald-400 border-emerald-900",
-  suspended: "bg-yellow-950/60 text-yellow-400 border-yellow-900",
-  banned: "bg-red-950/60 text-red-400 border-red-900",
-  pending: "bg-zinc-800  text-zinc-400 border-zinc-700",
+  active: "   bg-emerald-950/90 text-emerald-400 border-emerald-900",
+  suspended: "bg-yellow-950/90  text-yellow-400  border-yellow-900",
+  banned: "   bg-red-950/90     text-red-400     border-red-900",
+  pending: "  bg-zinc-800/80    text-zinc-400    border-zinc-700",
 };
 
 const ROLE_STYLES = {
-  admin: "bg-violet-950/60 text-violet-400 border-violet-900",
-  moderator: "bg-blue-950/60 text-blue-400 border-blue-900",
-  creator: "bg-orange-950/60 text-orange-400 border-orange-900",
-  user: "bg-zinc-800 text-zinc-400 border-zinc-700",
+  admin: "    bg-violet-950/30 text-violet-700 border-violet-900",
+  moderator: "bg-blue-950/30   text-blue-400   border-blue-900",
+  creator: "  bg-orange-950/30 text-orange-400 border-orange-900",
+  user: "     bg-zinc-800/30   text-zinc-900   border-zinc-700",
 };
 
 const STATUS_DOT = {
-  active: "bg-emerald-400",
+  active: "   bg-emerald-400",
   suspended: "bg-yellow-400",
-  banned: "bg-red-400",
-  pending: "bg-zinc-500",
+  banned: "   bg-red-400",
+  pending: "  bg-zinc-400",
 };
 
 function UserCard({ user, selected, onToggle, onBan, onSuspend, onActivate, isPending, isOnline }) {
   return (
     <div
       className={`
-        rounded-2xl border border-border bg-card p-4 flex flex-col gap-3
+        rounded-2xl border border-border bg-bg-white1 p-4 flex flex-col gap-3
         transition-colors
-        ${selected ? "bg-label2 border-border" : ""}
+        ${selected ? "bg-violet-200 border-border" : ""}
       `}
     >
       {/* Row 1 — checkbox · avatar · name · menu */}
@@ -55,7 +55,7 @@ function UserCard({ user, selected, onToggle, onBan, onSuspend, onActivate, isPe
           className="mt-0.5 border-zinc-600 data-[state=checked]:bg-violet-600 data-[state=checked]:border-violet-600"
         />
 
-        <Avatar className="w-12 h-12 border border-border bg-bg">
+        <Avatar className="w-12 h-12 border border-border bg-bg-gray2">
           <SafeImage
             src={user?.profileImageUrl !== "" ? user?.profileImageUrl : null}
             fill
@@ -66,14 +66,14 @@ function UserCard({ user, selected, onToggle, onBan, onSuspend, onActivate, isPe
         </Avatar>
         <div className="flex-1 min-w-0 mt-2">
           <div className="flex items-center gap-1.5 flex-wrap">
-            <span className="text-sm font-semibold text-zinc-100 leading-tight">
+            <span className="text-sm font-semibold text-text1 leading-tight">
               {user.firstName} {user.lastName}
             </span>
             {user.verified && (
-              <BadgeCheck className="w-3.5 h-3.5 text-violet-400 shrink-0" />
+              <BadgeCheck className="w-3.5 h-3.5 text-violet-700 shrink-0" />
             )}
           </div>
-          <p className="text-xs text-zinc-500 truncate mt-0.5">
+          <p className="text-xs text-text2 truncate mt-0.5">
             @{user.username} · {user.email}
           </p>
         </div>
@@ -83,29 +83,29 @@ function UserCard({ user, selected, onToggle, onBan, onSuspend, onActivate, isPe
           <DropdownMenuTrigger asChild>
             <Button
               variant="ghost" size="icon"
-              className="h-7 w-7 text-zinc-500 hover:text-zinc-200 hover:bg-zinc-800 shrink-0 -mt-0.5"
+              className="h-7 w-7 text-text2 hover:text-text1 shrink-0 -mt-0.5"
               disabled={isPending}
             >
               <MoreHorizontal className="w-4 h-4" />
             </Button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="bg-zinc-900 border-zinc-700 w-44">
+          <DropdownMenuContent align="end" className="bg-bg-white1 border-border w-44">
             <DropdownMenuItem
               onClick={() => onActivate(user?._id)}
-              className="text-emerald-400 focus:bg-zinc-800 focus:text-emerald-300 cursor-pointer"
+              className="text-emerald-400 focus:bg-bg-gray-hover focus:text-emerald-300 cursor-pointer"
             >
               <UserCheck className="w-4 h-4 mr-2" /> Activate
             </DropdownMenuItem>
             <DropdownMenuItem
               onClick={() => onSuspend(user?._id)}
-              className="text-yellow-400 focus:bg-zinc-800 focus:text-yellow-300 cursor-pointer"
+              className="text-yellow-400 focus:bg-bg-gray-hover focus:text-yellow-300 cursor-pointer"
             >
               <UserX className="w-4 h-4 mr-2" /> Suspend
             </DropdownMenuItem>
-            <DropdownMenuSeparator className="bg-zinc-800" />
+            <DropdownMenuSeparator className="bg-border" />
             <DropdownMenuItem
               onClick={() => onBan(user?._id)}
-              className="text-red-400 focus:bg-zinc-800 focus:text-red-300 cursor-pointer"
+              className="text-red-400 focus:bg-bg-gray-hover focus:text-red-300 cursor-pointer"
             >
               <Ban className="w-4 h-4 mr-2" /> Ban user
             </DropdownMenuItem>
@@ -134,17 +134,17 @@ function UserCard({ user, selected, onToggle, onBan, onSuspend, onActivate, isPe
       </div>
 
       {/* Row 3 — stats grid */}
-      <div className="grid grid-cols-3 divide-x divide-border border border-border rounded-xl overflow-hidden">
+      <div className="grid grid-cols-3 divide-x divide-text2 border border-text2 rounded-xl overflow-hidden">
         {[
           { label: "POSTS", value: user?.posts?.length, red: false },
           { label: "LASTSEEN", value: isOnline ? 'Online' : getPresenceStatus(user?.lastSeen), red: isOnline || getPresenceStatus(user?.lastSeen) === 'Online' },
           { label: "REPORTS", value: user?.reports, red: user?.reports > 0 },
         ].map(({ label, value, red }) => (
-          <div key={label} className="flex flex-col items-center py-2.5 gap-0.5 bg-bg">
-            <span className="text-[9px] font-semibold tracking-widest text-zinc-500 uppercase">
+          <div key={label} className="flex flex-col items-center py-2.5 gap-0.5 bg-bg-gray2">
+            <span className="text-[9px] font-semibold tracking-widest text-text2 uppercase">
               {label}
             </span>
-            <span className={`text-sm ${red ? "text-red-400" : "text-zinc-200"}`}>
+            <span className={`text-sm font-semibold ${red ? "text-red-400" : "text-tezt1"}`}>
               {value}
             </span>
           </div>
@@ -222,16 +222,16 @@ export default function UsersTable({ initialUsers }) {
             placeholder="Search users…"
             value={search}
             onChange={e => { setSearch(e.target.value); setPage(1); }}
-            className="w-full sm:w-56 bg-label2 border-0 text-secondary placeholder:text-zinc-300 h-9 focus-visible:ring-[1px]"
+            className="w-full sm:w-56 bg-bg-gray2 border-0 text-text1 placeholder:text-text2 h-9 focus-visible:ring-[1px]"
           />
 
           <Select value={roleFilter} onValueChange={v => { setRoleFilter(v); setPage(1); }}>
-            <SelectTrigger className="w-36 bg-label2 border-border text-zinc-300 h-9 capitalize">
+            <SelectTrigger className="w-36 bg-bg-gray2 border-border text-text2 h-9 capitalize cursor-pointer">
               <SelectValue placeholder="Role" />
             </SelectTrigger>
-            <SelectContent className="bg-label2 border-border">
+            <SelectContent className="bg-bg-gray2 border-border">
               {["all", "admin", "moderator", "creator", "member"].map(r => (
-                <SelectItem key={r} value={r} className="text-secondary focus:bg-label2 capitalize">
+                <SelectItem key={r} value={r} className="text-text2 focus:text-text1 focus:bg-bg-gray-hover capitalize">
                   {r === "all" ? "All roles" : r}
                 </SelectItem>
               ))}
@@ -239,12 +239,12 @@ export default function UsersTable({ initialUsers }) {
           </Select>
 
           <Select value={statusFilter} onValueChange={v => { setStatus(v); setPage(1); }}>
-            <SelectTrigger className="w-36 bg-label2 border-border text-zinc-300 h-9 capitalize">
+            <SelectTrigger className="w-36 bg-bg-gray2 border-border text-text2 h-9 capitalize cursor-pointer">
               <SelectValue placeholder="Status" />
             </SelectTrigger>
-            <SelectContent className="bg-label2 border-border">
+            <SelectContent className="bg-bg-gray2 border-border">
               {["all", "active", "suspended", "banned", "pending"].map(s => (
-                <SelectItem key={s} value={s} className="text-secondary focus:bg-label capitalize">
+                <SelectItem key={s} value={s} className="text-text2 focus:text-text1 focus:bg-bg-gray-hover capitalize">
                   {s === "all" ? "All statuses" : s}
                 </SelectItem>
               ))}
@@ -255,7 +255,7 @@ export default function UsersTable({ initialUsers }) {
             <Button
               variant="ghost" size="sm"
               onClick={() => { setSearch(""); setRoleFilter("all"); setStatus("all"); setPage(1); }}
-              className="text-red-600 hover:text-label2 h-9"
+              className="text-red-600 hover:text-text2 h-9 cursor-pointer"
             >
               <RefreshCw className="w-3.5 h-3.5 mr-1.5" /> Reset
             </Button>
@@ -267,19 +267,19 @@ export default function UsersTable({ initialUsers }) {
           {selected.length > 0 && (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="outline" size="sm" className="border-border bg-label text-zinc-300 hover:bg-zinc-800 h-9">
+                <Button variant="outline" size="sm" className="border-border bg-bg-gray2 text-text2 hover:bg-bg-gray-hover h-9 cursor-pointer">
                   Bulk actions ({selected.length})
                 </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent className="bg-label border-border">
-                <DropdownMenuItem onClick={() => handleBulk("activate")} className="text-emerald-400 focus:bg-zinc-800 focus:text-emerald-300 cursor-pointer">
+              <DropdownMenuContent className="bg-bg-white1 border-border">
+                <DropdownMenuItem onClick={() => handleBulk("activate")} className="text-emerald-400 focus:bg-bg-gray-hover focus:text-emerald-300 cursor-pointer">
                   <UserCheck className="w-4 h-4 mr-2" /> Activate
                 </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => handleBulk("suspend")} className="text-yellow-400 focus:bg-zinc-800 focus:text-yellow-300 cursor-pointer">
+                <DropdownMenuItem onClick={() => handleBulk("suspend")} className="text-yellow-400 focus:bg-bg-gray-hover focus:text-yellow-300 cursor-pointer">
                   <UserX className="w-4 h-4 mr-2" /> Suspend
                 </DropdownMenuItem>
                 <DropdownMenuSeparator className="bg-border" />
-                <DropdownMenuItem onClick={() => handleBulk("ban")} className="text-red-400 focus:bg-zinc-800 focus:text-red-300 cursor-pointer">
+                <DropdownMenuItem onClick={() => handleBulk("ban")} className="text-red-400 focus:bg-bg-gray-hover focus:text-red-300 cursor-pointer">
                   <Ban className="w-4 h-4 mr-2" /> Ban all
                 </DropdownMenuItem>
               </DropdownMenuContent>
@@ -297,7 +297,7 @@ export default function UsersTable({ initialUsers }) {
               onCheckedChange={toggleAll}
               className="border-zinc-600 data-[state=checked]:bg-violet-600 data-[state=checked]:border-violet-600"
             />
-            <span className="text-xs text-zinc-500">
+            <span className="text-xs text-text2">
               {selected.length > 0
                 ? `${selected.length} selected`
                 : `${filtered.length} users`}
@@ -306,7 +306,7 @@ export default function UsersTable({ initialUsers }) {
         )}
 
         {filtered.length === 0 ? (
-          <p className="text-center py-12 text-zinc-500 text-sm">
+          <p className="text-center py-12 text-text2 text-sm">
             No users match the current filters.
           </p>
         ) : (
@@ -330,12 +330,12 @@ export default function UsersTable({ initialUsers }) {
       <div className="rounded-xl border border-border overflow-hidden hidden sm:block">
         <Table className="bg-card">
           <TableHeader>
-            <TableRow className="bg-bg border-border text-xs text-secondary font-medium">
+            <TableRow className="bg-bg-gray2 border-border text-xs text-text2 font-medium">
               <TableHead className="w-10 pl-4">
                 <Checkbox
                   checked={allChecked}
                   onCheckedChange={toggleAll}
-                  className="border-border text-black data-[state=checked]:bg-secondary data-[state=checked]:border-secondary"
+                  className="border-text2 text-black data-[state=checked]:bg-white data-[state=checked]:border-white"
                 />
               </TableHead>
               <TableHead className="">User</TableHead>
@@ -353,7 +353,7 @@ export default function UsersTable({ initialUsers }) {
           <TableBody>
             {filtered.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={11} className="text-center py-12 text-zinc-500">
+                <TableCell colSpan={11} className="text-center py-12 text-text2">
                   No users match the current filters.
                 </TableCell>
               </TableRow>
@@ -362,20 +362,20 @@ export default function UsersTable({ initialUsers }) {
               return (
                 <TableRow
                   key={user?._id}
-                  className={`border-border hover:bg-card-hover transition-colors ${selected.includes(user?._id) ? "bg-violet-950/20" : ""}`}
+                  className={`border-border bg-bg-white1 hover:bg-bg-gray-hover transition-colors cursor-pointer ${selected.includes(user?._id) ? "bg-violet-200" : ""}`}
                 >
                   <TableCell className="pl-4">
                     <Checkbox
                       checked={selected.includes(user?._id)}
                       onCheckedChange={() => toggleOne(user?._id)}
-                      className="border-border data-[state=checked]:bg-secondary data-[state=checked]:border-secondary cursor-pointer"
+                      className="border-text2 data-[state=checked]:bg-white data-[state=checked]:border-white cursor-pointer"
                     />
                   </TableCell>
 
                   <TableCell>
                     <div className="flex items-center gap-2.5">
                       <div className="relative">
-                        <Avatar className="w-17 h-17 border border-border bg-bg">
+                        <Avatar className="w-17 h-17 border border-border bg-bg-gray2">
                           <SafeImage
                             src={user?.profileImageUrl !== "" ? user?.profileImageUrl : null}
                             fill
@@ -385,19 +385,19 @@ export default function UsersTable({ initialUsers }) {
                           <AvatarFallback className={'text-[24px] text-primary font-bold'}>{user?.firstName?.[0] + user?.lastName?.[0]}</AvatarFallback>
                         </Avatar>
                         {(isUserOnline || (getPresenceStatus(user?.lastSeen) === 'Online')) && (
-                          <span className="absolute bottom-1 right-1 w-4 h-4 bg-green-500 border-2 border-card rounded-full" />
+                          <span className="absolute bottom-1 right-1 w-4 h-4 bg-green-500 border-2 border-bg-white1 rounded-full" />
                         )}
                       </div>
                       <div className="min-w-0">
                         <div className="flex items-center gap-1.5">
-                          <span className="text-[16px] font-medium text-zinc-200 truncate">
+                          <span className="text-[16px] font-medium text-text1 truncate">
                             {user?.firstName} {user?.lastName}
                           </span>
                           {user?.isVerified && (
                             <BadgeCheck className="w-4 h-4 text-primary shrink-0" />
                           )}
                         </div>
-                        <span className="text-xs text-zinc-500">@{user.username}</span>
+                        <span className="text-xs text-text2">@{user.username}</span>
                       </div>
                     </div>
                   </TableCell>
@@ -408,25 +408,25 @@ export default function UsersTable({ initialUsers }) {
                     </Badge>
                   </TableCell>
 
-                  <TableCell className="hidden lg:table-cell text-xs text-zinc-400">{user.email}</TableCell>
+                  <TableCell className="hidden lg:table-cell text-xs text-text1">{user.email}</TableCell>
 
-                  <TableCell className="hidden sm:table-cell text-right text-sm text-zinc-300 tabular-nums">
+                  <TableCell className="hidden sm:table-cell text-right text-sm text-text1 tabular-nums">
                     {user?.posts?.length}
                   </TableCell>
 
                   <TableCell className="hidden xl:table-cell text-right tabular-nums pr-6">
                     {user?.reports > 0
                       ? <span className="text-sm font-semibold text-red-400">{user.reports}</span>
-                      : <span className="text-sm text-zinc-600">0</span>}
+                      : <span className="text-sm text-text1">0</span>}
                   </TableCell>
 
-                  <TableCell className="hidden xl:table-cell text-xs text-zinc-500 pl-8 ">
+                  <TableCell className="hidden xl:table-cell text-xs text-text2 pl-8 ">
                     {new Date(user.createdAt).toLocaleDateString("en-US", {
                       month: "short", day: "numeric", year: "numeric",
                     })}
                   </TableCell>
 
-                  <TableCell className={`hidden lg:table-cell text-xs font-medium ${(isUserOnline || (getPresenceStatus(user?.lastSeen) === 'Online')) ? 'text-red-500' : 'text-zinc-500'}`}>
+                  <TableCell className={`hidden lg:table-cell text-xs font-medium ${(isUserOnline || (getPresenceStatus(user?.lastSeen) === 'Online')) ? 'text-red-500' : 'text-text2'}`}>
                     {(isUserOnline || (getPresenceStatus(user?.lastSeen) === 'Online')) ? (
                       <span className="flex items-center gap-1.5">
                         <span className="w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse" />
@@ -448,29 +448,29 @@ export default function UsersTable({ initialUsers }) {
                       <DropdownMenuTrigger asChild>
                         <Button
                           variant="ghost" size="icon"
-                          className="h-7 w-7 text-zinc-500 hover:text-zinc-200 hover:bg-zinc-800"
+                          className="h-7 w-7 text-text2 hover:text-text1 hover:bg-bg-gray2 cursor-pointer"
                           disabled={isPending}
                         >
                           <MoreHorizontal className="w-4 h-4" />
                         </Button>
                       </DropdownMenuTrigger>
-                      <DropdownMenuContent align="end" className="bg-zinc-900 border-zinc-700 w-44">
+                      <DropdownMenuContent align="end" className="bg-bg-white1 border-border w-44">
                         <DropdownMenuItem
                           onClick={() => handleActivate(user._id)}
-                          className="text-emerald-400 focus:bg-zinc-800 focus:text-emerald-300 cursor-pointer"
+                          className="text-emerald-400 focus:bg-bg-gray-hover focus:text-emerald-300 cursor-pointer"
                         >
                           <UserCheck className="w-4 h-4 mr-2" /> Activate
                         </DropdownMenuItem>
                         <DropdownMenuItem
                           onClick={() => handleSuspend(user._id)}
-                          className="text-yellow-400 focus:bg-zinc-800 focus:text-yellow-300 cursor-pointer"
+                          className="text-yellow-400 focus:bg-bg-gray-hover focus:text-yellow-300 cursor-pointer"
                         >
                           <UserX className="w-4 h-4 mr-2" /> Suspend
                         </DropdownMenuItem>
-                        <DropdownMenuSeparator className="bg-zinc-800" />
+                        <DropdownMenuSeparator className="bg-border" />
                         <DropdownMenuItem
                           onClick={() => handleBan(user._id)}
-                          className="text-red-400 focus:bg-zinc-800 focus:text-red-300 cursor-pointer"
+                          className="text-red-400 focus:bg-bg-gray-hover focus:text-red-300 cursor-pointer"
                         >
                           <Ban className="w-4 h-4 mr-2" /> Ban user
                         </DropdownMenuItem>
@@ -494,7 +494,7 @@ export default function UsersTable({ initialUsers }) {
             variant="outline" size="sm"
             onClick={() => setPage(p => Math.max(1, p - 1))}
             disabled={page === 1}
-            className="border-zinc-700 bg-zinc-900 text-zinc-400 hover:bg-zinc-800 hover:text-zinc-200 h-8"
+            className="border-border bg-bg-gray2 text-text2 hover:bg-zinc-800 hover:text-zinc-200 h-8"
           >
             Previous
           </Button>

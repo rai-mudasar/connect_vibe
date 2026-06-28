@@ -1,6 +1,6 @@
 import { Suspense } from "react";
-import PostPageWrapper from "@/components/post/PostPageWrapper";
 import Loading from "@/components/Loading";
+import PostPageWrapper from "@/components/post/PostPageWrapper";
 
 export default function PostPage({params}) {
     

@@ -115,7 +115,7 @@ export default function CreatePostDialog({ loggedInUser }) {
   return (
     <Dialog open={isDialogOpen} onOpenChange={handleDialogChange}>
       <DialogTrigger asChild>
-        <div className="flex items-center gap-2 p-4 bg-card border border-border rounded-lg shadow-sm cursor-pointer mt-2 md:mt-0 z-30">
+        <div className="flex items-center gap-2 p-4 bg-bg-white1 border border-border rounded-lg shadow-sm cursor-pointer mt-2 md:mt-0 z-30">
           <Avatar className="w-10 h-10 border border-border bg-bg z-50 font-semibold">
             <SafeImage
               src={loggedInUser?.profileImageUrl}
@@ -133,8 +133,8 @@ export default function CreatePostDialog({ loggedInUser }) {
         </div>
       </DialogTrigger>
 
-      <DialogContent className="sm:max-w-125 max-h-full bg-bg border-border text-secondary p-0 gap-0 overflow-y-scroll hide-scrollbar">
-        <DialogHeader className="p-4 bg-card border-b border-border">
+      <DialogContent className="max-h-[calc(100vh-10px)] bg-bg-white1 border-border text-text1 p-0 gap-0 overflow-y-scroll hide-scrollbar">
+        <DialogHeader className="p-4 border-b border-border">
           <DialogTitle className="text-center">
             {showCropper ? "Crop image" : "Create post"}
           </DialogTitle>
@@ -153,12 +153,12 @@ export default function CreatePostDialog({ loggedInUser }) {
           ) : (
             <>
               {/* User info */}
-              <div className="flex items-center gap-3 text-secondary">
-                <Avatar className="h-10 w-10 border border-border bg-card ">
+              <div className="flex items-center gap-3">
+                <Avatar className="h-10 w-10 border border-border bg-bg-gray2">
                   <AvatarImage src={loggedInUser?.profileImageUrl} />
-                  <AvatarFallback className={'text-primary'}>{loggedInUser?.firstName?.[0]}</AvatarFallback>
+                  <AvatarFallback className={'text-lg font-bold'}>{loggedInUser?.firstName?.[0] + loggedInUser?.lastName?.[0]}</AvatarFallback>
                 </Avatar>
-                <span className="font-semibold text-sm">
+                <span className="font-semibold text-lg">
                   {loggedInUser?.firstName} {loggedInUser?.lastName}
                 </span>
               </div>
@@ -176,7 +176,7 @@ export default function CreatePostDialog({ loggedInUser }) {
                 <div className="relative rounded-lg overflow-hidden border border-boder">
                   <img
                     src={URL.createObjectURL(image)}
-                    className="w-full max-h-75 object-contain bg-black/5"
+                    className="w-full aspect-4/5 object-contain"
                     alt="preview"
                   />
                   <Button
@@ -191,7 +191,7 @@ export default function CreatePostDialog({ loggedInUser }) {
               )}
 
               {/* Add to post toolbar */}
-              <div className="flex items-center justify-between bg-card border border-border rounded-lg p-3">
+              <div className="flex items-center justify-between border border-border rounded-lg p-3">
                 <span className="text-sm font-semibold">Add photo to your post</span>
                 <div className="flex gap-1">
                   <input
@@ -215,7 +215,7 @@ export default function CreatePostDialog({ loggedInUser }) {
               <Button
                 onClick={handlePost}
                 disabled={loading || (!text && !image)}
-                className="w-full bg-primary hover:bg-bg text-secondary hover:text-primary font-bold h-10"
+                className="w-full bg-primary/80 hover:bg-primary text-white font-bold h-10 cursor-pointer"
               >
                 {loading ? "Posting..." : "Post"}
               </Button>

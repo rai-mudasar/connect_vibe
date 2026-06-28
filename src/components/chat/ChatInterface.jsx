@@ -183,10 +183,10 @@ export default function ChatInterface({
   };
 
   return (
-    <div className="flex flex-col h-full bg-bg">
+    <div className="flex flex-col h-full bg-bg-gray1">
       <div ref={containerRef} className="flex-1 overflow-y-auto p-4 space-y-4">
         
-        <div ref={sentinelRef} className="h-2 w-full text-secondary flex items-center justify-center text-xs text-muted-foreground">
+        <div ref={sentinelRef} className="h-2 w-full text-text2 flex items-center justify-center text-xs text-muted-foreground">
           {isLoadingMore && "Loading previous messages..."}
         </div>
 
@@ -200,8 +200,8 @@ export default function ChatInterface({
               >
                 <div
                   className={`wrap-break-word py-2 px-4 rounded-2xl max-w-[70%] transition-opacity duration-200 ${isMe
-                    ? "bg-card text-white border border-border rounded-tr-none"
-                    : "bg-secondary text-black border border-border rounded-tl-none"
+                    ? "bg-primary text-white border border-border rounded-tr-none"
+                    : "bg-bg-white1 text-text2 border border-border rounded-tl-none"
                     } ${msg.isOptimistic ? "opacity-50 italic" : "opacity-100"}`}
                 >
                   {msg.text}
@@ -212,13 +212,13 @@ export default function ChatInterface({
         <div ref={scrollRef} />
       </div>
 
-      <div className="shrink-0 p-4 flex gap-2 bg-card border-t border-border shadow-sm">
+      <div className="shrink-0 p-4 flex gap-2 bg-bg-white1 border-t border-border shadow-sm">
         <input
           value={inputMessage}
           onChange={(e) => setInputMessage(e.target.value)}
           onKeyDown={(e) => e.key === "Enter" && handleSendMessage()}
           placeholder="Type a message..."
-          className="flex-1 p-2 px-4 bg-gray-200 text-black rounded-full outline-none focus:ring-1 focus:ring-primary shadow-sm"
+          className="flex-1 p-2 px-4 bg-gray-200 text-text2 rounded-full outline-none focus:ring-1 focus:ring-primary shadow-sm"
         />
         <button
           onClick={handleSendMessage}

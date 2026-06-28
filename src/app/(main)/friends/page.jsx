@@ -20,9 +20,9 @@ import {
 } from "@/actions/friendActions";
 import { toast } from "sonner";
 import { Card } from "@/components/ui/card";
-import React, { useState, useEffect } from "react";
-import UserCard from "@/components/profile/UserCard";
+import { useState, useEffect } from "react";
 import { Users, UserPlus, Send, UserCheck, Loader2, Menu } from "lucide-react";
+import UserCard from "@/components/profile/UserCard";
 
 export default function FriendsPage() {
   const [activeTab, setActiveTab] = useState("friends");
@@ -80,22 +80,22 @@ export default function FriendsPage() {
   }
 
   return (
-    <div className="flex h-screen bg-bg text-secondary dark:bg-[#1b1b1b] pt-20 md:pt-14">
+    <div className="flex h-screen bg-bg-gray1 text-text1 -pt-63 sm:pt-20 md:pt-14 relative">
       <Sheet
         open={sheetOpen}
         onOpenChange={() => setSheetOpen((prev) => !prev)}
       >
-        <SheetTrigger className="h-6 absolute flex justify-start mt-6 ml-4 transition md:hidden">
-          <Menu />
+        <SheetTrigger className="h-6 absolute top-6.5 left-4 flex justify-start transition cursor-pointer md:hidden">
+          <Menu className="text-text2" />
         </SheetTrigger>
 
         <SheetContent
           showCloseButton={false}
           side={"left"}
-          className="w-52 h-screen mt-20.5 bg-card"
+          className="w-60 h-screen mt-23 bg-bg-white1 border-border"
         >
           <SheetHeader>
-            <SheetTitle className={"text-xl text-secondary -mb-4"}>Friends</SheetTitle>
+            <SheetTitle className={"text-xl text-text1 -mb-4"}>Friends</SheetTitle>
             <SheetDescription className="sr-only">
               View and manage your recent social notifications and activity.
             </SheetDescription>
@@ -105,17 +105,17 @@ export default function FriendsPage() {
             <button
               key={tab.id}
               onClick={() => handleClick(tab.id)}
-              className={`flex items-center gap-3 px-4 py-3 rounded-lg font-normal md:font-medium transition-all relative
+              className={`flex items-center gap-3 px-4 py-3 rounded-lg text-text1 font-normal md:font-medium transition-all relative
               ${
                 activeTab === tab.id
-                  ? "text-primary bg-bg border border-border dark:bg-blue-900/20"
-                  : "text-label dark:text-gray-300 hover:bg-bg dark:hover:bg-[#3a3b3c] hover:text-primary"
+                  ? "bg-bg-gray-hover border border-border"
+                  : "hover:bg-bg-gray-hover "
               }`}
             >
               {tab.icon}
               <span>{tab.label}</span>
               {activeTab === tab.id && (
-                <div className="absolute bottom-0 left-0 h-full w-1 bg-bg rounded-r-md" />
+                <div className="absolute bottom-0 left-0 h-full w-1 bg-primary rounded-r-md" />
               )}
             </button>
           ))}
@@ -123,17 +123,17 @@ export default function FriendsPage() {
       </Sheet>
 
       {/* Left Sidebar for desktop */}
-      <div className="w-50 lg:w-80 bg-card dark:bg-[#242526] shadow-md py-4 hidden md:flex flex-col gap-2">
+      <div className="w-70 bg-bg-white1 dark:bg-[#242526] shadow-md py-4 hidden md:flex flex-col gap-2">
         <h2 className="text-lg md:text-2xl font-bold mb-4 px-2">Friends</h2>
         {tabs.map((tab) => (
           <button
             key={tab.id}
             onClick={() => setActiveTab(tab.id)}
-            className={`flex items-center gap-3 px-4 py-3 rounded-lg font-normal md:font-medium transition-all relative
+            className={`flex items-center hover:bg-bg-gray-hover gap-3 px-4 py-3 rounded-lg font-normal md:font-medium transition-all relative cursor-pointer
               ${
                 activeTab === tab.id
-                  ? "text-primary bg-bg border border-border dark:bg-blue-900/20"
-                  : "text-label hover:text-primary dark:text-gray-300 hover:bg-bg dark:hover:bg-[#3a3b3c]"
+                  ? "bg-bg-gray-hover border border-border dark:bg-blue-900/20"
+                  : ""
               }`}
           >
             {tab.icon}
@@ -146,11 +146,11 @@ export default function FriendsPage() {
       </div>
 
       {/* Main Content */}
-      <div className="flex-1 overflow-y-auto p-6">
+      <div className="flex-1 overflow-y-auto px-6 pt-6">
         <div className="max-w-5xl mx-auto">
           <div className="flex justify-between items-center mb-6 ml-7 md:ml-0">
             <h1 className="text-xl font-semibold">{tabs.map(tab => tab.id === activeTab ? tab.label : "" )}</h1>
-            <span className="text-sm text-label font-medium">
+            <span className="text-sm text-text2 font-medium">
               {data.length} People
             </span>
           </div>
@@ -160,15 +160,15 @@ export default function FriendsPage() {
               <Loader2 className="animate-spin text-primary" size={40} />
             </div>
           ) : data.length > 0 ? (
-            <div className="grid grid-cols-2 mob:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-9 pl-4">
+            <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-9 pl-4">
               {data.map((user) => (
-                <UserCard key={user._id} user={user} type={activeTab} onAction={handleOnAction} />
+                <UserCard key={user._id} user={user} type={activeTab} onAction={handleOnAction} className={'w-40 md:w-50'} />
               ))}
             </div>
           ) : (
             <Card className="flex flex-col items-center justify-center p-20 text-center border-dashed">
-              <Users size={64} className="text-label mb-4" />
-              <p className="text-label text-lg font-medium">
+              <Users size={64} className="text-text2 mb-4" />
+              <p className="text-text2 text-lg font-medium">
                 No {activeTab} to show right now.
               </p>
             </Card>

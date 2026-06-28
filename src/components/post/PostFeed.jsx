@@ -10,7 +10,7 @@ export default function PostFeed({ loggedInUser, allPosts, isOwnProfile, classNa
 
       {allPosts.length === 0 && (
         <div className="w-full h-187.5 flex justify-center items-center">
-          <p className="text-3xl font-semibold text-neutral-700">
+          <p className="text-3xl font-semibold text-text2">
             No Post to Display
           </p>
         </div>

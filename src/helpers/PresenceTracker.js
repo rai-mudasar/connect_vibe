@@ -4,6 +4,9 @@ export function getPresenceStatus(lastSeen) {
 
     const diff = Date.now() - new Date(lastSeen);
 
+    if(!lastSeen || lastSeen === ''){
+        return "Unverified"
+    }
     if (diff < 60000) {
         return "Online";
     } else {

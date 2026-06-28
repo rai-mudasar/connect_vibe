@@ -76,8 +76,8 @@ export default function ProfileHeader({ currentProfileUser, isOwnProfile }) {
         ref={profileInputRef}
         onChange={handleUpdateProfileImage}
       />
-      <section className="h-50 md:h-90 relative rounded-b-3xl object-cover overflow-hidden bg-card border border-border flex justify-center items-center">
-        {(!currentProfileUser?.coverImageUrl || currentProfileUser?.coverImageUrl === "") && <p className="font-semibold lg:text-5xl text-primary">{isOwnProfile ? 'Upload a cover Image' : 'No Cover Image!'}</p>}
+      <section className="w-full h-50 md:h-90 relative rounded-b-3xl object-cover overflow-hidden bg-bg-gray2 border border-border flex justify-center items-center">
+        {(!currentProfileUser?.coverImageUrl || currentProfileUser?.coverImageUrl === "") && <p className="font-semibold lg:text-5xl text-text1">{isOwnProfile ? 'Upload a cover Image' : 'No Cover Image!'}</p>}
         {currentProfileUser?.coverImageUrl !== "" &&
           <SafeImage
             src={currentProfileUser?.coverImageUrl !== "" ? currentProfileUser?.coverImageUrl : null}
@@ -89,18 +89,16 @@ export default function ProfileHeader({ currentProfileUser, isOwnProfile }) {
         {isOwnProfile && (
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <div className="absolute bottom-5 right-5 border border-border text-primary font-semibold bg-bg px-4 py-2 rounded-[10px] flex gap-2 cursor-pointer">
+              <div className="absolute bottom-5 right-5 bg-bg-gray1 border border-border text-text1 font-semibold bg-bg px-4 py-2 rounded-[10px] flex justify-center items-center gap-2 cursor-pointer">
                 <Camera
-                  className="text-primary"
+                  className="w-8 h-8 text-bg-gray1"
                   fill=""
-                  size={28}
-                  strokeWidth="1px"
                 />
                 <p className="hidden md:block">Edit cover photo</p>
               </div>
             </DropdownMenuTrigger>
 
-            <DropdownMenuContent className={"bg-card text-primary border-border mr-8 md:mr-0"}>
+            <DropdownMenuContent className={"bg-bg-white1 text-text1 border-border mr-8 md:mr-0"}>
               <DropdownMenuGroup>
                 <DropdownMenuItem
                   onClick={handleCoverInputRef}
@@ -126,24 +124,23 @@ export default function ProfileHeader({ currentProfileUser, isOwnProfile }) {
       <section className="flex flex-col md:flex-row items-center md:items-start pl-3 md:px-17 -mt-5 md:my-6 relative">
         <div className="w-full flex items-center">
           <div className="relative">
-            <Avatar className="w-26 md:w-40 h-26 md:h-40 border border-border bg-bg">
+            <Avatar className="w-26 md:w-40 h-26 md:h-40 bg-bg-gray1 border-2 border-bg-white1">
               <SafeImage
                 src={currentProfileUser?.profileImageUrl !== "" ? currentProfileUser?.profileImageUrl : null}
                 fill
                 alt="User Profile Image"
                 className="object-contain"
               />
-              <AvatarFallback className={'text-5xl lg:text-7xl text-primary font-bold'}>{currentProfileUser?.firstName?.[0]}</AvatarFallback>
+              <AvatarFallback className={'text-3xl lg:text-7xl text-text1 font-bold'}>{currentProfileUser?.firstName?.[0] + currentProfileUser?.lastName?.[0]}</AvatarFallback>
             </Avatar>
             {isOwnProfile && (
               <div
-                className="w-7 md:w-9 h-7 md:h-9 bg-primary rounded-full absolute bottom-4 right-0 flex justify-center items-center cursor-pointer"
+                className="w-7 md:w-9 h-7 md:h-9 bg-bg-gray1 rounded-full absolute bottom-4 right-0 flex justify-center items-center cursor-pointer"
                 onClick={handleProfileInputRef}
               >
                 <Camera
-                  className="text-primary w-6 md:w-7 h-6 md:h-7"
-                  fill=""
-                  strokeWidth="1px"
+                  className="text-bg-gray1 w-6 md:w-7 h-6 md:h-7"
+                  fill=''
                 />
               </div>
             )}

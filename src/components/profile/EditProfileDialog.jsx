@@ -35,7 +35,7 @@ import {
 } from "../ui/select";
 
 // Pass the initial user data as props
-export default function EditProfileDialog({ currentProfileUser }) {
+export default function EditProfileDialog({ currentProfileUser, isSettingPart }) {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const router = useRouter();
 
@@ -57,8 +57,8 @@ export default function EditProfileDialog({ currentProfileUser }) {
       const result = await updateProfile(currentProfileUser._id, data);
 
       if (result.success) {
-        setIsDialogOpen(false); // Close dialog
-        router.refresh(); // Refresh server data
+        setIsDialogOpen(false);
+        router.refresh();
         toast.success("Profile updated successfully!");
       }
     } catch (error) {
@@ -69,13 +69,17 @@ export default function EditProfileDialog({ currentProfileUser }) {
   return (
     <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
       <DialogTrigger asChild>
-        <button className="w-30 md:w-39 flex items-center gap-1 bg-card border border-border text-[15px] font-semibold text-label px-2.5 md:px-5 py-2 md:py-2.5 my-7 md:my-0 rounded-[10px] hover:bg-gray-200 transition">
-          <Pencil fill="black" className="w-5 md:w-6 h-5 md:h-6" strokeWidth={"1px"} />
+        <button className={`flex items-center gap-2 font-semibold rounded-lg ${isSettingPart ? 'w-full hover:bg-bg-gray-hover py-2 pl-2 flex-row'
+          :
+          'w-32 sm:w-39 bg-bg-gray2 border border-border text-[15px] text-label px-2.5 md:px-5 py-2 md:py-2.5 my-7 md:my-0 hover:bg-bg-gray-hover transition'} cursor-pointer`}>
+          <div className={`${isSettingPart ? 'rounded-full bg-bg-gray2 p-2.5' : ''}`}>
+            <Pencil className="w-5 md:w-6 h-5 md:h-6" />
+          </div>
           <span>Edit Profile</span>
         </button>
       </DialogTrigger>
 
-      <DialogContent className="sm:max-w-125 max-h-[90vh] overflow-y-scroll bg-card text-secondary border border-border">
+      <DialogContent className="max-h-[98vh] overflow-y-scroll bg-bg-white1 text-text1">
         <DialogHeader>
           <DialogTitle className="text-center text-xl">
             Edit Profile
@@ -93,7 +97,7 @@ export default function EditProfileDialog({ currentProfileUser }) {
                 control={form.control}
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>First Name</FormLabel>
+                    <FormLabel className={'text-text2'}>First Name</FormLabel>
                     <FormControl>
                       <Input
                         id="firstname"
@@ -101,7 +105,7 @@ export default function EditProfileDialog({ currentProfileUser }) {
                         autoComplete="firstname"
                         autoFocus
                         required
-                        className={'text-label border-border focus-visible:ring-[1px] md:focus-visible:ring-[2px]'}
+                        className={'text-text1 border-border focus-visible:ring-[1px] md:focus-visible:ring-2'}
                         {...field}
                       />
                     </FormControl>
@@ -114,14 +118,14 @@ export default function EditProfileDialog({ currentProfileUser }) {
                 control={form.control}
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Last Name</FormLabel>
-                    <FormControl>
+                    <FormLabel className={'text-text2'}>Last Name</FormLabel>
+                    <FormControl className={'text-text2'}>
                       <Input
                         id="lastname"
                         placeholder="lastname"
                         autoComplete="lastname"
                         required
-                        className={'text-label border-border focus-visible:ring-[1px] md:focus-visible:ring-[2px]'}
+                        className={'text-label border-border focus-visible:ring-[1px] md:focus-visible:ring-2'}
                         {...field}
                       />
                     </FormControl>
@@ -136,12 +140,12 @@ export default function EditProfileDialog({ currentProfileUser }) {
               control={form.control}
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Bio</FormLabel>
+                  <FormLabel className={'text-text2'}>Bio</FormLabel>
                   <FormControl>
                     <Textarea
                       placeholder="Describe yourself..."
                       required
-                      className={'text-label border-border focus-visible:ring-[1px] md:focus-visible:ring-[2px] resize-none'}
+                      className={'text-label border-border focus-visible:ring-[1px] md:focus-visible:ring-2 resize-none'}
                       {...field}
                     />
                   </FormControl>
@@ -155,12 +159,12 @@ export default function EditProfileDialog({ currentProfileUser }) {
               control={form.control}
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Location</FormLabel>
+                  <FormLabel className={'text-text2'}>Location</FormLabel>
                   <FormControl>
                     <Input
                       placeholder="City, Country"
                       required
-                      className={'text-label border-border focus-visible:ring-[1px] md:focus-visible:ring-[2px]'}
+                      className={'text-label border-border focus-visible:ring-[1px] md:focus-visible:ring-2'}
                       {...field} />
                   </FormControl>
                   <FormMessage className={"text-red-600"} />
@@ -173,12 +177,12 @@ export default function EditProfileDialog({ currentProfileUser }) {
               control={form.control}
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Occupation</FormLabel>
+                  <FormLabel className={'text-text2'}>Occupation</FormLabel>
                   <FormControl>
                     <Input
                       placeholder="Software Engineer"
                       required
-                      className={'text-label border-border focus-visible:ring-[1px] md:focus-visible:ring-[2px]'}
+                      className={'text-label border-border focus-visible:ring-[1px] md:focus-visible:ring-2'}
                       {...field}
                     />
                   </FormControl>
@@ -192,22 +196,22 @@ export default function EditProfileDialog({ currentProfileUser }) {
               control={form.control}
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Relationship Status</FormLabel>
+                  <FormLabel className={'text-text2'}>Relationship Status</FormLabel>
                   <Select
                     onValueChange={field.onChange}
                     defaultValue={field.value}
                   >
                     <FormControl>
-                      <SelectTrigger className="bg-card border-border">
+                      <SelectTrigger className="bg-bg-white1 border-border">
                         <SelectValue placeholder="Select status" />
                       </SelectTrigger>
                     </FormControl>
-                    <SelectContent className="bg-bg text-secondary border-border">
-                      <SelectItem value="None">None</SelectItem>
-                      <SelectItem value="Single">Single</SelectItem>
-                      <SelectItem value="Engaged">Engaged</SelectItem>
-                      <SelectItem value="Married">Married</SelectItem>
-                      <SelectItem value="In a relationship">
+                    <SelectContent className="bg-bg-white1 text-text1 border-border">
+                      <SelectItem className={'cursor-pointer hover:bg-bg-gray-hover'} value="None">None</SelectItem>
+                      <SelectItem className={'cursor-pointer hover:bg-bg-gray-hover'} value="Single">Single</SelectItem>
+                      <SelectItem className={'cursor-pointer hover:bg-bg-gray-hover'} value="Engaged">Engaged</SelectItem>
+                      <SelectItem className={'cursor-pointer hover:bg-bg-gray-hover'} value="Married">Married</SelectItem>
+                      <SelectItem className={'cursor-pointer hover:bg-bg-gray-hover'} value="In a relationship">
                         In a relationship
                       </SelectItem>
                     </SelectContent>
@@ -220,7 +224,7 @@ export default function EditProfileDialog({ currentProfileUser }) {
             <Button
               type="submit"
               disabled={form.formState.isSubmitting}
-              className="bg-bg hover:bg-primary border border-border text-primary mt-2 w-full"
+              className="bg-primary/80 hover:bg-primary border border-border text-white mt-2 w-full cursor-pointer"
             >
               {form.formState.isSubmitting ? "Saving..." : "Save Changes"}
             </Button>

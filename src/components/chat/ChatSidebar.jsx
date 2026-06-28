@@ -177,16 +177,16 @@ export default function ChatSidebar({ friends, loggedInUserId, initialConversati
   };
 
   return (
-    <div className={`${isChatting ? "hidden sm:flex" : "flex"} w-screen sm:w-80 h-screen bg-bg flex-col border-r border-border relative`}>
+    <div className={`${isChatting ? "hidden sm:flex" : "flex"} w-screen sm:w-80 h-screen bg-bg-gray1 flex-col border-r border-border relative`}>
       <div className="w-full h-18 flex flex-row items-center justify-between pl-4 pr-7 shrink-0">
         <div className="flex items-center justify-center">
-          <div onClick={() => {router.back()}} className="text-secondary cursor-pointer">
+          <div onClick={() => {router.back()}} className="text-text1 cursor-pointer">
             <ChevronLeft className="h-9" />
           </div>
-          <h2 className="text-2xl md:text-3xl font-bold text-secondary">Messages</h2>
+          <h2 className="text-2xl md:text-3xl font-bold text-text1">Messages</h2>
         </div>
         <Link href={'/home'} className="relative cursor-pointer sm:hidden">
-          <p className="text-[22px] text-secondary font-semibold">Connect<span className="text-primary">Vibe.</span></p>
+          <p className="text-[22px] text-text1 font-semibold">Connect<span className="text-primary">Vibe.</span></p>
         </Link>
         <div className="hidden sm:flex justify-center items-center w-10 h-10 bg-primary rounded-xl shadow-md cursor-pointer z-50">
           <NewChatDrawer friends={friends} loggedInUserId={loggedInUserId} />
@@ -194,12 +194,12 @@ export default function ChatSidebar({ friends, loggedInUserId, initialConversati
       </div>
 
       <div className="relative px-4 mb-4 shrink-0">
-        <Search className="absolute left-7 top-1/2 -translate-y-1/2 w-4 h-4 text-label" />
+        <Search className="absolute left-7 top-1/2 -translate-y-1/2 w-4 h-4 text-text2" />
         <Input
           placeholder="Search friends..."
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
-          className="pl-10 pr-10 bg-card border border-border text-secondary placeholder-label w-full"
+          className="pl-10 pr-10 bg-bg-white1 border border-border text-text1 placeholder:text-text2 w-full"
         />
         {searchQuery && (
           <button
@@ -228,11 +228,11 @@ export default function ChatSidebar({ friends, loggedInUserId, initialConversati
                 <div
                   key={chat?._id}
                   onClick={() => handleChatClick(chat)}
-                  className={`flex items-center gap-3 px-3 py-2 text-label rounded-lg cursor-pointer transition mb-2 bg-card border ${isCurrentlyActive ? 'border-primary bg-card/20 shadow-sm' : 'border-border hover:bg-card-hover hover:border-border'
+                  className={`flex items-center gap-3 px-3 py-2 text-text1 rounded-lg cursor-pointer transition mb-2 bg-bg-gray1 border border-bg-gray1 ${isCurrentlyActive ? ' border-border bg-bg-white1 shadow-sm' : 'hover:border-border hover:bg-bg-white1'
                     }`}
                 >
                   <div className="relative">
-                    <Avatar className="w-12 h-12 border border-border bg-bg flex items-center justify-center overflow-hidden relative shrink-0">
+                    <Avatar className="w-12 h-12 bg-bg-gray2 border border-border bg-bg flex items-center justify-center overflow-hidden relative shrink-0">
                       <SafeImage
                         src={otherUser?.profileImageUrl !== "" ? otherUser?.profileImageUrl : null}
                         fill
@@ -248,16 +248,16 @@ export default function ChatSidebar({ friends, loggedInUserId, initialConversati
 
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center justify-between">
-                      <p className="font-medium truncate text-secondary">
+                      <p className="font-medium truncate text-text1">
                         {otherUser ? `${otherUser?.firstName} ${otherUser?.lastName}` : "User"}
                       </p>
                       {hasUnread && (
-                        <span className="bg-primary text-black text-xs font-bold min-w-5 h-5 rounded-full flex items-center justify-center px-1 animate-pulse">
+                        <span className="bg-primary text-white text-xs font-bold min-w-5 h-5 rounded-full flex items-center justify-center px-1 animate-pulse">
                           {chat.unreadCount}
                         </span>
                       )}
                     </div>
-                    <p className={`w-50 text-sm truncate ${hasUnread ? 'font-semibold text-secondary' : 'text-label'}`}>
+                    <p className={`w-50 text-sm truncate ${hasUnread ? 'font-semibold text-text1' : 'text-text2'}`}>
                       {(chat?.lastMessage?.deletedFor?.includes(loggedInUserId) ? "Started a conversation" : chat?.lastMessage?.text) || "Started a conversation"}
                     </p>
                   </div>
@@ -265,12 +265,12 @@ export default function ChatSidebar({ friends, loggedInUserId, initialConversati
               );
             })
           ) : (
-            <p className="text-sm text-label px-2 italic mt-4">No recent chats found</p>
+            <p className="text-sm text-text2 px-2 italic mt-4">No recent chats found</p>
           )}
         </div>
       </div>
 
-      <div className="w-13 h-13 bg-primary hover:bg-primary/90 transition-colors rounded-full fixed bottom-10 right-10 flex sm:hidden justify-center items-center shadow-lg cursor-pointer z-50">
+      <div className="w-13 h-13 bg-primary transition-colors rounded-full fixed bottom-10 right-10 flex sm:hidden justify-center items-center shadow-lg cursor-pointer z-50">
         <NewChatDrawer friends={friends} loggedInUserId={loggedInUserId} />
       </div>
     </div>

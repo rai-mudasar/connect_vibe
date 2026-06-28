@@ -60,15 +60,15 @@ export default function StatsGrid({ stats }) {
       {cards.map((card) => (
         <div
           key={card.label}
-          className="bg-card dark:bg-gray-800 rounded-xl border border-border dark:border-gray-700 p-5"
+          className="bg-bg-white1 dark:bg-gray-800 rounded-xl border border-border dark:border-gray-700 p-5"
         >
           <div className="flex items-center justify-between mb-3">
-            <p className="text-sm text-label dark:text-gray-400">{card.label}</p>
+            <p className="text-sm text-text2 dark:text-gray-400">{card.label}</p>
             <div className={`w-9 h-9 rounded-lg ${card.bg} ${card.color} flex items-center justify-center`}>
               {card.icon}
             </div>
           </div>
-          <p className="text-2xl font-semibold text-secondary">{card.value}</p>
+          <p className="text-2xl font-semibold text-text1">{card.value}</p>
           <p className={`text-xs mt-1 ${card.up ? "text-green-600 dark:text-green-400" : "text-gray-400"}`}>
             {card.delta}
           </p>

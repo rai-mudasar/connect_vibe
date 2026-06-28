@@ -4,9 +4,9 @@ import { Avatar, AvatarFallback } from "../ui/avatar";
 export default function LeftSidebar({ loggedInUser }) {
 
   return (
-    <div className="w-0 md:min-w-70 md:w-[23%] hidden md:block p-2 bg-bg dark:bg-[#333334] border-r border-border z-9 fixed">
+    <div className="w-0 md:min-w-70 md:w-[23%] hidden md:block p-2 z-9 fixed">
       <div className="w-full pb-4 mb-100">
-        <div className="flex items-center bg-card border border-border shadow-md rounded-xl space-x-3 p-2 cursor-pointer transition-all duration-200">
+        <div className="flex items-center bg-bg-white1 border border-border shadow-md rounded-xl space-x-3 p-2 cursor-pointer transition-all duration-200">
           {/* <div className="w-8 h-8 rounded-full overflow-hidden z-20 relative">
             </div> */}
           <Avatar className="w-9 md:w-10 h-9 md:h-10 border border-border bg-bg">
@@ -16,9 +16,9 @@ export default function LeftSidebar({ loggedInUser }) {
               alt="User Profile Image"
               className="object-contain"
             />
-            <AvatarFallback className={'text-[22px] text-primary font-bold'}>{loggedInUser?.firstName?.[0]}</AvatarFallback>
+            <AvatarFallback className={'text-[22px] text-text1 font-bold'}>{loggedInUser?.firstName?.[0]}</AvatarFallback>
           </Avatar>
-          <p className="font-medium text-[15px] text-primary">{`${loggedInUser?.firstName} ${loggedInUser?.lastName}`}</p>
+          <p className="font-medium text-[15px] text-text1">{`${loggedInUser?.firstName} ${loggedInUser?.lastName}`}</p>
         </div>
       </div>
 
