@@ -157,7 +157,7 @@ export default function PostCard({ post, priority, loggedInUser }) {
           <span>{post?.likes?.length}</span>
         </div>
         <Link href={`/post/${post._id}`} className="flex space-x-3">
-          <span>{post?.comments?.length} comments</span>
+          <span>{post?.commentsCount} comments</span>
         </Link>
       </div>
 
@@ -174,7 +174,7 @@ export default function PostCard({ post, priority, loggedInUser }) {
           <span>Like</span>
         </button>
         <div className="w-[50%] cursor-pointer">
-          <ViewPostDialog post={post} />
+          <ViewPostDialog post={post} loggedInUser={loggedInUser} />
         </div>
       </div>
     </div>

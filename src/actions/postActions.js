@@ -95,6 +95,60 @@ export async function getAllPostByAuthorId(authorId) {
   }
 }
 
+export async function getPostAllcomments(postId) {
+  try {
+    const [_, allComments] = await Promise.all([
+      getSessionUser(),
+      commentModel
+        .find({ postId })
+        .sort({ createdAt: -1 })
+        .populate("author", "firstName lastName profileImageUrl")
+        .lean(),
+    ]);
+
+    if (!allComments || allComments.length === 0) {
+      return {
+        success: true,
+        message: "No Comment Available",
+        data: []
+      };
+    }
+
+    return {
+      success: true,
+      message: "Fetched Successfully",
+      data: JSON.parse(JSON.stringify(allComments)),
+    };
+  } catch (error) {
+    // console.error(`Error in getPostAllcomments action : ${error.message || error}`);
+    return {
+      success: false,
+      message: `Error in getPostAllcomments action : ${error.message || error}`,
+    };
+  }
+}
+
+export async function getCommentReplies(parentId) {
+  try {
+    await getSessionUser()
+
+    const replies = await commentModel.find({ parentId })
+      .populate("author", "firstName lastName profileImageUrl")
+      .sort({ createdAt: 1 })
+      .lean();
+
+    return {
+      success: true,
+      data: JSON.parse(JSON.stringify(replies))
+    };
+  } catch (error) {
+    return {
+      success: false,
+      message: error.message
+    };
+  }
+}
+
 export async function toggleLikes(postId) {
 
   try {
@@ -154,35 +208,38 @@ export async function toggleLikes(postId) {
   }
 }
 
-export async function getPostAllcomments(postId) {
+export async function toggleCommentLike(commentId) {
   try {
-    const [_, allComments] = await Promise.all([
-      getSessionUser(),
-      commentModel
-        .find({ postId })
-        .sort({ createdAt: -1 })
-        .populate("author", "firstName lastName profileImageUrl")
-        .lean(),
-    ]);
+    const user = await getSessionUser();
 
-    if (!allComments || allComments.length === 0) {
-      return {
-        success: true,
-        message: "No Comment Available",
-        data: []
-      };
-    }
+    // 1. Pehle current comment check karein (Lean is fine here just for status check)
+    const comment = await commentModel.findById(commentId).lean();
+    if (!comment) return {
+      success: false,
+      message: "Comment not found"
+    };
+
+    const isLiked = comment.likes.map(id => id.toString()).includes(user.id);
+    const updateOperator = isLiked
+      ? { $pull: { likes: user.id } }
+      : { $addToSet: { likes: user.id } };
+
+    const updatedComment = await commentModel.findByIdAndUpdate(
+      commentId,
+      updateOperator,
+      { new: true, runValidators: true }
+    );
 
     return {
       success: true,
-      message: "Fetched Successfully",
-      data: JSON.parse(JSON.stringify(allComments)),
+      likes: JSON.parse(JSON.stringify(updatedComment.likes))
     };
+
   } catch (error) {
-    console.error(`Error in getting All comment action : ${error.message || error}`);
+    console.error(`Error inside toggleCommentLike action: ${error.message || error}`);
     return {
       success: false,
-      message: `Error in getting All comment action : ${error.message || error}`,
+      message: `Error inside toggleCommentLike action: ${error.message || error}`
     };
   }
 }
@@ -204,9 +261,9 @@ export async function addNewComment(postId, comment) {
 
     const updatedPost = await postModel.findByIdAndUpdate(
       postId,
-      { $push: { comments: newComment._id } },
-      { new: true, session },
-    )
+      { $inc: { commentsCount: 1 } },
+      { new: true }
+    );
 
     if (!updatedPost) throw new Error("Post not found");
 
@@ -220,7 +277,7 @@ export async function addNewComment(postId, comment) {
         `/post/${updatedPost._id}`
       );
     }
-    
+
     await session.commitTransaction()
     session.endSession()
     revalidatePath(`/home`);
@@ -239,6 +296,101 @@ export async function addNewComment(postId, comment) {
       success: false,
       message: `Error in post comment action and transation aborted with error : ${error.message || error}`,
     };
+  }
+}
+
+export async function addCommentReply(postId, parentId, content) {
+  try {
+    const user = await getSessionUser();
+    // Create Reply document
+    const newReply = await commentModel.create({
+      postId,
+      author: user.id,
+      content,
+      parentId,
+    });
+
+    // Parent comment ka repliesCount increment karein
+    await commentModel.findByIdAndUpdate(parentId, {
+      $inc: { repliesCount: 1 }
+    });
+
+    await postModel.findByIdAndUpdate(postId, {
+      $inc: { commentsCount: 1 }
+    });
+
+    // Populate author data for instant UI render
+    const populatedReply = await commentModel.findById(newReply._id).populate(
+      "author",
+      "firstName lastName profileImageUrl"
+    ).lean();
+
+    return {
+      success: true,
+      message: "Reply posted!",
+      data: JSON.parse(JSON.stringify(populatedReply))
+    };
+
+  } catch (error) {
+    return {
+      success: false,
+      message: error.message
+    };
+  }
+}
+
+export async function deleteComment(commentId) {
+  try {
+    const user = await getSessionUser();
+
+    const comment = await commentModel.findById(commentId);
+    if (!comment) return {
+      success: false,
+      message: "Comment not found"
+    };
+
+    const post = await postModel.findById(comment.postId);
+
+    // 2. 🔒 Check permission: Ya toh comment ka author ho ya post ka owner
+    const isCommentAuthor = comment.author.toString() === user.id;
+    const isPostOwner = post && post.author.toString() === user.id;
+
+    if (!isCommentAuthor && !isPostOwner) {
+      return { success: false, message: "You don't have permission to delete this comment." };
+    }
+
+    const totalDeletedDocs = await commentModel.countDocuments({
+      $or: [
+        { _id: commentId },
+        { parentId: commentId }
+      ]
+    });
+
+    // 3. Agar yeh ek REPLY hai, toh parent comment ka repliesCount decrement karein
+    if (comment.parentId) {
+      await commentModel.findByIdAndUpdate(comment.parentId, {
+        $inc: { repliesCount: -1 }
+      });
+    }
+
+    // 4. 🧹 Recursive Cleanup: Is comment ko aur iske andar ke saare nested replies ko delete karein
+    // Chunki hamare naye 2-level structure mein replies ki parentId main comment hoti hai, yeh query sab saaf kar degi
+    await commentModel.deleteMany({
+      $or: [
+        { _id: commentId },
+        { parentId: commentId }
+      ]
+    });
+
+    await postModel.findByIdAndUpdate(comment.postId, {
+      $inc: { commentsCount: -totalDeletedDocs }
+    });
+
+    return { success: true, message: "Comment deleted successfully!" };
+
+  } catch (error) {
+    console.error("Error deleting comment:", error);
+    return { success: false, message: error.message };
   }
 }
 

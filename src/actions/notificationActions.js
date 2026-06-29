@@ -16,7 +16,9 @@ export async function sendNotification(senderId, receiverId, notificationType, r
     notificationType !== "LIKE" &&
     notificationType !== "UNLIKE" &&
     notificationType !== "FRIEND_REQUEST" &&
-    notificationType !== "COMMENT"
+    notificationType !== "COMMENT" &&
+    notificationType !== "COMMENT_LIKE" &&
+    notificationType !== "COMMENT_REPLY"
   ) {
     throw new Error("Invalid notification type");
   }

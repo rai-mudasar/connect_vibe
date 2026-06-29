@@ -7,7 +7,7 @@ const postSchema = new mongoose.Schema({
     mediaType: { type: String, enum: ["image", "video"], required: true },
     caption: { type: String },
     likes: [{ type: mongoose.Schema.Types.ObjectId, ref: "user" }],
-    comments: [{ type: mongoose.Schema.Types.ObjectId, ref: "comment" }]
+    commentsCount: { type: Number, default: 0 }
 }, { timestamps: true });
 
 const postModel = mongoose.models.post || mongoose.model("post", postSchema);
