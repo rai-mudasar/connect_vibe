@@ -7,9 +7,9 @@ import React from 'react'
 export default function PeopleYouMayKnowSkeleton() {
     return (
         <div>
-            <div className="flex justify-between mx-5 font-semibold text-md md:text-lg text-secondary">
+            <div className="flex justify-between mx-5 font-semibold text-md md:text-lg text-text3 dark:text-text-dark">
                 <p>People You May Know</p>
-                <Link href={"/friends"} className="text-label">
+                <Link href={"/friends"} className="text-text2">
                     See more
                 </Link>
             </div>

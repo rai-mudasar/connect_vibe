@@ -112,9 +112,9 @@ export default function NotificationDrawer({
               // if there is navigation change the following div to link
               <Link href={`${notification.redirectUrl}`} key={notification._id}>
                 <div
-                  className={`p-3 rounded-xl border transition-colors hover:bg-bg-gray-hover mt-4 ${notification.isRead
-                    ? "border-border"
-                    : "bg-[#AAC9FF] border-border"
+                  className={`p-3 rounded-xl border transition-colors hover:bg-bg-gray-hover dark:hover:bg-dark-card2 mt-4 ${notification.isRead
+                    ? "border-border dark:border-border-dark"
+                    : "bg-[#AAC9FF] dark:bg-dark-card2/70 border-border"
                     }`}
                 >
                   <div className="flex gap-3">
@@ -127,30 +127,30 @@ export default function NotificationDrawer({
                       >
                         {notification.type === "LIKE" && (
                           <div className="flex flex-row gap-1">
-                            <h1 className="font-bold text-text1">{`${notification?.senderId?.firstName} ${notification?.senderId?.lastName}`}
-                              <span className="font-normal"> likes your post.</span>
+                            <h1 className="font-bold text-text1 dark:text-text-dark">{`${notification?.senderId?.firstName} ${notification?.senderId?.lastName}`}
+                              <span className="font-normal text-text1 dark:text-text2"> likes your post.</span>
                             </h1>
                           </div>
                         )}
                         {notification.type === "UNLIKE" && (
                           <div className="flex gap-1">
-                            <h1 className="font-bold text-text1">{`${notification?.senderId?.firstName} ${notification?.senderId?.lastName}`}
-                              <span className="font-normal"> unlikes your post.</span>
+                            <h1 className="font-bold text-text1 dark:text-text-dark">{`${notification?.senderId?.firstName} ${notification?.senderId?.lastName}`}
+                              <span className="font-normal text-text1 dark:text-text2"> unlikes your post.</span>
                             </h1>
                           </div>
                         )}
                         {notification.type === "COMMENT" && (
                           <div className="">
-                            <h1 className="font-bold text-text1">{`${notification?.senderId?.firstName} ${notification?.senderId?.lastName}`}
+                            <h1 className="font-bold text-text1 dark:text-text-dark">{`${notification?.senderId?.firstName} ${notification?.senderId?.lastName}`}
 
-                              <span className="font-normal"> commented on your post.</span>
+                              <span className="font-normal text-text1 dark:text-text2"> commented on your post.</span>
                             </h1>
                           </div>
                         )}
                         {notification.type === "FRIEND_REQUEST" && (
                           <div className="flex gap-1">
-                            <h1 className="font-bold text-text1">{`${notification?.senderId?.firstName} ${notification?.senderId?.lastName}`}
-                              <span className="font-normal"> send you a friend request.</span>
+                            <h1 className="font-bold text-text1 dark:text-text-dark">{`${notification?.senderId?.firstName} ${notification?.senderId?.lastName}`}
+                              <span className="font-normal text-text1 dark:text-text2"> send you a friend request.</span>
                             </h1>
                           </div>
                         )}

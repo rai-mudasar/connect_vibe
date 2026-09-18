@@ -6,20 +6,32 @@ import { getSessionUser } from "./userActions";
 import userModel from "@/models/userModel";
 import friendRequestModel from "@/models/friendRequestModel";
 
-export async function getFriends() {
+export async function getFriends({ page = 1, limit = 10 } = {}) {
   try {
     const sessionUser = await getSessionUser();
     const user = await userModel
       .findById(sessionUser.id)
-      .populate("friends", "firstName lastName username profileImageUrl occupation")
+      .select("friends")
+      .lean();
+
+    const allFriendIds = user?.friends || [];
+    const total        = allFriendIds.length;
+
+    // Slice the IDs for this page, then fetch only those users
+    const pagedIds = allFriendIds.slice((page - 1) * limit, page * limit);
+
+    const friends = await userModel
+      .find({ _id: { $in: pagedIds } })
+      .select("firstName lastName username profileImageUrl occupation")
       .lean();
 
     return {
       success: true,
-      data: JSON.parse(JSON.stringify(user?.friends || [])),
+      data:    JSON.parse(JSON.stringify(friends)),
+      hasMore: page * limit < total,
+      total,
     };
   } catch (error) {
-    // console.error(`Error in getFriends action : ${error.message || error}`);
     return {
       success: false,
       message: `Error in getFriends action : ${error.message || error}`,
@@ -28,67 +40,90 @@ export async function getFriends() {
   }
 }
 
-export async function getNearbyPeople() {
+export async function getNearbyPeople({ page = 1, limit = 10 } = {}) {
   await connection();
   try {
-    const sessionUser = await getSessionUser();
+    const sessionUser    = await getSessionUser();
     const loggedInUserId = sessionUser.id;
 
-    const currentUser = await userModel.findById(loggedInUserId).select('friends').lean();
-    
-    const activeRequests = await friendRequestModel.find({
-      $or: [{ sender: loggedInUserId }, { receiver: loggedInUserId }],
-      status: 'pending'
-    }).select('sender receiver').lean();
+    const currentUser = await userModel
+      .findById(loggedInUserId)
+      .select("friends")
+      .lean();
 
-    const requestUserIds = activeRequests.map(req => 
+    const activeRequests = await friendRequestModel
+      .find({
+        $or: [{ sender: loggedInUserId }, { receiver: loggedInUserId }],
+        status: "pending",
+      })
+      .select("sender receiver")
+      .lean();
+
+    const requestUserIds = activeRequests.map(req =>
       req.sender.toString() === loggedInUserId ? req.receiver : req.sender
     );
 
     const excludeIds = [
       loggedInUserId,
       ...(currentUser?.friends || []),
-      ...requestUserIds
+      ...requestUserIds,
     ];
 
-    const users = await userModel
-      .find({
-        _id: { $nin: excludeIds },
-        isBanned: false,
-      })
-      .select("username firstName lastName profileImageUrl")
-      .limit(10)
-      .lean();
+    const query = {
+      _id:     { $nin: excludeIds },
+      isBanned: false,
+    };
+
+    const [total, users] = await Promise.all([
+      userModel.countDocuments(query),
+      userModel
+        .find(query)
+        .select("username firstName lastName profileImageUrl")
+        .skip((page - 1) * limit)
+        .limit(limit)
+        .lean(),
+    ]);
 
     return {
       success: true,
       message: "Fetch Successfully!",
-      data: JSON.parse(JSON.stringify(users)),
+      data:    JSON.parse(JSON.stringify(users)),
+      hasMore: page * limit < total,
+      total,
     };
   } catch (error) {
-    // console.error(`Error in getNearbyPeople action : ${error.message || error}`);
     return {
       success: false,
       message: `Error in getNearbyPeople action : ${error.message || error}`,
-      data: []
+      data: [],
     };
   }
 }
 
-export async function getPendingRequests() {
+export async function getPendingRequests({ page = 1, limit = 10 } = {}) {
   try {
     const sessionUser = await getSessionUser();
 
-    const incomingRequests = await friendRequestModel
-      .find({ receiver: sessionUser.id, status: 'pending' })
-      .populate("sender", "firstName lastName username profileImageUrl occupation")
-      .lean();
+    const query = { receiver: sessionUser.id, status: "pending" };
+
+    const [total, incomingRequests] = await Promise.all([
+      friendRequestModel.countDocuments(query),
+      friendRequestModel
+        .find(query)
+        .sort({ createdAt: -1 })
+        .skip((page - 1) * limit)
+        .limit(limit)
+        .populate("sender", "firstName lastName username profileImageUrl occupation")
+        .lean(),
+    ]);
 
     const formattedData = incomingRequests.map(req => req.sender);
 
     return {
       success: true,
-      data: JSON.parse(JSON.stringify(formattedData)),
+      data:    JSON.parse(JSON.stringify(formattedData)),
+      hasMore: page * limit < total,
+      total,
     };
   } catch (error) {
     return {
@@ -99,21 +134,30 @@ export async function getPendingRequests() {
   }
 }
 
-export async function getSentRequests() {
+export async function getSentRequests({ page = 1, limit = 10 } = {}) {
   try {
-    console.log('f');
+    console.log("f");
     const sessionUser = await getSessionUser();
-    
-    const outgoingRequests = await friendRequestModel
-    .find({ sender: sessionUser.id, status: 'pending' })
-    .populate("receiver", "firstName lastName username profileImageUrl occupation")
-    .lean();
-    
+
+    const query = { sender: sessionUser.id, status: "pending" };
+
+    const [total, outgoingRequests] = await Promise.all([
+      friendRequestModel.countDocuments(query),
+      friendRequestModel
+        .find(query)
+        .skip((page - 1) * limit)
+        .limit(limit)
+        .populate("receiver", "firstName lastName username profileImageUrl occupation")
+        .lean(),
+    ]);
+
     const formattedData = outgoingRequests.map(req => req.receiver);
 
     return {
       success: true,
-      data: JSON.parse(JSON.stringify(formattedData)),
+      data:    JSON.parse(JSON.stringify(formattedData)),
+      hasMore: page * limit < total,
+      total,
     };
   } catch (error) {
     console.error(`Error in getSentRequests action : ${error.message || error}`);
