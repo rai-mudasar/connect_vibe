@@ -294,40 +294,75 @@ export async function deleteCoverImage(coverUrl, userId) {
   }
 }
 
-export async function updateProfile(userId, data) {
+export async function updateProfile(data) {
   try {
-    await connectToDb()
+    const sessionUser = await getSessionUser();
 
-    const user = await userModel.findById(userId);
+    const user = await userModel.findById(sessionUser.id);
 
     if (!user) {
-      throw new Error("No user found")
+      throw new Error("No user found");
     }
 
-    await userModel.findByIdAndUpdate(userId, {
+    if (user.lastProfileUpdate) {
+      const currentDate = new Date();
+      const lastUpdate = new Date(user.lastProfileUpdate);
+
+      // Option A: Strict 30-day cooldown
+      const THIRTY_DAYS_IN_MS = 30 * 24 * 60 * 60 * 1000;
+      const timeDifference = currentDate - lastUpdate;
+
+      if (timeDifference < THIRTY_DAYS_IN_MS) {
+        const daysRemaining = Math.ceil(
+          (THIRTY_DAYS_IN_MS - timeDifference) / (1000 * 60 * 60 * 24)
+        );
+
+        return {
+          success: false,
+          message: `You can only update your profile once a month. Please try again in ${daysRemaining} day(s).`,
+        };
+      }
+    }
+
+    await userModel.findByIdAndUpdate(sessionUser.id, {
       firstName: data.firstName,
       lastName: data.lastName,
       bio: data.bio,
       location: data.location,
       occupation: data.occupation,
-      relationshipStatus: data.relationshipStatus
-    })
+      relationshipStatus: data.relationshipStatus,
+      lastProfileUpdate: new Date(),
+    });
 
     return {
       success: true,
       message: "Updated Successfully",
     };
   } catch (error) {
-    console.log("Updating Profile action with error : ", error.message || error);
+    console.log("Error in updateProfile action : ", error.message || error);
 
     return {
       success: false,
-      message: `Something went wrong with error : ${error.message || error} !`,
+      message: `Error in updateProfile action :  ${error.message || error}`,
     };
   }
 }
 
-export async function getLoggedInUser() {
+export async function updateDefaultPostPrivacy(privacy) {
+  try {
+    const sessionUser = await getSessionUser();
+
+    await userModel.findByIdAndUpdate(sessionUser.id, {
+      privacy: { defaultPostPrivacy: privacy },
+    });
+
+    return { success: true, message: "Default post privacy updated!" };
+  } catch (error) {
+    return { success: false, message: `Error in updateDefaultPostPrivacy ${error.message || error}` };
+  }
+}
+
+export async function getLoggedInUser(otherParams) {
   await connection();
 
   try {
@@ -335,7 +370,7 @@ export async function getLoggedInUser() {
 
     const loggedInUser = await userModel
       .findById(sessionUser.id)
-      .select("username firstName lastName email profileImageUrl")
+      .select(`username firstName lastName email profileImageUrl privacy ${otherParams}`)
       .lean();
 
     if (!loggedInUser) throw new Error("No user found for this Id!")

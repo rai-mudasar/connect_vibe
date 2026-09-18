@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { getToken } from "next-auth/jwt";
 
 export async function proxy(request) {
-  console.log("middleware is running");
+  // console.log("middleware is running");
   const token = await getToken({
     req: request,
     secret: process.env.NEXTAUTH_SECRET,
@@ -16,8 +16,11 @@ export async function proxy(request) {
       url.pathname.startsWith("/friends") ||
       url.pathname.startsWith("/profile") ||
       url.pathname.startsWith("/chat") ||
+      url.pathname.startsWith("/chat/") ||
+      url.pathname.startsWith("/post/") ||
+      url.pathname.startsWith("/user/") ||
       url.pathname.startsWith("/admin") ||
-      url.pathname.startsWith("/admin/:path") )
+      url.pathname.startsWith("/admin/") )
   ) {
     return NextResponse.redirect(new URL("/login", request.url));
   }

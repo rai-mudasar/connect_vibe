@@ -77,7 +77,7 @@ export default function ChatNavbarBadge({ initialCount, loggedInUserId }) {
     <TooltipProvider delayDuration={300}>
       <Tooltip>
         <TooltipTrigger asChild>
-          <Link href="/chat" className="relative p-2 transition-colors flex items-center justify-center border-b-2 border-bg-white1 hover:border-primary group">
+          <Link href="/chat" className="relative p-2 transition-colors flex items-center justify-center border-b-2 border-bg-white1 dark:border-dark-card hover:border-primary group">
             <MessageCircle className="w-6 h-6 text-text2 group-hover:text-primary" />
 
             {globalUnreadCount > 0 && (

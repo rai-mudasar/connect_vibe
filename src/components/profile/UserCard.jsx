@@ -4,8 +4,9 @@ import { Avatar, AvatarFallback } from "../ui/avatar";
 import Link from "next/link";
 
 export default function UserCard({ user, type, onAction, className }) {
+  const name = user?.firstName + " " + user?.lastName;
   const currentButton = [
-    { id: "friends", label: "Remove Friend", icon: <UserMinus className="w-4 md:w-5" /> },
+    { id: "friends", label: "Unfriend", icon: <UserMinus className="w-4 md:w-5" /> },
     { id: "nearby", label: "Add Friend", icon: <UserPlus className="w-4 md:w-5" /> },
     { id: "pending", label: "Accept Request", icon: <UserCheck className="w-4 md:w-5" /> },
     { id: "sent", label: "Cancel Request", icon: <X className="w-4 md:w-5" /> },
@@ -15,13 +16,13 @@ export default function UserCard({ user, type, onAction, className }) {
 
   return (
     <div className={`aspect-4/6 shrink-0 ${className}`}>
-      <div className="w-full h-full shadow-xl rounded-lg overflow-hidden border border-border">
-        <div className="w-full h-[65%] relative border-b border-border text-text1">
+      <div className="w-full h-full shadow-xl rounded-lg overflow-hidden border border-border dark:border-border-dark text-text1 dark:text-text-dark">
+        <div className="w-full h-[65%] relative border-b border-border dark:border-border-dark">
           <Avatar className="w-full h-full bg-bg rounded-none">
             <SafeImage
-              src={user.profileImageUrl !== "" ? user.profileImageUrl : null}
+              src={user?.profileImageUrl !== "" ? user?.profileImageUrl : null}
               fill={true}
-              alt={`${user.firstName}'s profile`}
+              alt={`${user?.firstName}'s profile`}
               className="object-cover rounded-full"
             />
             <div className="w-full h-full rounded-full bg-bg-gray2">
@@ -30,19 +31,19 @@ export default function UserCard({ user, type, onAction, className }) {
           </Avatar>
         </div>
 
-        <div className="w-full h-[35%] bg-bg-white1 p-2 flex flex-col justify-between">
-          <Link href={`/user/${user.username}`}>
-            <h1 className="text-[17px] md:text-[20px] text-text1 font-bold truncate hover:underline">
-              {`${user.firstName} ${user.lastName}`}
+        <div className="w-full h-[35%] bg-bg-white1 dark:bg-dark-card p-2 flex flex-col justify-between">
+          <Link href={`/user/${user?.username}`}>
+            <h1 className="text-[17px] md:text-[20px font-bold truncate hover:underline">
+              {`${user?.firstName} ${user?.lastName}`}
             </h1>
           </Link>
 
           <button
-            onClick={() => onAction(user._id, type)}
-            className="w-full h-8 md:h-10 bg-primary/80 hover:bg-primary text-white transition-colors rounded-lg flex justify-center items-center gap-1 md:gap-2 group"
+            onClick={() => onAction(user?._id, type, name)}
+            className="w-full h-8 md:h-10 bg-primary/80 hover:bg-primary text-white transition-colors rounded-lg flex justify-center items-center gap-1 md:gap-2 group cursor-pointer"
           >
             {/* <span className="">{currentButton.icon}</span> */}
-            <p className="text-[15px] md:text-sm font-semibold cursor-pointer uppercase">
+            <p className="text-[15px] md:text-sm font-semibold uppercase">
               {currentButton.label}
             </p>
           </button>

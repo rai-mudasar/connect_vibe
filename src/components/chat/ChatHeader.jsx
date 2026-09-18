@@ -40,15 +40,15 @@ export default function ChatHeader({ conversationId, initialChatMetadata, curren
     }
 
     return (
-        <div className="w-full h-18 flex flex-row items-center px-3 bg-card border-b border-border shadow-sm/30">
+        <div className="w-full h-18 flex flex-row items-center px-3 bg-white1 dark:bg-dark-card border-b border-border dark:border-border-dark shadow-sm/30">
             <div className="w-full h-full flex flex-row items-center gap-2">
-                <Link href={'/chat'} className="font-semibold text-lg text-label cursor-pointer">
+                <Link href={'/chat'} className="font-semibold text-lg text-text2 cursor-pointer">
                     <div className="flex justify-center items-center md:mt-1">
                         <ArrowLeft className="w-5 md:w-6 h-5 md:h-6 ml-1 md:ml-0" />
                     </div>
                 </Link>
 
-                <Avatar className="w-10 h-10 bg-bg-gray2 border-border ml-1 md:ml-4">
+                <Avatar className="w-10 h-10 bg-bg-gray2 dark:bg-dark-card2 border-border dark:border-border-dark ml-1 md:ml-4">
                     <SafeImage
                         src={chattingUser?.profileImageUrl || null}
                         fill
@@ -60,7 +60,7 @@ export default function ChatHeader({ conversationId, initialChatMetadata, curren
                     </AvatarFallback>
                 </Avatar>
                 <div>
-                    <p className="text-xl text-primary md:text-2xl font-semibold ">
+                    <p className="text-xl text-primary dark:text-text-dark md:text-2xl font-semibold ">
                         {chattingUser ? `${chattingUser.firstName} ${chattingUser.lastName}` : "Loading..."}
                     </p>
                     <p className="text-[12px] ml-2 -mt-1 text-text2 italic">
@@ -76,8 +76,8 @@ export default function ChatHeader({ conversationId, initialChatMetadata, curren
                             <MoreVertical className="w-5 md:w-6 h-5 md:h-6" />
                         </div>
                     </DropdownMenuTrigger>
-                    <DropdownMenuContent className={'bg-bg-white1 border-border'}>
-                        <DropdownMenuItem className="cursor-pointer text-text2 hover:text-text1">
+                    <DropdownMenuContent className={'bg-bg-white1 dark:bg-dark-card2 border-border dark:border-border-dark'}>
+                        <DropdownMenuItem className="cursor-pointer text-text2 dark:text-text-dark hover:text-text1">
                             <button onClick={() => handleChatDelete(conversationId)}>
                                 Delete Conversation
                             </button>

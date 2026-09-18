@@ -58,12 +58,12 @@ export default function Login() {
     }
   };
   return (
-    <div className="h-screen w-full bg-bg-gray1 pt-20 sm:pt-15 md:pt-10 flex flex-col items-center gap-9">
+    <div className="h-screen w-full bg-bg-gray1 dark:bg-dark pt-20 sm:pt-15 md:pt-10 flex flex-col items-center gap-9">
       <div className="text-primary text-3xl md:text-5xl font-bold">
-        <span className="text-text1">Connect</span>Vibe.
+        <span className="text-text1 dark:text-text-dark">Connect</span>Vibe.
       </div>
-      <div className="p-10 shadow-xl/10 shadow-[#032062] rounded-4xl bg-bg-white1 border border-border">
-        <div className="w-68 md:w-80 text-text1">
+      <div className="p-10 shadow-xl/10 shadow-[#032062] rounded-4xl bg-bg-white1 dark:bg-dark-card border border-border dark:border-border-dark">
+        <div className="w-68 md:w-80 text-text1 dark:text-text-dark">
           <Form {...form}>
             <form
               onSubmit={form.handleSubmit(onSubmit)}
@@ -84,7 +84,7 @@ export default function Login() {
                         autoComplete="email"
                         autoFocus
                         required
-                        className={'border-border focus-visible:ring-[1px] md:focus-visible:ring-2px'}
+                        className={'border-border dark:border-border-dark focus-visible:ring-[1px] md:focus-visible:ring-2px'}
                         {...field}
                       />
                     </FormControl>
@@ -109,7 +109,7 @@ export default function Login() {
                           type={showPassword ? "text" : "password"}
                           required
                           autoComplete="current-password"
-                          className={'border-border focus-visible:ring-[1px] md:focus-visible:ring-2px'}
+                          className={'border-border dark:border-border-dark focus-visible:ring-[1px] md:focus-visible:ring-2px'}
                           {...field}
                         />
                         <button
@@ -145,7 +145,7 @@ export default function Login() {
               <Button
                 type="submit"
                 disabled={isSubmitting}
-                className="bg-primary/90 hover:bg-primary border border-border rounded-3xl text-white font-semibold text-[18px] md:text-[21px] cursor-pointer"
+                className="bg-primary/90 hover:bg-primary border border-border dark:border-border-dark rounded-3xl text-white font-semibold text-[18px] md:text-[21px] cursor-pointer"
               >
                 {isSubmitting ? (
                   <>
@@ -160,7 +160,7 @@ export default function Login() {
           </Form>
         </div>
 
-        <Link href={"/signup"} className="w-full bg-bg-white1 hover:bg-bg-gray-hover border border-primary rounded-3xl text-primary font-semibold text-[18px] md:text-[21px] cursor-pointer flex justify-center items-center mt-4 py-0.75">
+        <Link href={"/signup"} className="w-full bg-bg-white1 hover:bg-bg-gray-hover border dark:bg-dark-card2 dark:hover:bg-dark-card border-primary dark:border-border-dark rounded-3xl text-primary font-semibold text-[18px] md:text-[21px] cursor-pointer flex justify-center items-center mt-4 py-0.75">
           <p className="text-label">Create new account</p>
         </Link>
       </div>

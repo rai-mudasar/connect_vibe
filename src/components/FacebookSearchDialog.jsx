@@ -1,23 +1,79 @@
 "use client";
 
+import { toast } from "sonner";
 import { Search, X } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { Input } from "@/components/ui/input";
 import { useDebounce } from "@/hooks/useDebounced";
 import { useEffect, useRef, useState } from "react";
 import { getUserBySearchedName } from "@/actions/userActions";
-import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
-import Link from "next/link";
+import { Dialog, DialogContent, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import SafeImage from "./SafeImage";
 
+
+const SearchResultsList = ({ inputData, isLoading, searchedData, onItemClick }) => {
+  if (inputData === "") return null;
+
+  if (isLoading) return (
+    <div className="flex items-center justify-center py-8">
+      <div className="w-5 h-5 border-2 border-border dark:border-border-dark border-t-primary rounded-full animate-spin" />
+    </div>
+  );
+
+  if (searchedData.length === 0) return (
+    <p className="text-lg text-text2 text-center py-6">
+      No results for <span className='font-bold text-text1 dark:text-text-dark'>"{inputData}"</span>
+    </p>
+  );
+
+  return (
+    <div className="max-h-50 overflow-y-scroll hide-scrollbar px-2">
+      {searchedData.map((user) => (
+        <div
+          key={user?._id}
+          onMouseDown={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            onItemClick(user?.username);
+          }}
+          className="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-bg-gray-hover dark:hover:bg-dark-card2 border border-bg-white1 dark:border-dark-card hover:border-text2 dark:hover:border-border transition-colors cursor-pointer"
+        >
+          <div className="w-10 h-10 rounded-full relative overflow-hidden shrink-0 bg-bg-gray2 dark:bg-dark-card2 border border-border">
+            <SafeImage
+              src={user?.profileImageUrl}
+              alt={`${user?.firstName} profile`}
+              fill
+              className="object-contain"
+            />
+          </div>
+          <div className="min-w-0">
+            <p className="font-semibold text-sm text-primary truncate">
+              {user?.firstName} {user?.lastName}
+            </p>
+            {(user.location !== "None" || user?.occupation !== "None") && (
+              <p className="text-[11px] text-label truncate">
+                {user?.location !== "None" && user?.location}
+                {user?.location !== "None" && user?.occupation !== "None" && " | "}
+                {user?.occupation !== "None" && user?.occupation}
+              </p>
+            )}
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+};
+
 export function FacebookSearchDialog() {
-  const [inputData, setInputData]       = useState("");
-  const [isLoading, setIsLoading]       = useState(false);
+  const [inputData, setInputData] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
   const [searchedData, setSearchedData] = useState([]);
-  const [mobileOpen, setMobileOpen]     = useState(false);
-  const mobileInputRef                  = useRef(null);
-  const dropdownRef                     = useRef(null);
+  const [mobileOpen, setMobileOpen] = useState(false);
+  const mobileInputRef = useRef(null);
+  const dropdownRef = useRef(null);
 
   const debouncedSearchValue = useDebounce(inputData, 400);
+  const router = useRouter();
 
   // ── fetch ─────────────────────────────────────────────────────────────────
   useEffect(() => {
@@ -32,7 +88,7 @@ export function FacebookSearchDialog() {
       try {
         const response = await getUserBySearchedName(debouncedSearchValue.trim());
         if (!cancelled && response.success) setSearchedData(response.data);
-      } catch (_) {}
+      } catch (_) { }
       finally { if (!cancelled) setIsLoading(false); }
     };
     run();
@@ -60,73 +116,24 @@ export function FacebookSearchDialog() {
     setIsLoading(false);
   };
 
-  const handleSelect = () => {
-    reset();
+  const handleClick = (name) => {
+    toast.error('Clicked');
     setMobileOpen(false);
-  };
-
-  // ── shared results list ───────────────────────────────────────────────────
-  const Results = () => {
-    if (inputData === "") return null;
-
-    if (isLoading) return (
-      <div className="flex items-center justify-center py-8">
-        <div className="w-5 h-5 border-2 border-border border-t-primary rounded-full animate-spin" />
-      </div>
-    );
-
-    if (searchedData.length === 0) return (
-      <p className="text-lg text-text2 text-center py-6">
-        No results for <span className='font-bold text-text1'>"{inputData}"</span>
-      </p>
-    );
-
-    return (
-      <div className="max-h-50 overflow-y-scroll hide-scrollbar px-2">
-        {searchedData.map((user) => (
-          <Link
-            key={user._id}
-            href={`/user/${user.username}`}
-            onClick={handleSelect}
-            className="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-bg-gray-hover border border-bg-white1 hover:border-border transition-colors"
-          >
-            <div className="w-10 h-10 rounded-full relative overflow-hidden shrink-0 bg-bg border border-border">
-              <SafeImage
-                src={user.profileImageUrl}
-                alt={`${user.firstName} profile`}
-                fill
-                className="object-contain"
-              />
-            </div>
-            <div className="min-w-0">
-              <p className="font-semibold text-sm text-primary truncate">
-                {user.firstName} {user.lastName}
-              </p>
-              {(user.location !== "None" || user.occupation !== "None") && (
-                <p className="text-[11px] text-label truncate">
-                  {user.location !== "None" && user.location}
-                  {user.location !== "None" && user.occupation !== "None" && " | "}
-                  {user.occupation !== "None" && user.occupation}
-                </p>
-              )}
-            </div>
-          </Link>
-        ))}
-      </div>
-    );
+    reset();
+    router.push(`/user/${name}`);
   };
 
   return (
     <>
       {/* ── DESKTOP: inline search box (md and above) ────────────────────── */}
       <div ref={dropdownRef} className="relative hidden lg:block">
-        <div className="w-52 h-10 bg-bg-gray1 rounded-2xl flex items-center pl-3 gap-1.5">
+        <div className="w-52 h-10 bg-bg-gray1 dark:bg-dark-card2 rounded-2xl flex items-center pl-3 gap-1.5">
           <Search className="w-4 h-4 text-text2 shrink-0 stroke-[2px]" />
           <Input
             value={inputData}
             onChange={(e) => setInputData(e.target.value)}
             placeholder="Search ConnectVibe"
-            className="bg-transparent border-0 placeholder:text-text2 text-text1 w-full h-full text-sm rounded-2xl shadow-none focus-visible:ring-0 p-0"
+            className="bg-transparent border-0 placeholder:text-text2 text-text1 dark:text-text-dark w-full h-full text-sm rounded-2xl shadow-none focus-visible:ring-0 p-0"
           />
           {inputData && (
             <button onClick={reset} className="pr-2 text-text2 transition-colors">
@@ -136,29 +143,31 @@ export function FacebookSearchDialog() {
         </div>
 
         {inputData !== "" && (
-          <div className="absolute top-full -left-20 mt-2 w-80 max-h-96 bg-bg-white1 rounded-2xl border border-border shadow-2xl overflow-y-auto hide-scrollbar z-50 py-2">
-            <Results />
+          <div className="absolute top-full -left-20 mt-2 w-80 max-h-96 bg-bg-white1 dark:bg-dark-card2 rounded-2xl border border-border dark:border-border-dark shadow-2xl overflow-y-auto hide-scrollbar z-50 py-2">
+            <SearchResultsList
+              inputData={inputData}
+              isLoading={isLoading}
+              searchedData={searchedData}
+              onItemClick={handleClick}
+            />
           </div>
         )}
       </div>
 
-      {/* ── MOBILE: round icon trigger ────────────────────────── */}
-      <button
-        onClick={() => setMobileOpen(true)}
-        className="lg:hidden w-9 h-9 rounded-full bg-bg-gray2 border border-border flex items-center justify-center transition-colors cursor-pointer"
-        aria-label="Open search"
-      >
-        <Search className="w-5 md:w-6 h-5 md:h-6 stroke-[3px] text-text1" />
-      </button>
-
       {/* ── MOBILE: shadcn Dialog ────────────────────────────────────────── */}
       <Dialog open={mobileOpen} onOpenChange={setMobileOpen}>
-        <DialogContent showCloseButton={false} className="md:hidden top-4 translate-y-0 rounded-2xl p-0 gap-0 w-[calc(100vw-2rem)] max-w-md border border-border bg-bg-white1 shadow-xl">
+        <DialogTrigger
+          className="lg:hidden w-9 h-9 rounded-full bg-bg-gray2 dark:bg-dark-card2 border border-border dark:border-border-dark flex items-center justify-center transition-colors cursor-pointer"
+          aria-label="Open search"
+        >
+          <Search className="w-5 md:w-6 h-5 md:h-6 stroke-[3px] text-text1 dark:text-text-dark" />
+        </DialogTrigger>
+        <DialogContent showCloseButton={false} className="md:hidden top-4 translate-y-0 rounded-2xl p-0 gap-0 w-[calc(100vw-2rem)] max-w-md border border-border dark:border-border-dark bg-bg-white1 dark:bg-dark-card shadow-xl">
 
           <DialogTitle className="sr-only">Search ConnectVibe</DialogTitle>
 
           <div className="flex items-center gap-2 px-3 pt-3 pb-2">
-            <div className="flex-1 h-10 bg-bg-gray1 rounded-2xl flex items-center pl-3 gap-1.5 border border-border">
+            <div className="flex-1 h-10 bg-bg-gray1 dark:bg-dark-card2 rounded-2xl flex items-center pl-3 gap-1.5 border border-border dark:border-border-dark">
               <Search className="w-4 h-4 text-text2 shrink-0 stroke-[2px]" />
               <Input
                 ref={mobileInputRef}
@@ -181,10 +190,14 @@ export function FacebookSearchDialog() {
             </button>
           </div>
 
-          {/* Results */}
           {inputData !== "" && (
             <div className="max-h-[60vh] overflow-y-auto hide-scrollbar px-2 pb-3">
-              <Results />
+              <SearchResultsList
+                inputData={inputData}
+                isLoading={isLoading}
+                searchedData={searchedData}
+                onItemClick={handleClick}
+              />
             </div>
           )}
 

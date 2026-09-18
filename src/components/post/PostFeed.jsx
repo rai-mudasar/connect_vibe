@@ -9,7 +9,7 @@ export default function PostFeed({ loggedInUser, allPosts, isOwnProfile, classNa
       {isOwnProfile && <CreatePostDialog loggedInUser = {loggedInUser} />}
 
       {allPosts.length === 0 && (
-        <div className="w-full h-187.5 flex justify-center items-center">
+        <div className="w-full h-80 md:h-60 flex justify-center items-center">
           <p className="text-3xl font-semibold text-text2">
             No Post to Display
           </p>

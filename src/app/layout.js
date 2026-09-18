@@ -3,6 +3,8 @@ import AuthProvider from "@/context/AuthProvider";
 import { Toaster } from "@/components/ui/sonner";
 import { Geist, Geist_Mono } from "next/font/google";
 import { PresenceProvider } from "@/context/PresenceContext";
+import { ConfirmContextProvider } from "@/context/ConfirmContext";
+import { ThemeProvider } from "@/context/ThemeProvider";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -37,19 +39,23 @@ export default function RootLayout({ children }) {
         className={`${geistSans.variable} ${geistMono.variable} antialiased  hide-scrollbar`}
       >
         <AuthProvider>
-          <PresenceProvider>
-            {children}
-          </PresenceProvider>
-          <Toaster
-            position="top-center"
-            toastOptions={{
-              style: {
-                background: "#fff",
-                color: "#0866FF",
-                border: "1px solid #444",
-              },
-            }}
-          />
+          <ThemeProvider>
+            <PresenceProvider>
+              <ConfirmContextProvider>
+                {children}
+              </ConfirmContextProvider>
+            </PresenceProvider>
+            <Toaster
+              position="top-center"
+              toastOptions={{
+                style: {
+                  background: "#fff",
+                  color: "#0866FF",
+                  border: "1px solid #444",
+                },
+              }}
+            />
+          </ThemeProvider>
         </AuthProvider>
       </body>
     </html>

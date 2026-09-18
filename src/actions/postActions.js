@@ -6,9 +6,9 @@ import postModel from "@/models/postModel";
 import commentModel from "@/models/commentModel";
 import { connection } from "next/server";
 import { revalidatePath } from "next/cache";
-import { getSessionUser } from "./userActions";
 import { sendNotification } from "./notificationActions";
 import { deleteFromCloudinary } from "@/helpers/Cloudinary";
+import { getLoggedInUser, getSessionUser } from "./userActions";
 
 export async function getPostById(postId) {
   try {
@@ -16,7 +16,7 @@ export async function getPostById(postId) {
 
     const [loggedInUser, post] = await Promise.all([
       getSessionUser(),
-      postModel.findById(postId).populate('author', 'firstName lastName profileImageUrl').lean()
+      postModel.findById(postId).populate('author', 'username firstName lastName profileImageUrl').lean()
     ])
 
     if (!post) throw new Error('Post not found!')
@@ -36,17 +36,27 @@ export async function getPostById(postId) {
   }
 }
 
-export async function getAllPosts() {
+export async function getAllFeedPosts() {
   await connection()
   try {
-    const [_, allPosts] = await Promise.all([
-      getSessionUser(),
-      postModel
-        .find({})
-        .sort({ createdAt: -1 })
-        .populate("author", "firstName lastName username profileImageUrl")
-        .lean(),
-    ]);
+    await getSessionUser();
+    const loggedInUser = await getLoggedInUser('friends');
+
+
+    const allPosts = await postModel
+      .find({
+        $or: [
+          { privacy: "everyone" }, // Public posts
+          { author: loggedInUser?.data?._id }, // User's own posts
+          {
+            privacy: "friends",
+            author: { $in: loggedInUser?.data?.friends } // Friends' posts
+          }
+        ]
+      })
+      .sort({ createdAt: -1 })
+      .populate("author", "firstName lastName username profileImageUrl")
+      .lean()
 
     return {
       success: true,

@@ -2,30 +2,26 @@
 
 import axios from "axios";
 import SafeImage from "../SafeImage";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
+import ImageCropper from "@/components/ImageCropper";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { ImagePlus, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { useState, useRef, useEffect } from "react";
+import { PostPrivacySelect } from "./PostPrivacySelect";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import ImageCropper from "@/components/ImageCropper";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 
 export default function CreatePostDialog({ loggedInUser }) {
   const [text, setText] = useState("");
-  const [image, setImage] = useState(null); 
+  const [image, setImage] = useState(null);
   const [loading, setLoading] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
   const [rawImageSrc, setRawImageSrc] = useState(null);
   const [showCropper, setShowCropper] = useState(false);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [privacy, setPrivacy] = useState(loggedInUser?.privacy?.defaultPostPrivacy)
 
   const fileInputRef = useRef(null);
   const router = useRouter();
@@ -62,6 +58,7 @@ export default function CreatePostDialog({ loggedInUser }) {
     const formData = new FormData();
     if (image) formData.append("image", image, "post.jpg"); // blob uploads fine
     formData.append("text", text);
+    formData.append("privacy", privacy);
 
     setLoading(true);
     try {
@@ -115,7 +112,7 @@ export default function CreatePostDialog({ loggedInUser }) {
   return (
     <Dialog open={isDialogOpen} onOpenChange={handleDialogChange}>
       <DialogTrigger asChild>
-        <div className="flex items-center gap-2 p-4 bg-bg-white1 border border-border rounded-lg shadow-sm cursor-pointer mt-2 md:mt-0 z-30">
+        <div className="flex items-center gap-2 p-4 bg-bg-white1 dark:bg-dark-card border border-border dark:border-border-dark rounded-lg cursor-pointer mt-2 md:mt-0 z-30">
           <Avatar className="w-10 h-10 border border-border bg-bg z-50 font-semibold">
             <SafeImage
               src={loggedInUser?.profileImageUrl}
@@ -123,18 +120,18 @@ export default function CreatePostDialog({ loggedInUser }) {
               alt="LoggedIn User Image"
               className="object-contain"
             />
-            <AvatarFallback className="text-[22px] text-primary">
-              {loggedInUser?.firstName?.[0]}
+            <AvatarFallback className="text-[22px] text-primary bg-gray-100 dark:bg-dark-card2">
+              {loggedInUser?.firstName?.[0] + loggedInUser?.lastName?.[0]}
             </AvatarFallback>
           </Avatar>
-          <div className="bg-gray-100 rounded-full py-2 px-4 flex-1 text-gray-500 text-sm">
+          <div className="bg-bg-gray1 dark:bg-dark-card2 dark:border-border-dark rounded-full py-2 px-4 flex-1 text-text2 text-sm">
             What's on your mind, {loggedInUser?.firstName} {loggedInUser?.lastName}?
           </div>
         </div>
       </DialogTrigger>
 
-      <DialogContent className="max-h-[calc(100vh-10px)] bg-bg-white1 border-border text-text1 p-0 gap-0 overflow-y-scroll hide-scrollbar">
-        <DialogHeader className="p-4 border-b border-border">
+      <DialogContent className="max-h-[calc(100vh-10px)] bg-bg-white1 dark:bg-dark-card border-border dark:border-dark text-text1 dark:text-text3 p-0 gap-0 overflow-y-scroll hide-scrollbar">
+        <DialogHeader className="p-4 dark:bg-dark border-b border-border dark:border-dark">
           <DialogTitle className="text-center">
             {showCropper ? "Crop image" : "Create post"}
           </DialogTitle>
@@ -153,14 +150,22 @@ export default function CreatePostDialog({ loggedInUser }) {
           ) : (
             <>
               {/* User info */}
-              <div className="flex items-center gap-3">
-                <Avatar className="h-10 w-10 border border-border bg-bg-gray2">
-                  <AvatarImage src={loggedInUser?.profileImageUrl} />
-                  <AvatarFallback className={'text-lg font-bold'}>{loggedInUser?.firstName?.[0] + loggedInUser?.lastName?.[0]}</AvatarFallback>
-                </Avatar>
-                <span className="font-semibold text-lg">
-                  {loggedInUser?.firstName} {loggedInUser?.lastName}
-                </span>
+              <div className="flex justify-between">
+                <div className="flex items-center gap-3">
+                  <Avatar className="h-10 w-10 border border-border dark:border-dark bg-bg-gray2 dark:bg-dark-card2">
+                    <AvatarImage src={loggedInUser?.profileImageUrl} />
+                    <AvatarFallback className={'text-lg font-bold'}>{loggedInUser?.firstName?.[0] + loggedInUser?.lastName?.[0]}</AvatarFallback>
+                  </Avatar>
+                  <span className="font-semibold text-lg">
+                    {loggedInUser?.firstName} {loggedInUser?.lastName}
+                  </span>
+                </div>
+
+                <PostPrivacySelect
+                  value={privacy}
+                  onChange={(newPrivacy) => setPrivacy(newPrivacy)}
+                  size="sm"
+                />
               </div>
 
               {/* Post text */}
@@ -173,7 +178,7 @@ export default function CreatePostDialog({ loggedInUser }) {
 
               {/* Cropped image preview */}
               {image && (
-                <div className="relative rounded-lg overflow-hidden border border-boder">
+                <div className="relative rounded-lg overflow-hidden border border-border dark:border-dark">
                   <img
                     src={URL.createObjectURL(image)}
                     className="w-full aspect-4/5 object-contain"
@@ -191,7 +196,7 @@ export default function CreatePostDialog({ loggedInUser }) {
               )}
 
               {/* Add to post toolbar */}
-              <div className="flex items-center justify-between border border-border rounded-lg p-3">
+              <div className="flex items-center justify-between border border-border dark:border-dark rounded-lg p-3">
                 <span className="text-sm font-semibold">Add photo to your post</span>
                 <div className="flex gap-1">
                   <input

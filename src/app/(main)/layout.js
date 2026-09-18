@@ -8,7 +8,9 @@ export default function MainLayout({ children }) {
       <Suspense fallback={<NavbarSkeleton />}>
         <NavbarWrapper />
       </Suspense>
-      <main>{children}</main>
+      <main>
+        {children}
+      </main>
     </div>
   );
 }

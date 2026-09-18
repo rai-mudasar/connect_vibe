@@ -36,12 +36,21 @@ const userSchema = new mongoose.Schema(
         enum: ["public", "friends", "private"],
         default: "public",
       },
+      defaultPostPrivacy: {
+        type: String,
+        enum: ["everyone", "friends", "onlyme"],
+        default: "everyone",
+      },
       showEmail: { type: Boolean, default: false },
     },
 
     status: { type: String, enum: ['active', 'banned', 'suspended', 'pending'], default: 'pending' },
     isOnline: { type: Boolean },
     lastSeen: { type: Date },
+    lastProfileUpdate: {
+      type: Date,
+      default: null,
+    },
   },
   { timestamps: true },
 );

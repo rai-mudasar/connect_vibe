@@ -33,7 +33,7 @@ export default function HomeLayoutWrapper({ children, loggedInUser, friends }) {
     };
 
     return (
-        <div className={`min-h-screen bg-bg-gray1 flex flex-col relative md:${() => setActiveChatsLength(1)}`}>
+        <div className={`min-h-screen bg-bg-gray1 dark:bg-dark flex flex-col relative md:${() => setActiveChatsLength(1)}`}>
             <div className="flex flex-row pt-14 justify-between w-full max-w-480">
 
                 <div className="hidden lg:block md:min-w-70 md:w-[23%]">

@@ -51,13 +51,13 @@ export default function UserDetail({ currentProfileUser }) {
   ];
 
   return (
-    <Card className="w-full shadow-sm border-none bg-bg-white1">
+    <Card className="w-full bg-bg-white1 dark:bg-dark-card border border-border dark:border-border-dark rounded-md">
       <CardHeader className="pb-2">
-        <CardTitle className="text-xl font-bold text-text1">Personal Detail</CardTitle>
+        <CardTitle className="text-xl font-bold text-text1 dark:text-text-dark">Personal Detail</CardTitle>
       </CardHeader>
       <CardContent className="flex flex-col gap-4">
         {currentProfileUser?.bio && (
-          <div className="text-center pb-2 border-b border-border">
+          <div className="text-center pb-2 border-b border-border dark:border-border-dark">
             <p className="text-[15px] text-primary italic">"{currentProfileUser.bio}"</p>
           </div>
         )}
@@ -70,7 +70,7 @@ export default function UserDetail({ currentProfileUser }) {
                 {detail.icon}
                 <p>
                   <span className="text-text2">{detail.prefix}</span>
-                  <span className="font-semibold text-text1">{detail.value}</span>
+                  <span className="font-semibold text-text1 dark:text-text-dark">{detail.value}</span>
                 </p>
               </div>
             ) : null

@@ -1,7 +1,7 @@
 "use client";
 
 import { usePathname } from "next/navigation";
-import { House, Users2, User2Icon } from "lucide-react";
+import { House, Users2 } from "lucide-react";
 import { FacebookSearchDialog } from "../FacebookSearchDialog";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "../ui/tooltip";
 import Link from "next/link";
@@ -19,10 +19,10 @@ export default function Navbar({ loggedInUser, notifications, isAdmin, initialUn
 
   return (
     <TooltipProvider delayDuration={300}>
-      <nav className="w-full md:h-14 pt-1 md:pt-0 px-3 bg-bg-white1 flex flex-col md:flex-row items-center justify-around shadow-sm sm:fixed z-50">
+      <nav className="w-full md:h-14 pt-1 md:pt-0 px-3 bg-bg-white1 dark:bg-dark-card flex flex-col md:flex-row items-center justify-around shadow-sm sm:fixed z-50">
 
         <section className="w-full md:w-[25%] flex flex-row gap-2 items-center cursor-pointer mt-2 md:mt-0">
-          <p className="text-[22px] text-text1 font-semibold">Connect<span className="text-primary">Vibe.</span></p>
+          <p className="text-[22px] text-text1 dark:text-text3 font-semibold">Connect<span className="text-primary">Vibe.</span></p>
           <div className="hidden lg:flex">
             <FacebookSearchDialog />
           </div>
@@ -61,10 +61,6 @@ export default function Navbar({ loggedInUser, notifications, isAdmin, initialUn
           <div className="lg:hidden">
             <FacebookSearchDialog />
           </div>
-
-          {/* <div className="w-9 md:w-10 h-9 md:h-10 bg-bg-gray2 rounded-full cursor-pointer hidden lg:inline-flex justify-center items-center">
-            <ChatNavbarBadge initialCount={initialUnreadMessageCount} loggedInUserId={loggedInUser?._id} />
-          </div> */}
 
           <NotificationDrawer initialNotifications={notifications} loggedInUserId={loggedInUser?._id} />
 

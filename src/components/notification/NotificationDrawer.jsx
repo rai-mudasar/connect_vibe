@@ -74,8 +74,8 @@ export default function NotificationDrawer({
       <TooltipProvider delayDuration={300}>
         <Tooltip>
           <TooltipTrigger asChild>
-            <SheetTrigger className="w-9 md:w-10 h-9 md:h-10 relative flex justify-center items-center rounded-full bg-bg-gray2 transition cursor-pointer">
-              <Bell className="w-5 md:w-6 h-5 md:h-6 stroke-[2.7px] lg:fill-text1" />
+            <SheetTrigger className="w-9 md:w-10 h-9 md:h-10 relative flex justify-center items-center rounded-full bg-bg-gray2 dark:bg-dark-card2 text-text1 dark:text-text-dark transition cursor-pointer">
+              <Bell className="w-5 md:w-6 h-5 md:h-6 stroke-[2.7px]" />
               {unreadCount > 0 && (
                 <span className="absolute top-0 right-0 bg-red-500 text-white text-[10px] w-5 h-5 flex items-center justify-center rounded-full animate-pulse">
                   {unreadCount}
@@ -90,10 +90,10 @@ export default function NotificationDrawer({
         </Tooltip>
       </TooltipProvider>
 
-      <SheetContent className="w-80 sm:w-96 bg-bg-white1 border-border">
+      <SheetContent className="w-80 sm:w-96 bg-bg-white1 dark:bg-dark-card border-border dark:border-border-dark">
         <SheetHeader>
-          <div className="flex justify-between items-center border-b border-border pb-4 relative">
-            <SheetTitle className="text-xl text-text1 font-bold">Notifications</SheetTitle>
+          <div className="flex justify-between items-center border-b border-border dark:border-border-dark pb-4 relative">
+            <SheetTitle className="text-xl text-text1 dark:text-text-dark font-bold">Notifications</SheetTitle>
             {unreadCount > 0 && (
               <span className="text-[8px] text-white font-medium absolute -top-2 left-27 bg-red-700 px-1 py-0.5 rounded-2xl">
                 New

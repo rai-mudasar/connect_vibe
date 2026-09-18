@@ -2,26 +2,31 @@
 
 @theme {
   /* --color-primary: #D85A30; */
-  --color-primary-hover: #E66B40;
-  --color-secondary: #ffffff;
+  /* --color-primary-hover: #E66B40;
+  --color-secondary: #ffffff; */
   /* --color-bg: #031a50 ; */
   /* --color-card: #082363; */
-  --color-card-active: #132E6F;
-  --color-card-hover: #132E6F;
+  /* --color-card-active: #132E6F; */
+  /* --color-card-hover: #132E6F; */
   /* --color-border: #0d2d7a; */
   /* --color-label: #7a93c8; */
-  --color-label2: #2e4a80;
+  /* --color-label2: #2e4a80; */
   
   
   --color-text1: #010101;
   --color-text2: #636669;
   --color-text3: #FFFFFF;
+  --color-text-dark: #E5E8EB;
   --color-primary: #0866FF;
   --color-bg-gray1: #F2F4F7;
   --color-bg-gray2: #E8EAED;
   --color-bg-white1: #FFFFFF;
   --color-bg-gray-hover: #F2F2F2;
+  --color-dark: #1C1C1D;
+  --color-dark-card: #252728;
+  --color-dark-card2: #3B3D3E;
   --color-border: #E4E6E8;
+  --color-border-dark: #3A3C3D;
 }
 
 @utility hide-scrollbar {
@@ -37,6 +42,8 @@
   --breakpoint-mob: 500px;
 }
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 @layer base {
   ::-webkit-scrollbar {
     width: 5px;
@@ -44,17 +51,17 @@
   }
 
   ::-webkit-scrollbar-track {
-    background: #031a50;
+    background: #566886;
     border-radius: 10px;
   }
 
   ::-webkit-scrollbar-thumb {
-    background: #7a93c8;
+    background: #0867ffd5;
     border-radius: 10px;
   }
 
   ::-webkit-scrollbar-thumb:hover {
-    background: #D85A30;
+    background: #0866FF;
   }
 
   /* For Firefox (Firefox uses different properties) */

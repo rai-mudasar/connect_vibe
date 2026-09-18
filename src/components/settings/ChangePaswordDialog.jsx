@@ -54,11 +54,11 @@ export default function ChangePaswordDialog({ open, onOpenChange }) {
     return (
         <Dialog open={open} onOpenChange={onOpenChange}>
             <DialogContent className="z-100 max-w-md p-0 overflow-hidden border-none bg-transparent shadow-none">
-                <div className="w-full bg-bg-white1 p-6 rounded-2xl border border-border shadow-md">
+                <div className="w-full bg-bg-white1 dark:bg-dark-card2 p-6 rounded-2xl border border-border dark:border-border-dark shadow-md">
 
                     <div className="flex items-center gap-2 mb-4">
                         <KeyRound className="w-5 h-5 text-primary" />
-                        <h2 className="text-lg font-bold text-text1">Change Password</h2>
+                        <h2 className="text-lg font-bold text-text1 dark:text-text-dark">Change Password</h2>
                     </div>
 
                     <Form {...form}>
@@ -69,7 +69,7 @@ export default function ChangePaswordDialog({ open, onOpenChange }) {
                                 name="currentPassword"
                                 render={({ field }) => (
                                     <FormItem>
-                                        <FormLabel className="text-xs font-semibold text-text2">Current Password</FormLabel>
+                                        <FormLabel className="text-xs font-semibold text-text2 dark:text-text-dark">Current Password</FormLabel>
                                         <FormControl>
                                             <div className="relative flex items-center">
                                                 <Input
@@ -97,13 +97,13 @@ export default function ChangePaswordDialog({ open, onOpenChange }) {
                                 name="newPassword"
                                 render={({ field }) => (
                                     <FormItem>
-                                        <FormLabel className="text-xs font-semibold text-text2">New Password</FormLabel>
+                                        <FormLabel className="text-xs font-semibold text-text2 dark:text-text-dark">New Password</FormLabel>
                                         <FormControl>
                                             <div className="relative flex items-center">
                                                 <Input
                                                     type={showNew ? "text" : "password"}
                                                     placeholder="Enter new password"
-                                                    className="bg-bg border-border pr-10 w-full"
+                                                    className="bg-bg border-border  pr-10 w-full"
                                                     {...field}
                                                 />
                                                 <button
@@ -125,7 +125,7 @@ export default function ChangePaswordDialog({ open, onOpenChange }) {
                                 name="confirmPassword"
                                 render={({ field }) => (
                                     <FormItem>
-                                        <FormLabel className="text-xs font-semibold text-text2">Confirm New Password</FormLabel>
+                                        <FormLabel className="text-xs font-semibold text-text2 dark:text-text-dark">Confirm New Password</FormLabel>
                                         <FormControl>
                                             <div className="relative flex items-center">
                                                 <Input

@@ -7,12 +7,12 @@ import { toast } from "sonner";
 import { Button } from "../ui/button";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
+import { Textarea } from "@/components/ui/textarea";
 import { Avatar, AvatarImage, AvatarFallback } from "../ui/avatar";
 import { getExactDateAndTime } from "@/helpers/getSmartDate";
 import { Heart, MessageCircle, MoreHorizontal, Send, CornerDownRight, Trash2 } from "lucide-react";
-import { deletePostById, toggleLikes, addNewComment, toggleCommentLike, addCommentReply, getCommentReplies, deleteComment } from "@/actions/postActions";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "../ui/dropdown-menu";
-import { Textarea } from "@/components/ui/textarea";
+import { deletePostById, toggleLikes, addNewComment, toggleCommentLike, addCommentReply, getCommentReplies, deleteComment } from "@/actions/postActions";
 
 export default function Post({ fetchedPost, currentUser, comments, likes, isLike }) {
     const [post, setPost] = useState(fetchedPost);
@@ -102,11 +102,11 @@ export default function Post({ fetchedPost, currentUser, comments, likes, isLike
 
     return (
         <div className="w-full min-h-screen flex flex-col items-center pt-5 md:pt-20 relative overflow-y-scroll hide-scrollbar pb-24">
-            <div className="w-[90%] sm:w-[50%] lg:w-[40%] rounded-xl shadow-sm border border-border mb-2 md:mb-4 overflow-hidden relative">
+            <div className="w-[90%] sm:w-[50%] lg:w-[40%] dark:bg-dark-card rounded-xl shadow-sm border border-border dark:border-border-dark mb-2 md:mb-4 overflow-hidden relative">
                 {/* Header */}
-                <div className="flex items-center justify-between p-4 pb-2">
+                <div className="flex items-center justify-between dark:bg-dark-card p-4 pb-2">
                     <div className="flex items-center space-x-2">
-                        <div className="w-10 h-10 bg-bg-gray2 rounded-full overflow-hidden relative">
+                        <div className="w-10 h-10 bg-bg-gray2 dark:bg-dark-card2 rounded-full overflow-hidden relative">
                             {post?.author?.profileImageUrl && (
                                 <SafeImage
                                     src={post?.author?.profileImageUrl}
@@ -117,44 +117,39 @@ export default function Post({ fetchedPost, currentUser, comments, likes, isLike
                             )}
                         </div>
                         <div>
-                            <Link className="font-semibold text-[15px] text-text1 hover:underline" href={`/user/${post?.author?.username}`}>
+                            <Link className="font-semibold text-[15px] text-text1 dark:text-text-dark hover:underline" href={`/user/${post?.author?.username}`}>
                                 {post?.author?.firstName} {post?.author?.lastName}
                             </Link>
                             <p className="text-text2 text-[13px]">{getExactDateAndTime(post?.createdAt)}</p>
                         </div>
                     </div>
 
-                    <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                            <button className="p-2 text-text2">
-                                <MoreHorizontal className="h-8" />
-                            </button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end" className="w-50 md:w-70 bg-bg-white1 text-text1 border-border">
-                            {(loggedInUser?.id === post.author._id.toString() || loggedInUser?._id === post.author._id.toString()) ? (
+                    {(loggedInUser?.id === post.author._id.toString() || loggedInUser?._id === post.author._id.toString()) && (
+                        <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                                <button className="p-2 text-text2">
+                                    <MoreHorizontal className="h-8" />
+                                </button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent align="end" className="w-50 md:w-70 bg-bg-white1 dark:bg-dark-card text-text1 dark:text-text-dark border-border dark:border-border-dark">
                                 <DropdownMenuItem onClick={() => handleDeletePost(post._id)}>
-                                    <div className="w-full hover:bg-bg-gray-hover px-2 py-1 rounded-lg cursor-pointer">
+                                    <div className="w-full hover:bg-bg-gray-hover dark:hover:bg-dark-card2 px-2 py-1 rounded-lg cursor-pointer">
                                         <p className="font-bold">Delete Post</p>
                                         <p className="text-text2">This will deleted permanently</p>
                                     </div>
                                 </DropdownMenuItem>
-                            ) : (
-                                <DropdownMenuItem>
-                                    <div className="w-full hover:bg-bg-gray-hover px-2 py-1 rounded-lg cursor-pointer">
-                                        <p className="font-bold">Report Post</p>
-                                        <p className="text-text2">Hide such post?</p>
-                                    </div>
-                                </DropdownMenuItem>
-                            )}
-                        </DropdownMenuContent>
-                    </DropdownMenu>
+                            </DropdownMenuContent>
+                        </DropdownMenu>
+                    )}
                 </div>
 
-                <div className="px-4 pb-3">
-                    <p className="text-[15px] text-secondary">{post.caption}</p>
-                </div>
+                {post?.caption && (
+                    <div className="px-4 pb-3">
+                        <p className="text-[15px] text-text2">{post?.caption}</p>
+                    </div>
+                )}
 
-                {post.media && (
+                {post?.media && (
                     <div className="w-full flex justify-center">
                         <div className="w-full aspect-4/5 relative">
                             <SafeImage
@@ -168,7 +163,7 @@ export default function Post({ fetchedPost, currentUser, comments, likes, isLike
                 )}
 
                 {/* Stats */}
-                <div className="px-4 py-2 flex justify-between text-label text-[14px] border-b border-border">
+                <div className="px-4 py-2 flex justify-between text-text2 text-[14px] border-b border-border dark:border-border-dark">
                     <div className="flex items-center space-x-1">
                         <div className="bg-primary rounded-full p-1">
                             <Heart size={10} className="text-white fill-white" />
@@ -181,33 +176,33 @@ export default function Post({ fetchedPost, currentUser, comments, likes, isLike
                 {/* Actions */}
                 <div className="flex px-2 py-1 gap-3 md:gap-7 md:mx-7">
                     <button
-                        className="flex-1 flex items-center justify-center space-x-2 py-2 hover:bg-bg-gray-hover rounded-lg text-text1 border border-border font-medium cursor-pointer"
+                        className="flex-1 flex items-center justify-center space-x-2 py-2 hover:bg-bg-gray-hover dark:hover:bg-dark-card2 rounded-lg text-text1 dark:text-text-dark border border-border dark:border-border-dark font-medium cursor-pointer"
                         onClick={handleToggleLikes}
                     >
                         <Heart size={20} className={isLiked ? "fill-red-600 text-red-600" : ""} />
                         <span>Like</span>
                     </button>
                     <div className="flex-1">
-                        <Button
-                            className="w-full flex items-center justify-center mt-0.5 p-2 bg-card hover:bg-bg-gray-hover rounded-lg text-[16px] text-text1 border border-border font-medium cursor-pointer"
-                            onClick={() => {
-                                const element = document.getElementById("post-comment-textarea");
-                                if (element) element.focus();
-                            }}
+                        <button
+                            className="w-full flex items-center justify-center space-x-2 mt-0.5 p-2 bg-card hover:bg-bg-gray-hover dark:hover:bg-dark-card2 rounded-lg text-[16px] text-text1 dark:text-text-dark border border-border dark:border-border-dark font-medium cursor-not-allowed"
+                        // onClick={() => {
+                        //     const element = document.getElementById("post-comment-textarea");
+                        //     if (element) element.focus();
+                        // }}
                         >
                             <MessageCircle size={22} strokeWidth="2.5px" />
                             <span>Comment</span>
-                        </Button>
+                        </button>
                     </div>
                 </div>
             </div>
 
-            <div className="w-[90%] sm:w-[50%] lg:w-[40%] h-2 border-b-2 border-border mt-1"></div>
+            <div className="w-[90%] sm:w-[50%] lg:w-[40%] h-2 border-b-2 border-border dark:border-border-dark mt-1"></div>
 
             {/* Comments Section */}
             <div className="w-[90%] sm:w-[50%] lg:w-[40%] mt-2 ml-7 mb-10">
                 <div className="py-3">
-                    <h4 className="text-sm font-semibold text-label">Comments</h4>
+                    <h4 className="text-sm font-semibold text-text2">Comments</h4>
                     <div className="mt-4 space-y-4">
                         {loadedComments?.length > 0 ? (
                             loadedComments.map((comment) => (
@@ -228,7 +223,7 @@ export default function Post({ fetchedPost, currentUser, comments, likes, isLike
                                 />
                             ))
                         ) : (
-                            <p className="text-sm text-center text-label py-4">
+                            <p className="text-sm text-center text-text2 py-4">
                                 No comments yet. Be the first!
                             </p>
                         )}
@@ -238,7 +233,7 @@ export default function Post({ fetchedPost, currentUser, comments, likes, isLike
 
 
             {/* Sticky/Fixed Bottom Footer Comment Box */}
-            <div className="w-[90%] sm:w-[50%] lg:w-[40%] fixed bottom-3 bg-bg-gray2 border border-border rounded-3xl p-4 z-30 flex justify-center">
+            <div className="w-[90%] sm:w-[50%] lg:w-[40%] fixed bottom-3 bg-bg-gray2 dark:bg-dark-card border border-border dark:border-border-dark rounded-3xl p-4 z-30 flex justify-center">
                 <div ref={scrollRef} />
                 <div className="w-full flex gap-2 items-end">
                     <Textarea
@@ -246,7 +241,7 @@ export default function Post({ fetchedPost, currentUser, comments, likes, isLike
                         placeholder="Write a comment..."
                         value={newComment}
                         onChange={(e) => setNewComment(e.target.value)}
-                        className="min-h-10 max-h-30 rounded-xl resize-none border-border bg-white"
+                        className="min-h-10 max-h-30 rounded-xl resize-none border-border dark:border-border-dark bg-white dark:bg-dark-card2 focus-visible:ring-1"
                     />
                     <Button
                         size="icon"
@@ -262,7 +257,6 @@ export default function Post({ fetchedPost, currentUser, comments, likes, isLike
     );
 }
 
-// 🟢 COMMENT ITEM SUB-COMPONENT (SAME AS VIEWPOSTDIALOG)
 function CommentItem({ comment, postId, loggedInUserId, isReplyThread = false, postAuthorId, onDeleteSuccess, currentUserDetails, onChildReplyAdded }) {
     const [likes, setLikes] = useState(comment.likes || []);
     const [replies, setReplies] = useState([]);
@@ -359,43 +353,43 @@ function CommentItem({ comment, postId, loggedInUserId, isReplyThread = false, p
             const mention = parts[0];
             const restOfText = parts.slice(1).join(" ");
             return (
-                <p className="text-sm mt-0.5 break-words">
+                <p className="text-sm mt-0.5 wrap-break-word">
                     <span className="text-primary font-semibold hover:underline cursor-pointer mr-1">{mention}</span>
                     {restOfText}
                 </p>
             );
         }
-        return <p className="text-sm mt-0.5 break-words">{content}</p>;
+        return <p className="text-sm mt-0.5 wrap-break-word">{content}</p>;
     };
 
     if (isDeleting) return null;
 
     return (
-        <div className="flex flex-col gap-1 w-full text-text1 group">
+        <div className="flex flex-col gap-1 w-full dark:text-text-dark/75 group">
             <div className="flex gap-2.5 items-start w-full relative">
-                <Avatar className={`mt-1 relative ${isReplyThread ? "h-6 w-6" : "h-8 w-8"}`}>
-                    <AvatarImage src={comment.author.profileImageUrl} className="object-cover" />
-                    <AvatarFallback className="text-xs">{comment.author.firstName?.[0]}</AvatarFallback>
+                <Avatar className={`mt-1 bg-dark-card2 relative ${isReplyThread ? "h-6 w-6" : "h-8 w-8"}`}>
+                    <AvatarImage src={comment?.author?.profileImageUrl} className="object-cover" />
+                    <AvatarFallback className="text-xs">{comment?.author?.firstName?.[0]}</AvatarFallback>
                 </Avatar>
 
                 <div className="flex-1 min-w-0 flex flex-col items-start">
                     <div className="flex items-center gap-1.5 max-w-full group/bubble">
-                        <div className="bg-bg-gray1 p-2 px-3 rounded-2xl inline-block">
-                            <p className="text-xs font-bold text-text2">
-                                {comment.author.firstName} {comment.author.lastName}
+                        <div className="bg-bg-gray1 dark:bg-dark-card p-2 px-3 rounded-2xl inline-block">
+                            <p className="text-xs font-bold text-text2 dark:text-text-dark">
+                                {comment?.author?.firstName} {comment?.author?.lastName}
                             </p>
-                            {renderCommentContent(comment.content)}
+                            {renderCommentContent(comment?.content)}
                         </div>
 
-                        {canDelete && !comment._id.startsWith("temp-") && (
+                        {canDelete && !comment?._id.startsWith("temp-") && (
                             <div>
                                 <DropdownMenu>
                                     <DropdownMenuTrigger asChild>
-                                        <div className="h-6 w-6 rounded-full cursor-pointer bg-bg-gray2 text-text2 flex justify-center items-center">
+                                        <div className="h-6 w-6 rounded-full cursor-pointer bg-bg-gray2 dark:bg-dark-card text-text2 flex justify-center items-center">
                                             <MoreHorizontal className="h-3.5 w-3.5" />
                                         </div>
                                     </DropdownMenuTrigger>
-                                    <DropdownMenuContent align="start" className="bg-white border-border text-text1">
+                                    <DropdownMenuContent align="start" className="bg-white dark:bg-dark-card dark:hover:bg-dark-card2 border-border dark:border-border-dark text-text1 dark:text-text-dark">
                                         <DropdownMenuItem onClick={handleDeleteClick} className="text-destructive font-medium focus:bg-destructive/10 cursor-pointer flex items-center gap-2">
                                             <Trash2 className="h-4 w-4" />
                                             <span>Delete</span>
@@ -418,10 +412,10 @@ function CommentItem({ comment, postId, loggedInUserId, isReplyThread = false, p
                     {isReplying && (
                         <div className="flex gap-2 mt-2 w-[95%] items-end">
                             <Textarea
-                                placeholder={`Reply to ${comment.author.firstName}...`}
+                                placeholder={`Reply to ${comment?.author?.firstName}...`}
                                 value={replyText}
                                 onChange={(e) => setReplyText(e.target.value)}
-                                className="min-h-8 max-h-20 text-xs rounded-xl bg-white border-border resize-none py-1"
+                                className="min-h-8 max-h-20 text-xs rounded-xl bg-white dark:bg-dark-card border-border dark:border-border-dark placeholder:text-text2 text-text-dark resize-none py-1 focus-visible:ring-1"
                             />
                             <Button size="sm" onClick={handlePostReply} disabled={!replyText.trim()} className="h-8 px-3 bg-primary text-white text-xs rounded-xl cursor-pointer">
                                 Reply
@@ -437,7 +431,7 @@ function CommentItem({ comment, postId, loggedInUserId, isReplyThread = false, p
                     )}
 
                     {showReplies && replies.length > 0 && !isReplyThread && (
-                        <div className="space-y-3 mt-2 border-l-2 border-border/60 pl-3 w-full transition-all">
+                        <div className="space-y-3 mt-2 border-l-2 border-border/60 dark:border-border-dark pl-3 w-full transition-all">
                             {replies.map((reply) => (
                                 <CommentItem
                                     key={reply._id}

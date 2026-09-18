@@ -4,10 +4,11 @@ import Link from "next/link";
 import SafeImage from "../SafeImage";
 import ViewPostDialog from "./ViewPostDialog";
 import { toast } from "sonner";
-import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
-import { Heart, MoreHorizontal } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
 import { Avatar, AvatarFallback } from "../ui/avatar";
+import { useConfirm } from "@/context/ConfirmContext";
+import { Heart, MoreHorizontal, Trash2 } from "lucide-react";
 import { getExactDateAndTime } from "@/helpers/getSmartDate";
 import { deletePostById, toggleLikes } from "@/actions/postActions";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "../ui/dropdown-menu";
@@ -22,6 +23,7 @@ export default function PostCard({ post, priority, loggedInUser }) {
 
   const router = useRouter();
   const textRef = useRef(null)
+  const { confirm, close } = useConfirm();
 
   useEffect(() => {
     const el = textRef.current;
@@ -56,26 +58,37 @@ export default function PostCard({ post, priority, loggedInUser }) {
   };
 
   const handleDeletePost = async (postId) => {
-    try {
-      const response = await deletePostById(postId);
 
-      if (response.success) {
-        router.refresh()
-        toast.success(response.message)
-      } else {
-        toast.error(response.message)
-      }
-    } catch (error) {
-      toast.error(error.message || error)
-    }
+    confirm({
+      title: "Delete Post Permanently?",
+      description: "Are you sure? This action cannot be undone and will clear all comments.",
+      confirmText: "Yes, Delete",
+      variant: "destructive",
+      icon: Trash2,
+      onConfirm: async () => {
+        try {
+          const response = await deletePostById(postId);
+
+          if (response.success) {
+            close();
+            router.refresh()
+            toast.success(response.message)
+          } else {
+            toast.error(response.message)
+          }
+        } catch (error) {
+          toast.error(error.message || error)
+        }
+      },
+    });
   };
 
   return (
-    <div className="w-full h-full bg-bg-white1 text-text1 rounded-xl shadow-sm border border-border mb-2 md:mb-4 overflow-hidden relative">
+    <div className="w-full h-full bg-bg-white1 dark:bg-dark-card text-text1 rounded-xl shadow-sm border border-border dark:border-border-dark mb-2 md:mb-4 overflow-hidden relative">
 
       <div className="flex items-center justify-between p-4 pb-2 relative">
-        <div className="flex items-center space-x-2">
-          <Avatar className="w-10 h-10 bg-bg border border-border rounded-full overflow-hidden relative">
+        <div className="flex items-center space-x-2 dark:text-text-dark">
+          <Avatar className="w-10 h-10 bg-dark-card2 border border-border dark:border-border-dark rounded-full overflow-hidden relative">
             {post?.author?.profileImageUrl && (
               <SafeImage
                 src={post?.author?.profileImageUrl}
@@ -84,50 +97,42 @@ export default function PostCard({ post, priority, loggedInUser }) {
                 className={"object-contain"}
               />
             )}
-            <AvatarFallback className={'text-[22px] text-text1 font-bold'}>{post?.author?.firstName?.[0]}</AvatarFallback>
+            <AvatarFallback className={'text-[22px] text-text1 dark:text-text-dark font-bold'}>{post?.author?.firstName?.[0]}</AvatarFallback>
           </Avatar>
           <div>
             <Link className="font-semibold text-[15px] hover:underline cursor-pointer" href={`/user/${post?.author?.username}`}>
               {post?.author?.firstName} {post?.author?.lastName}
             </Link>
-            <p className="text-label text-[13px]">
+            <p className="text-text2 text-[13px]">
               {getExactDateAndTime(post?.createdAt)}
             </p>
           </div>
         </div>
         <DropdownMenu>
-          <DropdownMenuTrigger >
-            <div className="p-2 rounded-full cursor-pointer border-0">
-              <MoreHorizontal className="w-6 text-text2" />
-            </div>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent className={'w-70 bg-bg-white1 text-text1 border-border absolute -top-1 right-1'}>
-            {loggedInUser?._id.toString() === post?.author?._id.toString() &&
-              <DropdownMenuItem>
-                <div className="w-full p-2 cursor-pointer hover:bg-bg-gray-hover rounded-md" onClick={() => handleDeletePost(post?._id.toString())}>
-                  <p className="font-bold">Delete Post</p>
-                  <p className="text-text2">This will be deleted permanently.</p>
-                </div>
-              </DropdownMenuItem>
-            }
-            {loggedInUser?._id !== post?.author?._id &&
-              <DropdownMenuItem>
-                <div className="w-full p-2 cursor-pointer hover:bg-bg-gray-hover rounded-md" onClick={() => handleDeletePost(post?._id.toString())}>
-                  <p className="font-bold">Report Post</p>
-                  <p className="text-text2">Having issue with the post.</p>
-                </div>
-              </DropdownMenuItem>
-            }
+          {loggedInUser?._id.toString() === post?.author?._id.toString() &&
+            <DropdownMenuTrigger >
+              <div className="p-2 rounded-full cursor-pointer border-0">
+                <MoreHorizontal className="w-6 text-text2 dark:text-text-dark" />
+              </div>
+            </DropdownMenuTrigger>
+          }
+          <DropdownMenuContent className={'w-70 bg-bg-white1 dark:bg-dark-card text-text1 dark:text-text-dark border-border dark:border-border-dark absolute -top-1 right-1'}>
+            <DropdownMenuItem>
+              <div className="w-full p-2 cursor-pointer hover:bg-bg-gray-hover dark:hover:bg-dark-card2 rounded-md" onClick={() => handleDeletePost(post?._id.toString())}>
+                <p className="font-bold">Delete Post</p>
+                <p className="text-text2">This will be deleted permanently.</p>
+              </div>
+            </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
 
       <div className={`px-4 pb-3`}>
-        <p ref={textRef} className={`text-[15px] ${isExpanded ? '' : 'line-clamp-2'}`}>{post?.caption}</p>
+        <p ref={textRef} className={`text-[15px] text-text1 dark:text-text-dark ${isExpanded ? '' : 'line-clamp-2'}`}>{post?.caption}</p>
         {isClamped && (
-          <button 
-          onClick={() => setIsExpanded(!isExpanded)}
-          className="text-sm font-semibold cursor-pointer"
+          <button
+            onClick={() => setIsExpanded(!isExpanded)}
+            className="text-sm font-semibold cursor-pointer"
           >
             {isExpanded ? 'See less...' : '...See More'}
           </button>
@@ -149,7 +154,7 @@ export default function PostCard({ post, priority, loggedInUser }) {
         </div>
       )}
 
-      <div className="px-4 py-2 flex justify-between text-label text-[14px] border-b border-border mx-2">
+      <div className="px-4 py-2 flex justify-between text-text2 text-[14px] border-b border-border dark:border-border-dark mx-2">
         <div className="flex items-center space-x-1">
           <div className="bg-primary rounded-full p-1">
             <Heart size={12} className="text-white" />
@@ -163,7 +168,7 @@ export default function PostCard({ post, priority, loggedInUser }) {
 
       <div className="flex px-2 py-1 gap-2">
         <button
-          className="w-[50%] flex items-center justify-center space-x-2 py-2 hover:bg-bg-gray-hover border border-border rounded-lg text-label font-medium cursor-pointer"
+          className="w-[50%] flex items-center justify-center space-x-2 py-2 hover:bg-bg-gray-hover dark:hover:bg-dark-card2 border border-border dark:border-border-dark rounded-lg text-text2 dark:text-text-dark font-medium cursor-pointer"
           onClick={handleToggleLikes}
         >
           {isLiked ? (

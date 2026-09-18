@@ -32,7 +32,7 @@ export default function PeopleYouMayKnow({ knowUsers }) {
     <div>
       {users.length !== 0 && (
         <div className=''>
-          <div className="flex justify-between mx-5 font-semibold text-text1 text-md md:text-lg">
+          <div className="flex justify-between mx-5 font-semibold text-text1 dark:text-text-dark text-md md:text-lg">
             <p>People You May Know</p>
             <Link href={"/friends"} className="text-text2">
               See more

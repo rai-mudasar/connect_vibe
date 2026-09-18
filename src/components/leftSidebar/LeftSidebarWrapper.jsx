@@ -1,12 +1,13 @@
-import LeftSidebar from "./LeftSidebar";
-import { getLoggedInUser } from "@/actions/userActions";
+// import { getLoggedInUser } from "@/actions/userActions";
+// import LeftSidebar from "./LeftSidebar";
 
-export default async function LeftSidebarWrapper() {
-    const response = await getLoggedInUser();
+// export default async function LeftSidebarWrapper() {
+//     const response = await getLoggedInUser();
+//     console.log('Sidebar user 2 : ', response?.data)
 
-    const loggedInUser = response.success ? response.data : null
+//     const loggedInUser = response.success ? response.data : null
 
-    return (
-        <LeftSidebar loggedInUser={loggedInUser} />
-    )
-} 
+//     return (
+//         <LeftSidebar loggedInUser={loggedInUser} />
+//     )
+// } 

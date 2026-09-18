@@ -177,16 +177,16 @@ export default function ChatSidebar({ friends, loggedInUserId, initialConversati
   };
 
   return (
-    <div className={`${isChatting ? "hidden sm:flex" : "flex"} w-screen sm:w-80 h-screen bg-bg-gray1 flex-col border-r border-border relative`}>
-      <div className="w-full h-18 flex flex-row items-center justify-between pl-4 pr-7 shrink-0">
-        <div className="flex items-center justify-center">
-          <div onClick={() => {router.back()}} className="text-text1 cursor-pointer">
-            <ChevronLeft className="h-9" />
+    <div className={`${isChatting ? "hidden sm:flex" : "flex"} w-screen sm:w-80 h-screen bg-bg-gray1 dark:bg-dark-card flex-col border-r border-border dark:border-border-dark relative`}>
+      <div className="w-full h-18 text-text1 dark:text-text-dark flex flex-row items-center justify-between pl-4 pr-7 shrink-0">
+        <div className="flex items-center justify-center gap-2">
+          <div onClick={() => {router.back()}} className="cursor-pointer">
+            <ChevronLeft className="w-7 h-7 text-text2 dark:hover:text-text-dark" />
           </div>
-          <h2 className="text-2xl md:text-3xl font-bold text-text1">Messages</h2>
+          <h2 className="text-2xl md:text-3xl font-bold">Messages</h2>
         </div>
         <Link href={'/home'} className="relative cursor-pointer sm:hidden">
-          <p className="text-[22px] text-text1 font-semibold">Connect<span className="text-primary">Vibe.</span></p>
+          <p className="text-[22px] font-semibold">Connect<span className="text-primary">Vibe.</span></p>
         </Link>
         <div className="hidden sm:flex justify-center items-center w-10 h-10 bg-primary rounded-xl shadow-md cursor-pointer z-50">
           <NewChatDrawer friends={friends} loggedInUserId={loggedInUserId} />
@@ -199,12 +199,12 @@ export default function ChatSidebar({ friends, loggedInUserId, initialConversati
           placeholder="Search friends..."
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
-          className="pl-10 pr-10 bg-bg-white1 border border-border text-text1 placeholder:text-text2 w-full"
+          className="pl-10 pr-10 bg-bg-white1 dark:bg-dark-card2 border border-border dark:border-border-dark text-text1 dark:text-text-dark placeholder:text-text2 focus:ring-white w-full"
         />
         {searchQuery && (
           <button
             onClick={() => setSearchQuery("")}
-            className="absolute right-7 top-1/2 -translate-y-1/2 text-label hover:text-secondary transition-colors"
+            className="absolute right-7 top-1/2 -translate-y-1/2 text-text2 hover:text-secondary transition-colors"
           >
             <X className="w-4 h-4" />
           </button>
@@ -228,11 +228,11 @@ export default function ChatSidebar({ friends, loggedInUserId, initialConversati
                 <div
                   key={chat?._id}
                   onClick={() => handleChatClick(chat)}
-                  className={`flex items-center gap-3 px-3 py-2 text-text1 rounded-lg cursor-pointer transition mb-2 bg-bg-gray1 border border-bg-gray1 ${isCurrentlyActive ? ' border-border bg-bg-white1 shadow-sm' : 'hover:border-border hover:bg-bg-white1'
+                  className={`flex items-center gap-3 px-3 py-2 text-text1 dark:text-text-dark rounded-lg cursor-pointer transition mb-2 bg-bg-gray1 dark:bg-dark-card2/70 border border-bg-gray1 dark:border-border-dark ${isCurrentlyActive ? ' border-border bg-bg-white1 dark:bg-dark-card2 shadow-sm' : 'hover:border-border hover:bg-bg-white1 dark:hover:bg-dark-card2'
                     }`}
                 >
                   <div className="relative">
-                    <Avatar className="w-12 h-12 bg-bg-gray2 border border-border bg-bg flex items-center justify-center overflow-hidden relative shrink-0">
+                    <Avatar className="w-12 h-12 bg-bg-gray2 dark:bg-dark-card border border-border dark:border-border-dark bg-bg flex items-center justify-center overflow-hidden relative shrink-0">
                       <SafeImage
                         src={otherUser?.profileImageUrl !== "" ? otherUser?.profileImageUrl : null}
                         fill
@@ -248,7 +248,7 @@ export default function ChatSidebar({ friends, loggedInUserId, initialConversati
 
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center justify-between">
-                      <p className="font-medium truncate text-text1">
+                      <p className="font-medium truncate text-text1 dark:text-text-dark">
                         {otherUser ? `${otherUser?.firstName} ${otherUser?.lastName}` : "User"}
                       </p>
                       {hasUnread && (
@@ -257,7 +257,7 @@ export default function ChatSidebar({ friends, loggedInUserId, initialConversati
                         </span>
                       )}
                     </div>
-                    <p className={`w-50 text-sm truncate ${hasUnread ? 'font-semibold text-text1' : 'text-text2'}`}>
+                    <p className={`w-50 text-sm truncate ${hasUnread ? 'font-semibold text-text1 dark:text-text-dark' : 'text-text2'}`}>
                       {(chat?.lastMessage?.deletedFor?.includes(loggedInUserId) ? "Started a conversation" : chat?.lastMessage?.text) || "Started a conversation"}
                     </p>
                   </div>
@@ -265,7 +265,7 @@ export default function ChatSidebar({ friends, loggedInUserId, initialConversati
               );
             })
           ) : (
-            <p className="text-sm text-text2 px-2 italic mt-4">No recent chats found</p>
+            <p className="text-sm text-text2 px-22 italic mt-4">No recent chats found</p>
           )}
         </div>
       </div>

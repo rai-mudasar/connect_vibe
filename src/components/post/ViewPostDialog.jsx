@@ -61,19 +61,19 @@ export default function ViewPostDialog({ post, loggedInUser }) {
   return (
     <Dialog onOpenChange={handleDialogState}>
       <DialogTrigger asChild>
-        <Button className="w-full flex items-center justify-center mt-0.5 p-2 bg-card hover:bg-bg-gray-hover border border-border rounded-lg text-[16px] text-label font-medium cursor-pointer">
+        <Button className="w-full flex items-center justify-center mt-0.5 p-2 py-5 bg-bg-white1 dark:bg-dark-card hover:bg-bg-gray-hover dark:hover:bg-dark-card2 border border-border dark:border-border-dark rounded-lg text-[16px] text-text2 dark:text-text-dark font-medium cursor-pointer">
           <MessageCircle size={22} strokeWidth="2.5px" />
           <span>Comment</span>
         </Button>
       </DialogTrigger>
 
-      <DialogContent className="sm:max-w-150 max-h-[calc(100vh-20px)] flex flex-col p-0 gap-0 bg-bg-white1 border-border text-text1 overflow-hidden">
-        <DialogHeader className="p-4 bg-card border-b border-border">
+      <DialogContent className="sm:max-w-150 max-h-[calc(100vh-20px)] flex flex-col p-0 gap-0 bg-bg-white1 dark:bg-dark-card border-border dark:border-border-dark text-text1 dark:text-text-dark overflow-hidden">
+        <DialogHeader className="p-4 bg-bg-white1 dark:bg-dark-card border-b border-border dark:border-border-dark">
           <DialogTitle>Post by <span className="text-primary font-semibold">{`${post?.author?.firstName} ${post?.author?.lastName}`}</span> </DialogTitle>
           <DialogDescription className="sr-only">Post details and interaction drawer</DialogDescription>
         </DialogHeader>
 
-        <div className="flex-1 overflow-hidden flex flex-col">
+        <div className="flex-1 overflow-hidden flex flex-col dark:bg-dark">
           <ScrollArea className="flex-1 p-4 overflow-y-scroll hide-scrollbar">
             {/* 1. ORIGINAL POST INTERFACE */}
             <div className="mb-6 pb-4 border-b border-border">
@@ -84,9 +84,9 @@ export default function ViewPostDialog({ post, loggedInUser }) {
                 </Avatar>
                 <span className="font-semibold text-sm">{post?.author?.firstName} {post?.author?.lastName}</span>
               </div>
-              <p className="text-sm text-text1 mb-3">{post?.caption}</p>
+              <p className="text-sm text-text1 dark:text-text-dark mb-3">{post?.caption}</p>
               {post?.media && (
-                <div className="w-full bg-bg-gray1 flex justify-center">
+                <div className="w-full bg-bg-gray1 dark:bg-dark-card2 flex justify-center">
                   <div className="w-full aspect-4/5 relative border-t">
                     <SafeImage src={post?.media} fill alt="Post Media" className="object-contain" />
                   </div>
@@ -124,13 +124,13 @@ export default function ViewPostDialog({ post, loggedInUser }) {
         </div>
 
         {/* 3. FOOTER MAIN COMMENT BOX */}
-        <div className="p-4 border-t border-border bg-bg-gray1 z-30">
+        <div className="p-4 border-t border-border dark:border-border-dark bg-bg-gray1 dark:bg-dark-card z-30">
           <div className="flex gap-2 items-end">
             <Textarea
               placeholder="Write a comment..."
               value={newComment}
               onChange={(e) => setNewComment(e.target.value)}
-              className="min-h-10 max-h-30 rounded-xl resize-none border-border bg-white"
+              className="min-h-10 max-h-30 rounded-xl resize-none border-border dark:border-border-dark bg-white dark:bg-dark-card2 focus-visible:ring-1"
             />
             <Button size="icon" onClick={handlePostComment} disabled={!newComment.trim() || loading} className='h-10 bg-primary hover:bg-primary/90 cursor-pointer text-white'>
               <Send className="w-5 h-5 stroke-[2px]" />
@@ -241,13 +241,13 @@ function CommentItem({ comment, postId, loggedInUserId, isReplyThread = false, p
       const mention = parts[0];
       const restOfText = parts.slice(1).join(" ");
       return (
-        <p className="text-sm mt-0.5 break-words">
+        <p className="text-sm mt-0.5 wrap-break-words">
           <span className="text-primary font-semibold hover:underline cursor-pointer mr-1">{mention}</span>
           {restOfText}
         </p>
       );
     }
-    return <p className="text-sm mt-0.5 break-words">{content}</p>;
+    return <p className="text-sm mt-0.5 wrap-break-words">{content}</p>;
   };
 
   if (isDeleting) return null;

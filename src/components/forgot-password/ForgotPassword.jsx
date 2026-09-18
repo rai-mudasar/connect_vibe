@@ -46,8 +46,8 @@ export default function ForgotPassword() {
     }
   }
   return (
-    <div className="h-screen w-full bg-bg-gray1 text-text1 px-4 md:px-0 pt-30 sm:pt-15 md:pt-10 flex flex-col items-center gap-9">
-      <div className="p-10 rounded-4xl bg-bg-white1 border border-border">
+    <div className="h-screen w-full bg-bg-gray1 dark:bg-dark text-text1 dark:text-text-dark px-4 md:px-0 pt-30 sm:pt-15 md:pt-10 flex flex-col items-center gap-9">
+      <div className="p-10 rounded-4xl bg-bg-white1 dark:bg-dark-card border border-border dark:border-border-dark">
         <h1 className="text-3xl font-bold text-center">Verify your Account</h1>
         <p className="mt-1 flex flex-col text-center">
           Enter email linked to your account
@@ -73,7 +73,7 @@ export default function ForgotPassword() {
                         placeholder="user@gmail.com"
                         autoFocus
                         required
-                        className={'placeholder:text-text2 text-text1 border-border focus-visible:ring-[1px] md:focus-visible:ring-2px'}
+                        className={'placeholder:text-text2 text-text1 dark:text-text-dark border-border dark:border-border-dark focus-visible:ring-[1px] md:focus-visible:ring-2px'}
                         {...field}
                       />
                     </FormControl>

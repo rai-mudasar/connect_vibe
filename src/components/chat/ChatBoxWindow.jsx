@@ -154,9 +154,9 @@ export default function ChatBoxWindow({ friend, loggedInUser, onClose }) {
   }
 
   return (
-    <div className="w-72 h-96 bg-white border border-border shadow-2xl rounded-t-2xl flex flex-col z-90">
+    <div className="w-72 h-96 bg-bg-white1 dark:bg-dark-card border border-border dark:border-border-dark shadow-2xl rounded-t-2xl flex flex-col z-90">
       {/* Header */}
-      <div className="flex items-center justify-between p-2 border-b border-border bg-bg-white1 rounded-t-2xl">
+      <div className="flex items-center justify-between p-2 border-b border-border dark:border-border-dark bg-bg-white1 dark:bg-dark-card rounded-t-2xl">
         <div className="flex items-center gap-2 min-w-0">
           <Avatar className="w-7 h-7">
             <SafeImage
@@ -166,17 +166,17 @@ export default function ChatBoxWindow({ friend, loggedInUser, onClose }) {
               className="object-cover"
             />
             <AvatarFallback className="text-[10px] font-bold">
-              {friend?.firstName?.[0]}
+              {friend?.firstName?.[0] + friend?.lastName?.[0]}
             </AvatarFallback>
           </Avatar>
-          <p className="text-xs font-bold text-text1 truncate">
+          <p className="text-xs font-bold text-text1 dark:text-text-dark truncate">
             {`${friend?.firstName} ${friend?.lastName}`}
           </p>
         </div>
         <div className="flex items-center gap-2 text-text2">
           <button
             onClick={() => setIsMinimized(true)}
-            className="hover:text-text1 p-1"
+            className="hover:text-text1 dark:hover:text-text-dark p-1"
           >
             <Minus className="w-4 h-4" />
           </button>
@@ -187,7 +187,7 @@ export default function ChatBoxWindow({ friend, loggedInUser, onClose }) {
       </div>
 
       {/* Chat Messages Body Area */}
-      <div className="flex-1 overflow-y-auto p-3 flex flex-col gap-2 bg-gray-50/50">
+      <div className="flex-1 overflow-y-auto p-3 flex flex-col gap-2 bg-gray-50/50 dark:bg-dark-card2">
         {messages.map((msg) => {
           const isMe = msg.senderId === loggedInUser._id;
           return (
@@ -210,7 +210,7 @@ export default function ChatBoxWindow({ friend, loggedInUser, onClose }) {
       </div>
 
       {/* Footer Controls Layout */}
-      <div className="p-2 border-t border-border bg-bg-white1 z-50">
+      <div className="p-2 border-t border-border dark:border-border-dark bg-bg-white1 dark:bg-dark-card z-50">
         <div className="relative flex items-center">
           <input
             type="text"
@@ -218,7 +218,7 @@ export default function ChatBoxWindow({ friend, loggedInUser, onClose }) {
             value={message}
             onChange={(e) => setMessage(e.target.value)}
             onKeyDown={(e) => e.key === "Enter" && handleSendMessage()}
-            className="w-full bg-bg-gray2 border-none rounded-full pl-3 pr-8 py-1.5 text-xs focus:outline-none text-text1"
+            className="w-full bg-bg-gray2 dark:bg-dark-card2 border-none rounded-full pl-3 pr-8 py-1.5 text-xs focus:outline-none text-text1 dark:text-text-dark"
           />
           <Send
             onClick={handleSendMessage}

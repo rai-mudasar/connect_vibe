@@ -97,9 +97,9 @@ export default function verifyPage() {
     // Show error state
     if (error) {
         return (
-            <div className="h-screen w-full bg-bg text-secondary flex items-center justify-center">
-                <div className="px-20 py-10 rounded-4xl bg-card border border-border flex flex-col items-center justify-center">
-                    <p className="text-lg font-semibold text-red-500">{error}</p>
+            <div className="h-screen w-full text-text2 flex items-center justify-center">
+                <div className="px-20 py-10 rounded-4xl bg-card border border-border dark:border-border-dark flex flex-col items-center justify-center">
+                    <p className="text-lg font-semibold text-red-500 dark:text-red-400">{error}</p>
                     <button
                         onClick={() => router.push("/signup")}
                         className="mt-4 px-4 py-2 bg-primary text-secondary rounded-md"
@@ -112,8 +112,8 @@ export default function verifyPage() {
     }
 
     return (
-        <div className="h-screen w-full bg-bg-gray1 text-text1 px-4 md:px-0 pt-20 sm:pt-15 md:pt-10 flex flex-col items-center gap-9">
-            <div className="p-10  rounded-4xl bg-bg-white1 border border-border">
+        <div className="h-screen w-full bg-bg-gray1 dark:bg-dark text-text1 dark:text-text-dark px-4 md:px-0 pt-20 sm:pt-15 md:pt-10 flex flex-col items-center gap-9">
+            <div className="p-10  rounded-4xl bg-bg-white1 dark:bg-dark-card border border-border dark:border-border-dark">
                 <h1 className="text-3xl font-bold text-center">Please Verify your Account</h1>
                 <p className="mt-6 flex flex-col text-center">
                     Enter the verification code sent to
@@ -140,14 +140,14 @@ export default function verifyPage() {
                                                 placeholder="Enter OTP"
                                                 autoFocus
                                                 required
-                                                className={`placeholder:text-text2 text-text1 ${apiError !== '' ? 'border-red-500' : 'border-white'} focus-visible:ring-0`}
+                                                className={`placeholder:text-text2 text-text1 dark:text-text-dark dark:border-border-dark ${apiError !== '' ? 'border-red-500 dark:border-red-400' : 'border-white'} focus-visible:ring-0 focus:border border-border`}
                                                 {...field}
                                             />
                                         </FormControl>
-                                        <p className={`text-sm text-red-500`} >
+                                        <p className={`text-sm text-red-500 dark:text-red-400`} >
                                             {apiError }
                                         </p>
-                                        <FormMessage className={'text-red-500'} />
+                                        <FormMessage className={'text-red-500 dark:text-red-400'} />
                                     </FormItem>
                                 )}
                             />

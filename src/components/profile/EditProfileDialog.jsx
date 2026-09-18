@@ -60,6 +60,8 @@ export default function EditProfileDialog({ currentProfileUser, isSettingPart })
         setIsDialogOpen(false);
         router.refresh();
         toast.success("Profile updated successfully!");
+      } else {
+        toast.error(result.message)
       }
     } catch (error) {
       toast.error("Something went wrong");
@@ -69,17 +71,17 @@ export default function EditProfileDialog({ currentProfileUser, isSettingPart })
   return (
     <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
       <DialogTrigger asChild>
-        <button className={`flex items-center gap-2 font-semibold rounded-lg ${isSettingPart ? 'w-full hover:bg-bg-gray-hover py-2 pl-2 flex-row'
+        <button className={`flex items-center gap-2 font-semibold rounded-lg ${isSettingPart ? 'w-full hover:bg-bg-gray-hover dark:hover:bg-dark-card2 py-2 pl-2 flex-row'
           :
-          'w-32 sm:w-39 bg-bg-gray2 border border-border text-[15px] text-label px-2.5 md:px-5 py-2 md:py-2.5 my-7 md:my-0 hover:bg-bg-gray-hover transition'} cursor-pointer`}>
-          <div className={`${isSettingPart ? 'rounded-full bg-bg-gray2 p-2.5' : ''}`}>
+          'w-32 sm:w-39 bg-bg-gray2 hover:bg-bg-gray-hover dark:bg-dark-card dark:hover:bg-dark-card2 border border-border dark:border-border-dark text-[15px] text-text2 dark:text-text-dark px-2.5 md:px-5 py-2 md:py-2.5 my-7 md:my-0 transition'} cursor-pointer`}>
+          <div className={`${isSettingPart ? 'rounded-full bg-bg-gray2 dark:bg-dark-card2 p-2.5' : ''}`}>
             <Pencil className="w-5 md:w-6 h-5 md:h-6" />
           </div>
           <span>Edit Profile</span>
         </button>
       </DialogTrigger>
 
-      <DialogContent className="max-h-[98vh] overflow-y-scroll bg-bg-white1 text-text1">
+      <DialogContent className="max-h-[98vh] overflow-y-scroll bg-bg-white1 dark:bg-dark-card text-text1 dark:text-text-dark dark:border-border-dark border">
         <DialogHeader>
           <DialogTitle className="text-center text-xl">
             Edit Profile
@@ -105,7 +107,7 @@ export default function EditProfileDialog({ currentProfileUser, isSettingPart })
                         autoComplete="firstname"
                         autoFocus
                         required
-                        className={'text-text1 border-border focus-visible:ring-[1px] md:focus-visible:ring-2'}
+                        className={' border-border dark:border-border-dark focus-visible:ring-[1px] md:focus-visible:ring-2'}
                         {...field}
                       />
                     </FormControl>
@@ -119,13 +121,13 @@ export default function EditProfileDialog({ currentProfileUser, isSettingPart })
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel className={'text-text2'}>Last Name</FormLabel>
-                    <FormControl className={'text-text2'}>
+                    <FormControl>
                       <Input
                         id="lastname"
                         placeholder="lastname"
                         autoComplete="lastname"
                         required
-                        className={'text-label border-border focus-visible:ring-[1px] md:focus-visible:ring-2'}
+                        className={'border-border dark:border-border-dark focus-visible:ring-[1px] md:focus-visible:ring-2'}
                         {...field}
                       />
                     </FormControl>
@@ -145,7 +147,7 @@ export default function EditProfileDialog({ currentProfileUser, isSettingPart })
                     <Textarea
                       placeholder="Describe yourself..."
                       required
-                      className={'text-label border-border focus-visible:ring-[1px] md:focus-visible:ring-2 resize-none'}
+                      className={'border-border dark:border-border-dark focus-visible:ring-[1px] md:focus-visible:ring-2 resize-none'}
                       {...field}
                     />
                   </FormControl>
@@ -164,7 +166,7 @@ export default function EditProfileDialog({ currentProfileUser, isSettingPart })
                     <Input
                       placeholder="City, Country"
                       required
-                      className={'text-label border-border focus-visible:ring-[1px] md:focus-visible:ring-2'}
+                      className={'border-border dark:border-border-dark focus-visible:ring-[1px] md:focus-visible:ring-2'}
                       {...field} />
                   </FormControl>
                   <FormMessage className={"text-red-600"} />
@@ -182,7 +184,7 @@ export default function EditProfileDialog({ currentProfileUser, isSettingPart })
                     <Input
                       placeholder="Software Engineer"
                       required
-                      className={'text-label border-border focus-visible:ring-[1px] md:focus-visible:ring-2'}
+                      className={'border-border dark:border-border-dark focus-visible:ring-[1px] md:focus-visible:ring-2'}
                       {...field}
                     />
                   </FormControl>
@@ -202,16 +204,16 @@ export default function EditProfileDialog({ currentProfileUser, isSettingPart })
                     defaultValue={field.value}
                   >
                     <FormControl>
-                      <SelectTrigger className="bg-bg-white1 border-border">
+                      <SelectTrigger className="bg-bg-white1 dark:bg-dark-card2 border-border dark:border-border-dark">
                         <SelectValue placeholder="Select status" />
                       </SelectTrigger>
                     </FormControl>
-                    <SelectContent className="bg-bg-white1 text-text1 border-border">
-                      <SelectItem className={'cursor-pointer hover:bg-bg-gray-hover'} value="None">None</SelectItem>
-                      <SelectItem className={'cursor-pointer hover:bg-bg-gray-hover'} value="Single">Single</SelectItem>
-                      <SelectItem className={'cursor-pointer hover:bg-bg-gray-hover'} value="Engaged">Engaged</SelectItem>
-                      <SelectItem className={'cursor-pointer hover:bg-bg-gray-hover'} value="Married">Married</SelectItem>
-                      <SelectItem className={'cursor-pointer hover:bg-bg-gray-hover'} value="In a relationship">
+                    <SelectContent className="bg-bg-white1 dark:bg-dark-card text-text1 dark:text-text-dark border-border dark:border-border-dark">
+                      <SelectItem className={'cursor-pointer hover:bg-bg-gray-hover dark:hover:bg-dark-card2'} value="None">None</SelectItem>
+                      <SelectItem className={'cursor-pointer hover:bg-bg-gray-hover dark:hover:bg-dark-card2'} value="Single">Single</SelectItem>
+                      <SelectItem className={'cursor-pointer hover:bg-bg-gray-hover dark:hover:bg-dark-card2'} value="Engaged">Engaged</SelectItem>
+                      <SelectItem className={'cursor-pointer hover:bg-bg-gray-hover dark:hover:bg-dark-card2'} value="Married">Married</SelectItem>
+                      <SelectItem className={'cursor-pointer hover:bg-bg-gray-hover dark:hover:bg-dark-card2'} value="In a relationship">
                         In a relationship
                       </SelectItem>
                     </SelectContent>
@@ -224,7 +226,7 @@ export default function EditProfileDialog({ currentProfileUser, isSettingPart })
             <Button
               type="submit"
               disabled={form.formState.isSubmitting}
-              className="bg-primary/80 hover:bg-primary border border-border text-white mt-2 w-full cursor-pointer"
+              className="bg-primary/80 hover:bg-primary border border-border dark:border-border-dark text-white mt-2 w-full cursor-pointer"
             >
               {form.formState.isSubmitting ? "Saving..." : "Save Changes"}
             </Button>

@@ -78,9 +78,9 @@ export default function NewChatDrawer({ loggedInUserId, friends, triggerClassNam
                     </button>
                 </SheetTrigger>
 
-                <SheetContent side="left" className="w-full max-w-sm sm:max-w-xs h-screen sm:h-auto bg-bg-gray1 text-xl text-tex1 border-border">
-                    <SheetHeader className="border-b border-border">
-                        <SheetTitle className="text-xl font-bold text-text1">
+                <SheetContent side="left" className="w-full max-w-sm sm:max-w-xs h-screen sm:h-auto bg-bg-gray1 dark:bg-dark text-xl text-tex1 border-border dark:border-border-dark">
+                    <SheetHeader className="border-b dark:border-border-dark">
+                        <SheetTitle className="text-xl font-bold text-text1  dark:text-text-dark">
                             New Chat
                         </SheetTitle>
                     </SheetHeader>
@@ -88,12 +88,12 @@ export default function NewChatDrawer({ loggedInUserId, friends, triggerClassNam
                     <div className="flex flex-col flex-1 px-4 py-4 space-y-4">
                         {/* Search Bar */}
                         <div className="relative">
-                            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-label" />
+                            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-text2" />
                             <Input
                                 placeholder="Search friends..."
                                 value={searchQuery}
                                 onChange={(e) => setSearchQuery(e.target.value)}
-                                className="pl-10 pr-10 bg-bg-white1 border border-border text-text1 placeholder:text-text2 focus-visible:ring-[1px]"
+                                className="pl-10 pr-10 bg-bg-white1 dark:bg-dark-card border border-border  dark:border-border-dark text-text1 dark:text-text-dark placeholder:text-text2 focus-visible:ring-[1px]"
                             />
                             {searchQuery && (
                                 <button
@@ -113,10 +113,10 @@ export default function NewChatDrawer({ loggedInUserId, friends, triggerClassNam
                                         <button
                                             key={friend._id}
                                             onClick={() => handleOpenOrStartChat(friend._id)}
-                                            className="w-full flex items-center gap-3 px-3 py-2 rounded-lg bg-bg-white1 border border-border hover:bg-bg-gray-hover hover:border-border transition-colors text-left cursor-pointer"
+                                            className="w-full flex items-center gap-3 px-3 py-2 rounded-lg bg-bg-white1 hover:bg-bg-gray-hover dark:bg-dark-card dark:hover:bg-dark-card2 border border-border dark:border-border-dark transition-colors text-left cursor-pointer"
                                         >
                                             <div className="relative shrink-0">
-                                                <Avatar className="w-10 h-10 border border-border bg-bg">
+                                                <Avatar className="w-10 h-10 border border-border dark:border-border-dark">
                                                     <SafeImage
                                                         src={friend?.profileImageUrl !== "" ? friend?.profileImageUrl : null}
                                                         fill
@@ -131,7 +131,7 @@ export default function NewChatDrawer({ loggedInUserId, friends, triggerClassNam
                                             </div>
 
                                             <div className="flex-1 min-w-0">
-                                                <p className="font-medium text-sm text-text1 truncate">
+                                                <p className="font-medium text-sm text-text1 dark:text-text-dark truncate">
                                                     {friend.firstName + " " + friend.lastName}
                                                 </p>
                                                 {friend.status && (
@@ -145,7 +145,7 @@ export default function NewChatDrawer({ loggedInUserId, friends, triggerClassNam
                                 </div>
                             ) : (
                                 <div className="flex flex-col items-center justify-center py-12 text-center">
-                                    <div className="w-12 h-12 rounded-full bg-bg-gray2 border border-border flex items-center justify-center mb-3">
+                                    <div className="w-12 h-12 rounded-full bg-bg-gray2 dark:bg-dark-card border border-border  dark:border-border-dark flex items-center justify-center mb-3">
                                         <Search className="w-6 h-6 text-text2" />
                                     </div>
                                     <p className="text-sm font-medium text-text2 mb-1">

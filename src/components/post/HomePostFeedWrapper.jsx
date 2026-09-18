@@ -1,11 +1,11 @@
 import PostFeed from "./PostFeed";
-import { getAllPosts } from "@/actions/postActions";
+import { getAllFeedPosts } from "@/actions/postActions";
 import { getLoggedInUser } from "@/actions/userActions";
 
 export default async function HomePostFeedWrapper() {
     const [loggedInUserResponse, allPostsResponse] = await Promise.all([
         getLoggedInUser(),
-        getAllPosts(),
+        getAllFeedPosts(),
     ])
 
     const loggedInUser = loggedInUserResponse.success ? loggedInUserResponse.data : [];
