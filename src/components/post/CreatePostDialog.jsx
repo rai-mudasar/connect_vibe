@@ -90,15 +90,15 @@ export default function CreatePostDialog({ loggedInUser }) {
 
   if (!isMounted) {
     return (
-      <div className="flex items-center gap-2 p-4 bg-card rounded-lg shadow-sm cursor-pointer z-20">
-        <Avatar className="w-10 h-10 bg-neutral-300 z-50 border font-semibold">
+      <div className="flex items-center gap-2 p-4 bg-bg-white1  dark:bg-dark-card border border-border dark:border-border-dark rounded-lg cursor-pointer mt-2 md:mt-0 z-30">
+        <Avatar className="w-10 h-10 z-50 font-semibold">
           <SafeImage
             src={loggedInUser?.profileImageUrl !== "" ? loggedInUser?.profileImageUrl : null}
             fill
             alt="LoggedIn User Image"
             className="object-contain"
           />
-          <AvatarFallback className="bg-neutral-300">
+          <AvatarFallback className="bg-gray-100">
             {loggedInUser?.firstName?.[0]}
           </AvatarFallback>
         </Avatar>
@@ -113,7 +113,7 @@ export default function CreatePostDialog({ loggedInUser }) {
     <Dialog open={isDialogOpen} onOpenChange={handleDialogChange}>
       <DialogTrigger asChild>
         <div className="flex items-center gap-2 p-4 bg-bg-white1 dark:bg-dark-card border border-border dark:border-border-dark rounded-lg cursor-pointer mt-2 md:mt-0 z-30">
-          <Avatar className="w-10 h-10 border border-border bg-bg z-50 font-semibold">
+          <Avatar className="w-10 h-10 z-50 font-semibold">
             <SafeImage
               src={loggedInUser?.profileImageUrl}
               fill
